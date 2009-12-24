@@ -33,5 +33,6 @@ def NotPlayingDialog(player, line):
     elif player.STATUS == minionDefines.GETPASSWORD:
         player.STATUS = minionDefines.PLAYING
         player.transport.write(minionDefines.LYELLOW + "Welcome " + player.name + "\r\n")
+        player.factory.sendMessageToAllClients(player.name + " has joined.")
         return
 

@@ -28,6 +28,7 @@ class Users(LineReceiver):
     def disconnectClient(self):
         self.sendLine("Goodbye")
         self.factory.players.remove(self)
+        self.factory.sendMessageToAllClients(self.name + " has quit.")
         self.transport.loseConnection()
 
     def lineReceived(self, line):
