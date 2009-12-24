@@ -4,7 +4,8 @@ from twisted.internet.protocol import ServerFactory
 from twisted.internet import defer
 from twisted.python import failure, util
 from twisted.internet import reactor
-import minionsParser, minionsPlayer
+import minionsParser, minionsPlayer, minionDefines
+
 
 
 
@@ -13,15 +14,15 @@ class Users(LineReceiver):
     name = ""
 
     def connectionMade(self):
+        
         self.factory.players.append(self)
         # Limit how many can connect at one time
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
             self.disconnectClient()
         self.transport.write("Current Connections: " + str(len(self.factory.players)) + "\n\r")
-        d = defer.Deferred()
-        d.addCallback( minionsPlayer.createPlayer(self) )
-        d.backback("sucess")
+        minionsPlayer.createPlayer(self)
+
 
 
     def disconnectClient(self):
@@ -31,21 +32,22 @@ class Users(LineReceiver):
 
     def lineReceived(self, line):
         minionsParser.commandParser(self, line)
+        #self.say(line)
 
 
     def say(self, line):
-        self.sendToPlayer("You say, " + line[4:])
+        self.sendToPlayer("You say, " + line)
 
     def sendToPlayer(self, line):
         self.sendLine(line)
 
     # Send to everyone in room
     def sendToRoom(self, line):
-        for player in self.players:
-           if player == self:
-               self.say(line)
-           else:
-               self.sendLine(self.name + " says, " + line)
+        for player in self.factory.players:
+            if player == self:
+                self.say(line)
+            else:
+                player.sendToPlayer(self.name + " says, " + line)
 
 class SonzoFactory(ServerFactory):
     protocol = Users
@@ -54,9 +56,8 @@ class SonzoFactory(ServerFactory):
         self.players = []
  
     def sendMessageToAllClients(self, mesg): 
-        for client in self.users:
+        for client in self.players:
             client.sendLine(mesg)
-
 
 
 
