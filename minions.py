@@ -50,7 +50,7 @@ class Users(LineReceiver):
                 pass #self.say(line)
             else:
                 if player.STATUS == minionDefines.PLAYING:
-                    player.sendToPlayer(line)
+                    player.sendToPlayer(line + minionDefines.WHITE)
                     
     ################################################
     # Shout to everyone                            #
