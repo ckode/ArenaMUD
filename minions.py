@@ -11,7 +11,31 @@ import minionsParser, minionsPlayer, minionDefines
 
 
 class Users(LineReceiver):
-    name = ""
+    playerid           = None
+    name               = ""
+    lastname           = ""
+    strength           = 0
+    agility            = 0
+    intelligence       = 0
+    wisdom             = 0
+    charm              = 0
+    health             = 0
+    hp                 = 0
+    mana               = 0
+    mr                 = 0
+    stealth            = 0
+    weight             = 0
+    holding            = {}
+    wearing            = { 'arms':         None,
+                           'head':         None,
+                           'torso':        None,
+                           'l_finger':     None,
+                           'r_finger':     None,
+                           'legs':         None,
+                           'neck':         None,
+                           'feet':         None
+                         }
+
 
     def connectionMade(self):
         
@@ -20,7 +44,8 @@ class Users(LineReceiver):
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
             self.disconnectClient()
-        minionsPlayer.createPlayer(self)
+        self.STATUS = minionDefines.LOGIN
+        minionsParser.LoginPlayer(self, "")
 
 
 
