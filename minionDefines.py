@@ -51,3 +51,21 @@ B_CYAN             = chr(27) + "[46m"
 B_WHITE            = chr(27) + "[47m"
 B_DEFAULT          = chr(27) + "[49m"
 
+########### Command Numbers #############
+COMMANDS =       { '/quit':        0,
+                   'who':          1,
+                   'gossip':       2,
+                   'say':          3,
+                   'emote':        4,
+                   'help':         5
+                 }
+
+########### Command List ################
+COMMAND_DEFS  = { 0:            "Disconnect from the game.",
+                  1:            "Who is in the game.",
+                  2:            "Used to gossip to everyone in the game.",
+                  3:            "Use to say something or just type your mesage.",
+                  4:            "Used to make your own action.",
+                  5:            "Command used to list commands."
+                }
+

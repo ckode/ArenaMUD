@@ -38,3 +38,13 @@ def Say(player, line):
 def Emote(player, line):
     player.sendToRoom(minionDefines.BLUE + player.name + " " + line)
     player.sendLine(minionDefines.BLUE + player.name + " " + line + minionDefines.WHITE)
+
+################################################
+# Command -> Help
+################################################
+def Help(player):
+    width = 10
+    for command in minionDefines.COMMANDS.keys():
+        fill = width - (len(command) + 1)
+        player.sendLine(minionDefines.MAGENTA + "   " + " " * fill + command + minionDefines.WHITE +  " => " +
+                minionDefines.COMMAND_DEFS[minionDefines.COMMANDS[command]])

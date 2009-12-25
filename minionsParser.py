@@ -1,4 +1,4 @@
-import minionDefines, minionsCommands
+import minionDefines, minionsCommands, minionsDB
 
 import re, string
 
@@ -23,6 +23,8 @@ def commandParser(player, line):
         minionsCommands.Who(player)
     elif cmd[0].lower() == "emote":       
         minionsCommands.Emote(player, line[(len(cmd[0]) + 1):])
+    elif cmd[0].lower() == "help":
+        minionsCommands.Help(player)
     else:  # Say it to the room
         minionsCommands.Say(player, line)
 
@@ -52,6 +54,9 @@ def CleanPlayerInput(line):
 # This expedites all dialog when player isn't *playing*
 #############################################################
 def NotPlayingDialog(player, line):
+    if player.STATUS == minionDefines.LOGIN:
+        LoginPlayer(player, line)
+        return
     # Get player login name
     if player.STATUS == minionDefines.GETNAME:
         GetPlayerName(player, line)
@@ -83,6 +88,28 @@ def GetPlayerName(player, line):
 def GetPlayerPassword(player, line):
         player.Shout(minionDefines.BLUE + player.name + " has joined.")
         player.STATUS = minionDefines.PLAYING
-        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "\r\n" )
+        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
         return
 
+###############################################
+# LoginPlayer()
+#
+# Ask for username or new
+###############################################
+def LoginPlayer(player, line):
+    if line == "":
+       player.transport.write('Enter your username or type "' + minionDefines.LYELLOW + 'new' + minionDefines.WHITE + '": ')
+       return
+    else:
+       if line != "new":
+          pid = minionsDB.GetUserID(line)
+          if pid != 0:
+              player.playerid     = pid
+              player.name         = line
+              player.STATUS       = minionDefines.GETPASSWORD
+              player.transport.write("Enter your password: ")
+          else:
+              player.transport.write("Player not found, hit Enter and try again.")
+       else:
+          player.STATUS           = minionDefines.GETNAME
+          player.transport.write("Enter the name you would like to go by: ")
