@@ -20,7 +20,6 @@ class Users(LineReceiver):
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
             self.disconnectClient()
-        self.transport.write("Current Connections: " + str(len(self.factory.players)) + "\n\r")
         minionsPlayer.createPlayer(self)
 
 
@@ -28,7 +27,7 @@ class Users(LineReceiver):
     def disconnectClient(self):
         self.sendLine("Goodbye")
         self.factory.players.remove(self)
-        self.factory.sendMessageToAllClients(self.name + " has quit.")
+        self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " has quit.")
         self.transport.loseConnection()
 
     def lineReceived(self, line):
@@ -40,15 +39,32 @@ class Users(LineReceiver):
         self.sendToPlayer("You say, " + line)
 
     def sendToPlayer(self, line):
-        self.sendLine(line)
+        self.sendLine(line + minionDefines.WHITE)
 
-    # Send to everyone in room
+    ################################################
+    # Send to everyone in current room
+    ################################################
     def sendToRoom(self, line):
         for player in self.factory.players:
-            if player == self:
-                self.say(line)
+            if player == self and player.STATUS == minionDefines.PLAYING:
+                pass #self.say(line)
             else:
-                player.sendToPlayer(self.name + " says, " + line)
+                if player.STATUS == minionDefines.PLAYING:
+                    player.sendToPlayer(line)
+                    
+    ################################################
+    # Shout to everyone                            #
+    ################################################
+    def Shout(self, line):
+        for player in self.factory.players:
+           if player.STATUS == minionDefines.PLAYING:
+               player.sendToPlayer(line + minionDefines.WHITE)
+
+
+
+
+
+
 
 class SonzoFactory(ServerFactory):
     protocol = Users
@@ -58,7 +74,8 @@ class SonzoFactory(ServerFactory):
  
     def sendMessageToAllClients(self, mesg): 
         for client in self.players:
-            client.sendLine(mesg)
+            if client.STATUS == minionDefines.PLAYING:
+                client.sendLine(mesg + minionDefines.WHITE)
 
 
 

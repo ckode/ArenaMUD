@@ -1,4 +1,5 @@
-# Game Status defines
+import string
+# Game player status defines
 LOGOUT           = 0
 LOGIN            = 1
 GETNAME          = 2
@@ -7,9 +8,11 @@ GETPASSWORD      = 4
 NEW              = 5
 EDIT             = 50
 
+# All allowable printable characters (and BACKSPACE!)
+PRINTABLE_CHARS = string.printable + chr(0x08)
 
-#ANSI
-
+#############ANSI defines################
+#          Foreground Colors
 RESET              = chr(27) + "[0m"
 BOLD               = chr(27) + "[1m"
 ITALIC             = chr(27) + "[3m"
@@ -29,15 +32,15 @@ BLUE               = chr(27) + "[34m"
 MAGENTA            = chr(27) + "[35m"
 CYAN               = chr(27) + "[36m"
 WHITE              = chr(27) + "[37m"
-
-LRED                = chr(27) + "[1;31m"
-LGREEN              = chr(27) + "[1;32m"
-LYELLOW             = chr(27) + "[1;33m"
-LBLUE               = chr(27) + "[1;34m"
-LMAGENTA            = chr(27) + "[1;35m"
-LCYAN               = chr(27) + "[1;36m"
-
 DEFAULT            = chr(27) + "[39m"
+#        Light Foreground Colors
+LRED               = chr(27) + "[1;31m"
+LGREEN             = chr(27) + "[1;32m"
+LYELLOW            = chr(27) + "[1;33m"
+LBLUE              = chr(27) + "[1;34m"
+LMAGENTA           = chr(27) + "[1;35m"
+LCYAN              = chr(27) + "[1;36m"
+#          Background Colors
 B_BLACK            = chr(27) + "[40m"
 B_RED              = chr(27) + "[41m"
 B_GREEN            = chr(27) + "[42m"
