@@ -16,7 +16,7 @@ import sys
 class Users(StatefulTelnetProtocol):
     playerid           = None
     name               = ""
-    lastname           = " "
+    lastname           = ""
     password           = ""
     strength           = 0
     agility            = 0
@@ -44,7 +44,7 @@ class Users(StatefulTelnetProtocol):
 
     def connectionMade(self):
         
-        self.factory.players.append(self)
+
         # Limit how many can connect at one time
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
@@ -61,8 +61,11 @@ class Users(StatefulTelnetProtocol):
         self.transport.loseConnection()
 
     def connectionLost(self, reason):
-        self.factory.players.remove(self)
-        self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " has quit.")
+        # If player hungup, disconnectClient() didn't remove the user, remove them now
+        if self in self.factory.players:
+            self.factory.players.remove(self)
+        if self.name != "":
+            self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just hung up!")
 
     def lineReceived(self, line):
         minionsParser.commandParser(self, line)
