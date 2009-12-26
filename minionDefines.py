@@ -5,7 +5,8 @@ LOGIN            = 1
 GETNAME          = 2
 PLAYING          = 3
 GETPASSWORD      = 4
-NEW              = 5
+COMPAREPASSWORD  = 5
+NEW              = 6
 EDIT             = 50
 
 # All allowable printable characters (and BACKSPACE!)
