@@ -2,6 +2,10 @@ import minionDefines, minionsCommands, minionsDB
 
 import re, string
 
+def printthis(line):
+    print line
+def printtwo(line, line2):
+    print line + " " + line2
 
 def commandParser(player, line):
     # Clean players input
@@ -12,7 +16,44 @@ def commandParser(player, line):
         NotPlayingDialog(player, line)
         return
 
+    commands = { '/quit': minionsCommands.Quit,
+                 'gossip': minionsCommands.Gossip,
+                 'emote': minionsCommands.Emote,
+                 'who': minionsCommands.Who,
+                 'set': minionsCommands.Set,
+                 'help': minionsCommands.Help
+               }
     cmd = line.split()
+    if len(cmd) == 0:
+       return
+    cmdstr = re.compile(cmd[0].lower())
+    for each in commands.keys():
+       if cmdstr.match(each):
+          # Gossip command
+          if each == "gossip":
+             commands[each](player, line[(len(cmd[0]) + 1):])
+             return
+          # Who command
+          elif each == "who":
+             commands[each](player)
+             return
+          elif each == "emote":
+             commands[each](player, line[(len(cmd[0]) + 1):])
+             return
+          elif each == "help":
+             commands[each](player)
+             return
+          elif each == "set":
+             command[each](player, line[(len(cmd[0]) + 1):])
+             return
+          elif each == "/quit":
+             command[each](player)
+             return
+
+    minionsCommands.Say(player, line)
+    return
+
+
     if len(cmd) == 0: # or cmd[0] == chr(0x0D):
         pass
     elif cmd[0].lower() == "/quit":
@@ -81,7 +122,6 @@ def GetPlayerName(player, line):
     name = line[0]
     player.name = name.capitalize()
     pid = minionsDB.GetUserID(player.name)
-    print pid
     if pid > 0:
        player.transport.write("Username already exist, try again: ")
     else:
@@ -101,6 +141,7 @@ def ComparePassword(player, line):
        player.Shout(minionDefines.BLUE + player.name + " has joined.")
        player.STATUS = minionDefines.PLAYING
        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+       player.factory.players.append(player)
        return
     else:
        player.transport.write("Incorrect password, enter a password: ")
@@ -118,6 +159,7 @@ def SetPassword(player, line):
         player.Shout(minionDefines.BLUE + player.name + " has joined.")
         player.password = line
         player.playerid = minionsDB.CreatePlayer(player)
+        player.factory.players.append(player)
         player.STATUS = minionDefines.PLAYING
         player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
         return
