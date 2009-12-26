@@ -1,6 +1,6 @@
 CREATE TABLE players (
     id                INTEGER PRIMARY KEY,
-    name              VARCHAR(15) NOT NULL,
+    name              VARCHAR(15) NOT NULL UNIQUE,
     lastname          VARCHAR(20) NOT NULL,
     passwd            VARCHAR(20) NOT NULL,
     hp                INTEGER NOT NULL,

@@ -1,9 +1,10 @@
-from twisted.internet.protocol import Protocol, Factory
-from twisted.protocols.basic import LineReceiver
 from twisted.internet.protocol import ServerFactory
 from twisted.internet import defer
 from twisted.python import failure, util
 from twisted.internet import reactor
+from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
+
+
 import minionsParser, minionsPlayer, minionDefines
 
 import sys
@@ -12,7 +13,7 @@ import sys
 
 
 
-class Users(LineReceiver):
+class Users(StatefulTelnetProtocol):
     playerid           = None
     name               = ""
     lastname           = ""
@@ -52,6 +53,8 @@ class Users(LineReceiver):
         minionsParser.LoginPlayer(self, "")
 
 
+#    def cbLineMode(self):
+#           self.factory.requestNegotiate(LINEMODE, LINEMODE_MODE + '\0')
 
     def disconnectClient(self):
         self.sendLine("Goodbye")
@@ -99,12 +102,10 @@ class Users(LineReceiver):
 
 
 class SonzoFactory(ServerFactory):
-    protocol = Users
-
     def __init__(self):
         self.players = []
  
-    def sendMessageToAllClients(self, mesg): 
+    def sendMessageToAllClients(self, mesg):
         for client in self.players:
             if client.STATUS == minionDefines.PLAYING:
                 client.sendLine(mesg + minionDefines.WHITE)
@@ -114,5 +115,9 @@ class SonzoFactory(ServerFactory):
 #Create server factory
 factory = SonzoFactory()
 # Start listener on port 23 (telnet)
+factory.protocol = lambda: TelnetTransport(Users)
+#application = Application("Minions MUD Server")
+#MinionsMUD = TCPServer(23, factory)
+#MinionsMUD.setServiceParent(application)
 reactor.listenTCP(23, factory)
 reactor.run()
