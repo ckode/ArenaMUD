@@ -53,12 +53,12 @@ def commandParser(player, line):
              continue
           elif each == "set":
              if len(cmd[0]) == 3:
-                command[each](player, line[(len(cmd[0]) + 1):])
+                commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue
           elif each == "/quit":
              if len(cmd[0]) > 1:
-                command[each](player)
+                commands[each](player)
                 return
              continue
 
