@@ -8,6 +8,5 @@ def Logit(LogData):
     except:
         print "Failed to open logfile!"
         
-    f.write(LogData + "\r\n")
+    f.write(LogData + "\n")
     f.close()
-    
