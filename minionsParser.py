@@ -31,24 +31,36 @@ def commandParser(player, line):
        if cmdstr.match(each):
           # Gossip command
           if each == "gossip":
-             commands[each](player, line[(len(cmd[0]) + 1):])
-             return
+             if len(cmd[0]) > 2 and len(cmd) > 1:
+                commands[each](player, line[(len(cmd[0]) + 1):])
+                return
+             continue
           # Who command
           elif each == "who":
-             commands[each](player)
-             return
+             if len(cmd[0]) == 3 and len(cmd) == 1:
+                commands[each](player)
+                return
+             continue
           elif each == "emote":
-             commands[each](player, line[(len(cmd[0]) + 1):])
-             return
+             if len(cmd[0]) > 2 and len(cmd) > 1:
+                commands[each](player, line[(len(cmd[0]) + 1):])
+                return
+             continue
           elif each == "help":
-             commands[each](player)
-             return
+             if len(cmd) == 1 and len(cmd[0]) == 4:
+                commands[each](player)
+                return
+             continue
           elif each == "set":
-             command[each](player, line[(len(cmd[0]) + 1):])
-             return
+             if len(cmd[0]) == 3:
+                command[each](player, line[(len(cmd[0]) + 1):])
+                return
+             continue
           elif each == "/quit":
-             command[each](player)
-             return
+             if len(cmd[0]) > 1:
+                command[each](player)
+                return
+             continue
 
     minionsCommands.Say(player, line)
     return
