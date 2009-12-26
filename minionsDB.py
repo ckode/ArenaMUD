@@ -1,11 +1,12 @@
-import sqlite3, minionsLog
+import sqlite3, string
+import minionsLog
 
 ################################################
 # LoadPlayer()
 #
 # Loads player from database
 ################################################
-def LoadPlayer(player, name):
+def LoadPlayer(player):
     global DB
     try:
         conn     = sqlite3.connect('minions.db')
@@ -19,8 +20,12 @@ def LoadPlayer(player, name):
     except:
         minionsLog.Logit("Failed to get player data from the database.")
     row = cur.fetchone()
-    player.lastname = row[2]
-    player.password = row[3]
+    #if row[2] == None:
+    #   player.lastname = " "
+    #else:
+    #   player.lastname = row[2]
+    player.lastname = str(row[2])
+    player.password = str(row[3])
     player.hp       = row[4]
     player.mana     = row[5]
     player.mr       = row[6]
@@ -110,3 +115,48 @@ def CreatePlayer(player):
     uid = cur.fetchone()[0]
     conn.close()
     return uid
+    
+#################################################
+# ChangePassword()
+#
+# Changes players password
+#################################################
+def ChangePassword(name, password):
+    global DB
+
+    try:
+        conn     = sqlite3.connect('minions.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+
+    try:
+        cur.execute( "UPDATE players SET passwd=? WHERE name =?", (password, name))
+        conn.commit()
+    except:
+        minionsLog.Logit("Failed to update users password from the database where user was: %s" % (name,))
+    conn.close()
+
+#################################################
+# ChangeLastname()
+#
+# Changes players Lastname
+#################################################
+def ChangeLastname(name, lastname):
+    global DB
+
+    try:
+        conn     = sqlite3.connect('minions.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+
+    try:
+        cur.execute( "UPDATE players SET lastname=? WHERE name =?", (lastname, name))
+        conn.commit()
+    except:
+        minionsLog.Logit("Failed to update users lastname from the database where user was: %s" % (name,))
+    conn.close()
+

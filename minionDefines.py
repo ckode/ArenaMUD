@@ -58,7 +58,9 @@ COMMANDS =       { '/quit':        0,
                    'gossip':       2,
                    'say':          3,
                    'emote':        4,
-                   'help':         5
+                   'help':         5,
+                   'set password': 6,
+                   'set lastname': 7
                  }
 
 ########### Command List ################
@@ -67,6 +69,8 @@ COMMAND_DEFS  = { 0:            "Disconnect from the game.",
                   2:            "Used to gossip to everyone in the game.",
                   3:            "Use to say something or just type your mesage.",
                   4:            "Used to make your own action.",
-                  5:            "Command used to list commands."
+                  5:            "Command used to list commands.",
+                  6:            "Change password: 'set password <password>'",
+                  7:            "Change lastname: 'set lastname <lastname>'"
                 }
 

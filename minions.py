@@ -5,7 +5,7 @@ from twisted.internet import reactor
 from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 
 
-import minionsParser, minionsPlayer, minionDefines
+import minionsParser, minionsPlayer, minionDefines, minionsLog
 
 import sys
 
@@ -16,7 +16,7 @@ import sys
 class Users(StatefulTelnetProtocol):
     playerid           = None
     name               = ""
-    lastname           = ""
+    lastname           = " "
     password           = ""
     strength           = 0
     agility            = 0
@@ -53,8 +53,6 @@ class Users(StatefulTelnetProtocol):
         minionsParser.LoginPlayer(self, "")
 
 
-#    def cbLineMode(self):
-#           self.factory.requestNegotiate(LINEMODE, LINEMODE_MODE + '\0')
 
     def disconnectClient(self):
         self.sendLine("Goodbye")

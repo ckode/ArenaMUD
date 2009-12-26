@@ -25,6 +25,8 @@ def commandParser(player, line):
         minionsCommands.Emote(player, line[(len(cmd[0]) + 1):])
     elif cmd[0].lower() == "help":
         minionsCommands.Help(player)
+    elif cmd[0].lower() == "set":
+        minionsCommands.Set(player, line[(len(cmd[0]) + 1):])
     else:  # Say it to the room
         minionsCommands.Say(player, line)
 
@@ -95,6 +97,7 @@ def GetPlayerName(player, line):
 ###############################################
 def ComparePassword(player, line):
     if line == minionsDB.GetPassword(player.name):
+       minionsDB.LoadPlayer(player)
        player.Shout(minionDefines.BLUE + player.name + " has joined.")
        player.STATUS = minionDefines.PLAYING
        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
