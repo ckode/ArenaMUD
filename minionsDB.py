@@ -44,12 +44,16 @@ def GetUserID(name):
         player.Shutdown()
 
     try:
-        cur.execute( "SELECT id from players where name=?", (name,))
+        cur.execute( "SELECT id from players where name=?", (name,) )
     except:
         minionsLog.Logit("Failed to get users ID from the database.")
 
+    try:
+        uid = cur.fetchone()[0]
+    except:
+        return 0
     conn.close()
-    return cur.rowcount
+    return uid
 
 
 

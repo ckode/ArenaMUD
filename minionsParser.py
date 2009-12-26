@@ -66,7 +66,7 @@ def NotPlayingDialog(player, line):
         ComparePassword(player, line)
         return
     elif player.STATUS == minionDefines.GETPASSWORD:
-        GetPassword(player, line)
+        SetPassword(player, line)
         return
 
 ###############################################
@@ -78,8 +78,13 @@ def GetPlayerName(player, line):
     line = line.split()
     name = line[0]
     player.name = name.capitalize()
-    player.STATUS = minionDefines.GETPASSWORD
-    player.transport.write("Enter your password: ")
+    pid = minionsDB.GetUserID(player.name)
+    print pid
+    if pid > 0:
+       player.transport.write("Username already exist, try again: ")
+    else:
+       player.STATUS = minionDefines.GETPASSWORD
+       player.transport.write("Enter your password: ")
     return
 
 
@@ -98,16 +103,17 @@ def ComparePassword(player, line):
        player.transport.write("Incorrect password, enter a password: ")
 
 ###############################################
-# GetPassword()
+# SetPassword()
 #
-# Gets new player's password
+# Sets new player's password
 ###############################################
-def GetPassword(player, line):
+def SetPassword(player, line):
      if line == "":
         player.transport.write("Blank passwords not allowed, enter a password: ")
         return
      else:
         player.Shout(minionDefines.BLUE + player.name + " has joined.")
+        player.password = line
         player.playerid = minionsDB.CreatePlayer(player)
         player.STATUS = minionDefines.PLAYING
         player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
@@ -126,8 +132,8 @@ def LoginPlayer(player, line):
           line = line.split()
           name = line[0]
           name = name.capitalize()
-          pid = minionsDB.GetUserID(player.name)
-          if pid != 0:
+          pid = minionsDB.GetUserID(name)
+          if pid > 0:
               player.playerid     = pid
               player.name         = name
               player.STATUS       = minionDefines.COMPAREPASSWORD
