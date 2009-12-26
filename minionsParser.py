@@ -62,8 +62,11 @@ def NotPlayingDialog(player, line):
         GetPlayerName(player, line)
         return
     # Get player password
+    elif player.STATUS == minionDefines.COMPAREPASSWORD:
+        ComparePassword(player, line)
+        return
     elif player.STATUS == minionDefines.GETPASSWORD:
-        GetPlayerPassword(player, line)
+        GetPassword(player, line)
         return
 
 ###############################################
@@ -72,32 +75,43 @@ def NotPlayingDialog(player, line):
 # Get player name at logon and ask for password
 ###############################################
 def GetPlayerName(player, line):
-        line = line.split()
-        name = line[0]
-        player.name = name.capitalize()
-        player.STATUS = minionDefines.GETPASSWORD
-        player.transport.write("Enter your password: ")
-        return
-        
+    line = line.split()
+    name = line[0]
+    player.name = name.capitalize()
+    player.STATUS = minionDefines.GETPASSWORD
+    player.transport.write("Enter your password: ")
+    return
+
 
 ###############################################
-# GetPlayerPassword()
+# ComparePassword()
 #
 # Get player password at logon and log them in
 ###############################################
-def GetPlayerPassword(player, line):
-        if line == "":
-           player.transport.write("Blank passwords not allowed, enter a password: ")
-           return
-        if line == minionsDB.GetPassword(player.name):
-           player.Shout(minionDefines.BLUE + player.name + " has joined.")
-           player.playerid = minionsDB.CreatePlayer(player)
-           player.STATUS = minionDefines.PLAYING
-           player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
-           return
-        else:
-           player.transport.write("Incorrect password, enter a password: ")
+def ComparePassword(player, line):
+    if line == minionsDB.GetPassword(player.name):
+       player.Shout(minionDefines.BLUE + player.name + " has joined.")
+       player.STATUS = minionDefines.PLAYING
+       player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+       return
+    else:
+       player.transport.write("Incorrect password, enter a password: ")
 
+###############################################
+# GetPassword()
+#
+# Gets new player's password
+###############################################
+def GetPassword(player, line):
+     if line == "":
+        player.transport.write("Blank passwords not allowed, enter a password: ")
+        return
+     else:
+        player.Shout(minionDefines.BLUE + player.name + " has joined.")
+        player.playerid = minionsDB.CreatePlayer(player)
+        player.STATUS = minionDefines.PLAYING
+        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+        return
 ###############################################
 # LoginPlayer()
 #
@@ -116,7 +130,7 @@ def LoginPlayer(player, line):
           if pid != 0:
               player.playerid     = pid
               player.name         = name
-              player.STATUS       = minionDefines.GETPASSWORD
+              player.STATUS       = minionDefines.COMPAREPASSWORD
               player.transport.write("Enter your password: ")
           else:
               player.transport.write("Player not found, hit Enter and try again.")
