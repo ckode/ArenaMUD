@@ -60,6 +60,10 @@ class Users(StatefulTelnetProtocol):
         self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " has quit.")
         self.transport.loseConnection()
 
+    def connectionLost(self, reason):
+        self.factory.players.remove(self)
+        self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " has quit.")
+
     def lineReceived(self, line):
         minionsParser.commandParser(self, line)
         #self.say(line)
