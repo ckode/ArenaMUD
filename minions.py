@@ -6,6 +6,8 @@ from twisted.python import failure, util
 from twisted.internet import reactor
 import minionsParser, minionsPlayer, minionDefines
 
+import sys
+
 
 
 
@@ -14,6 +16,7 @@ class Users(LineReceiver):
     playerid           = None
     name               = ""
     lastname           = ""
+    password           = ""
     strength           = 0
     agility            = 0
     intelligence       = 0
@@ -25,6 +28,7 @@ class Users(LineReceiver):
     mr                 = 0
     stealth            = 0
     weight             = 0
+    room               = 0
     holding            = {}
     wearing            = { 'arms':         None,
                            'head':         None,
@@ -86,6 +90,9 @@ class Users(LineReceiver):
                player.sendToPlayer(line + minionDefines.WHITE)
 
 
+    def Shutdown(self):
+        self.reactor.stop()
+        #sys.exit()
 
 
 

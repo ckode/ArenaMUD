@@ -35,8 +35,6 @@ def commandParser(player, line):
 # and properly applying deletes by backspacing
 #############################################################
 def CleanPlayerInput(line):
-    # Remove all unprintable characters except BACKSPACE
-    line = filter(lambda x: x in minionDefines.PRINTABLE_CHARS, line)
     #Delete characters before backspaces
     pos = 0
     lineSize = len(line)
@@ -46,7 +44,9 @@ def CleanPlayerInput(line):
           newline = newline[:-1]
        else:
           newline += character
-    return newline
+    # Remove all unprintable characters
+    line = filter(lambda x: x in string.printable, newline)
+    return line
 
 #############################################################
 # NotPlayingDialog()
@@ -87,6 +87,7 @@ def GetPlayerName(player, line):
 ###############################################
 def GetPlayerPassword(player, line):
         player.Shout(minionDefines.BLUE + player.name + " has joined.")
+        player.playerid = minionsDB.CreatePlayer(player)
         player.STATUS = minionDefines.PLAYING
         player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
         return
