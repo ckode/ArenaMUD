@@ -4,6 +4,9 @@ from twisted.python import failure, util
 from twisted.internet import reactor
 from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 
+
+import minionsParser, minionsPlayer, minionDefines
+
 import minionsParser, minionsPlayer, minionDefines, minionsLog
 import minionsRooms, minionsDB
 
@@ -44,7 +47,8 @@ class Users(StatefulTelnetProtocol):
         
 
         # Limit how many can connect at one time
-        print str(self.transport.getPeer()[1]) + " CONNECTED!"
+        #print str(self.transport.host) + " CONNECTED!"
+        print "Connected"
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
             self.disconnectClient()
@@ -109,10 +113,11 @@ class Users(StatefulTelnetProtocol):
 
 class SonzoFactory(ServerFactory):
     def __init__(self):
+
         self.players = []
         self.RoomList = {}
         minionsDB.LoadRooms(self)
- 
+
     def sendMessageToAllClients(self, mesg):
         for client in self.players:
             if client.STATUS == minionDefines.PLAYING:
@@ -125,5 +130,6 @@ class SonzoFactory(ServerFactory):
 factory = SonzoFactory()
 # Start listener on port 23 (telnet)
 factory.protocol = lambda: TelnetTransport(Users)
+#factory.protocol = lambda: TelnetTransport(Users)
 reactor.listenTCP(23, factory)
 reactor.run()
