@@ -1,6 +1,6 @@
 INSERT INTO rooms (id, name, description, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_n, exit_u, exit_d, exits)
         values ( 1,
-                 "Town Sqaure",
+                 "Town Square",
                  "This is the middle of the freaking town!  You see trash piled up everywhere because this town is a slum!",
                  0,
                  0,

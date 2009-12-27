@@ -1,7 +1,28 @@
-import minionDefines, minionsDB, minionsLog
+import minionDefines, minionsDB, minionsLog, minionsCommands
 
 
+################################################
+# Command Up
+################################################
+def Up(player):
+   NewRoom = player.factory.RoomList[player.room].U
+   if NewRoom != 0:
+      player.room = NewRoom
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit up!" + minionDefine.WHITE)
 
+
+################################################
+# Command Down
+################################################
+def Down(player):
+   NewRoom = player.factory.RoomList[player.room].D
+   if NewRoom != 0:
+      player.room = NewRoom
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit down!" + minionDefine.WHITE)
 ################################################
 # Command -> QUIT
 ################################################
@@ -56,7 +77,7 @@ def Look(player, RoomNum):
    Room = player.factory.RoomList[RoomNum]
    player.sendLine(minionDefines.LCYAN + Room.Name)
    player.sendLine(minionDefines.DEFAULT + Room.Description)
-   player.sendLine(minionDefines.GREEN + "Obvious exits: " + Room.exits)
+   player.sendLine(minionDefines.GREEN + "Obvious exits: " + Room.exits + minionDefines.WHITE)
 ################################################
 # Command -> Set <property>
 ################################################
