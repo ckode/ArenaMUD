@@ -27,7 +27,9 @@ def commandParser(player, line):
                  'help':     minionsCommands.Help,
                  'look':     minionsCommands.Look,
                  'down':     minionsCommands.Down,
-                 'up':       minionsCommands.Up
+                 'up':       minionsCommands.Up,
+                 'rofl':     minionsCommands.Rofl,
+                 'wtf':      minionsCommands.Wtf
                }
     cmd = line.split()
     if len(cmd) == 0:
@@ -73,6 +75,16 @@ def commandParser(player, line):
           # Quit command
           elif each == "/quit":
              if len(cmd[0]) > 1:
+                commands[each](player)
+                return
+             continue
+          elif each == "rofl":
+             if len(cmd) == 1 and len(cmd[0]) == 4:
+                commands[each](player)
+                return
+             continue
+          elif each == "wtf":
+             if len(cmd) == 1 and len(cmd[0]) == 3:
                 commands[each](player)
                 return
              continue

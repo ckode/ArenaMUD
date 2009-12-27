@@ -10,7 +10,7 @@ def Up(player):
       player.room = NewRoom
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit up!" + minionDefine.WHITE)
+      player.sendLine(minionDefines.BLUE + "There is no exit up!" + minionDefines.WHITE)
 
 
 ################################################
@@ -22,7 +22,7 @@ def Down(player):
       player.room = NewRoom
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit down!" + minionDefine.WHITE)
+      player.sendLine(minionDefines.BLUE + "There is no exit down!" + minionDefines.WHITE)
 ################################################
 # Command -> QUIT
 ################################################
@@ -69,6 +69,19 @@ def Help(player):
         fill = width - (len(command) + 1)
         player.sendLine(minionDefines.MAGENTA + "   " + " " * fill + command + minionDefines.WHITE +  " => " +
                 minionDefines.COMMAND_DEFS[minionDefines.COMMANDS[command]])
+
+################################################
+# Command -> Rofl
+################################################
+def Rofl(player):
+    player.sendToRoom(minionDefines.GREEN + player.name + " rolls on the floor laughing!" + minionDefines.WHITE)
+    player.sendLine(minionDefines.GREEN + "You roll on the floor laughing!" + minionDefines.WHITE)
+################################################
+# Command -> Say
+################################################
+def Wtf(player):
+    player.sendToRoom(minionDefines.GREEN + player.name + " yells, What the fuck!" + minionDefines.WHITE)
+    player.sendLine(minionDefines.GREEN + "You yell, What the fuck!" + minionDefines.WHITE)
 
 ################################################
 # Command -> Look

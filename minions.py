@@ -36,7 +36,7 @@ class Users(StatefulTelnetProtocol):
                            'r_finger':     None,
                            'legs':         None,
                            'neck':         None,
-                           'feet':         None
+                           'feet':         None,
                          }
 
 
@@ -44,6 +44,7 @@ class Users(StatefulTelnetProtocol):
         
 
         # Limit how many can connect at one time
+        print "CONNECT!"
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
             self.disconnectClient()
