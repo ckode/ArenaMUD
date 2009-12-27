@@ -50,6 +50,14 @@ def Help(player):
                 minionDefines.COMMAND_DEFS[minionDefines.COMMANDS[command]])
 
 ################################################
+# Command -> Look
+################################################
+def Look(player, RoomNum):
+   Room = player.factory.RoomList[RoomNum]
+   player.sendLine(minionDefines.LCYAN + Room.Name)
+   player.sendLine(minionDefines.DEFAULT + Room.Description)
+   player.sendLine(minionDefines.GREEN + "Obvious exits: " + Room.exits)
+################################################
 # Command -> Set <property>
 ################################################
 def Set(player, line):

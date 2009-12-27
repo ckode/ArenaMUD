@@ -1,6 +1,8 @@
 import minionDefines, minionsCommands, minionsDB
+import minionsRooms
 
 import re, string
+from time import strftime, localtime
 
 def printthis(line):
     print line
@@ -21,7 +23,8 @@ def commandParser(player, line):
                  'emote': minionsCommands.Emote,
                  'who': minionsCommands.Who,
                  'set': minionsCommands.Set,
-                 'help': minionsCommands.Help
+                 'help': minionsCommands.Help,
+                 'look': minionsCommands.Look
                }
     cmd = line.split()
     if len(cmd) == 0:
@@ -35,53 +38,61 @@ def commandParser(player, line):
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue
-          # Who command
+          # Who command (who typed by itself)
           elif each == "who":
              if len(cmd[0]) == 3 and len(cmd) == 1:
                 commands[each](player)
                 return
              continue
+          # Emote command
           elif each == "emote":
              if len(cmd[0]) > 2 and len(cmd) > 1:
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue
+          # Help command (help typed by itself)
           elif each == "help":
              if len(cmd) == 1 and len(cmd[0]) == 4:
                 commands[each](player)
                 return
              continue
+          # Set command
           elif each == "set":
              if len(cmd[0]) == 3:
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue
+          elif each == "look":
+             if len(cmd) == 1:
+                commands[each](player, player.room)
+                return
+          # Quit command
           elif each == "/quit":
              if len(cmd[0]) > 1:
                 commands[each](player)
                 return
              continue
-
+    # No command found so say it to the room
     minionsCommands.Say(player, line)
     return
 
 
-    if len(cmd) == 0: # or cmd[0] == chr(0x0D):
-        pass
-    elif cmd[0].lower() == "/quit":
-        minionsCommands.Quit(player)
-    elif cmd[0].lower() == "gos":
-        minionsCommands.Gossip(player, line[(len(cmd[0]) + 1):])
-    elif cmd[0].lower() == "who":
-        minionsCommands.Who(player)
-    elif cmd[0].lower() == "emote":       
-        minionsCommands.Emote(player, line[(len(cmd[0]) + 1):])
-    elif cmd[0].lower() == "help":
-        minionsCommands.Help(player)
-    elif cmd[0].lower() == "set":
-        minionsCommands.Set(player, line[(len(cmd[0]) + 1):])
-    else:  # Say it to the room
-        minionsCommands.Say(player, line)
+#    if len(cmd) == 0: # or cmd[0] == chr(0x0D):
+#        pass
+#    elif cmd[0].lower() == "/quit":
+#        minionsCommands.Quit(player)
+#    elif cmd[0].lower() == "gos":
+#        minionsCommands.Gossip(player, line[(len(cmd[0]) + 1):])
+#    elif cmd[0].lower() == "who":
+#        minionsCommands.Who(player)
+#    elif cmd[0].lower() == "emote":       
+#        minionsCommands.Emote(player, line[(len(cmd[0]) + 1):])
+#    elif cmd[0].lower() == "help":
+#        minionsCommands.Help(player)
+#    elif cmd[0].lower() == "set":
+#        minionsCommands.Set(player, line[(len(cmd[0]) + 1):])
+#    else:  # Say it to the room
+#        minionsCommands.Say(player, line)
 
 #############################################################
 # CleanPlayerInput()
@@ -154,6 +165,8 @@ def ComparePassword(player, line):
        player.STATUS = minionDefines.PLAYING
        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
        player.factory.players.append(player)
+       minionsCommands.Look(player, player.room)
+       print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
        return
     else:
        player.transport.write("Incorrect password, enter a password: ")
@@ -174,6 +187,9 @@ def SetPassword(player, line):
         player.factory.players.append(player)
         player.STATUS = minionDefines.PLAYING
         player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+        player.factory.RoomList[player.room]
+        minionsCommands.Look(player, player.room)
+        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " created an account and logged on."
         return
 ###############################################
 # LoginPlayer()

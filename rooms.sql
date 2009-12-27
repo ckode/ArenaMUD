@@ -1,0 +1,33 @@
+INSERT INTO rooms (id, name, description, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_n, exit_u, exit_d, exits)
+        values ( 1,
+                 "Town Sqaure",
+                 "This is the middle of the freaking town!  You see trash piled up everywhere because this town is a slum!",
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 2,
+                 "down.");
+
+INSERT INTO rooms (id, name, description, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_n, exit_u, exit_d, exits)
+        values ( 2,
+                 "Hole in the Ground",
+                 "This is a big hole in the ground where most of the towns people defecate.  It smells like shit!",
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 1,
+                 0,
+                 "up.");

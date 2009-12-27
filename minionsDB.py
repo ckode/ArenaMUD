@@ -1,5 +1,5 @@
 import sqlite3, string
-import minionsLog
+import minionsLog, minionsRooms
 
 ################################################
 # LoadPlayer()
@@ -30,6 +30,7 @@ def LoadPlayer(player):
     player.mana     = row[5]
     player.mr       = row[6]
     player.stealth  = row[7]
+    player.room     = row[8]
     conn.close()
 
        
@@ -93,7 +94,7 @@ def GetPassword(name):
 def CreatePlayer(player):
     global DB
     #return 0
-    data = [player.name, player.lastname, player.password, player.hp, player.mana, player.mr, player.stealth]
+    data = [player.name, player.lastname, player.password, player.hp, player.mana, player.mr, player.stealth, player.room]
 
     try:
         conn     = sqlite3.connect('minions.db')
@@ -103,7 +104,7 @@ def CreatePlayer(player):
         player.Shutdown()
     # Insert new player into the database
     try:
-        cur.execute( 'INSERT INTO players (name, lastname, passwd, hp, mana, mr, stealth) values (?, ?, ?, ?, ?, ?, ?)', data )
+        cur.execute( 'INSERT INTO players (name, lastname, passwd, hp, mana, mr, stealth, room) values (?, ?, ?, ?, ?, ?, ?, ?)', data )
         conn.commit()
     except:
         minionsLog.Logit("Failed to insert new player into player table!")
@@ -160,3 +161,40 @@ def ChangeLastname(name, lastname):
         minionsLog.Logit("Failed to update users lastname from the database where user was: %s" % (name,))
     conn.close()
 
+#################################################
+# LoadRooms()
+#
+# Load all rooms from the database
+#################################################
+def LoadRooms(Sonzo):
+    #global RoomList
+    global DB
+
+    try:
+        conn     = sqlite3.connect('minions.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM rooms")
+    except:
+        minionsLog.Logit("Failed to query database for room information!")
+    for row in cur:
+        Sonzo.RoomList[row[0]] = minionsRooms.Room()
+        Sonzo.RoomList[row[0]].RoomNum            = row[0]
+        Sonzo.RoomList[row[0]].Name               = str(row[1])
+        Sonzo.RoomList[row[0]].Description        = str(row[2])
+        Sonzo.RoomList[row[0]].N                  = row[3]
+        Sonzo.RoomList[row[0]].NE                 = row[4]
+        Sonzo.RoomList[row[0]].E                  = row[5]
+        Sonzo.RoomList[row[0]].SE                 = row[6]
+        Sonzo.RoomList[row[0]].S                  = row[7]
+        Sonzo.RoomList[row[0]].SW                 = row[8]
+        Sonzo.RoomList[row[0]].W                  = row[9]
+        Sonzo.RoomList[row[0]].NW                 = row[10]
+        Sonzo.RoomList[row[0]].U                  = row[11]
+        Sonzo.RoomList[row[0]].D                  = row[12]
+        Sonzo.RoomList[row[0]].exits              = str(row[13])
+
+    print "Loaded %d rooms." % (len(Sonzo.RoomList),)
