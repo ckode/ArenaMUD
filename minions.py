@@ -4,13 +4,11 @@ from twisted.python import failure, util
 from twisted.internet import reactor
 from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 
-
 import minionsParser, minionsPlayer, minionDefines, minionsLog
+import minionsRooms, minionsDB
 
-import sys
-
-
-
+import sys 
+from time import strftime, localtime
 
 
 class Users(StatefulTelnetProtocol):
@@ -29,7 +27,7 @@ class Users(StatefulTelnetProtocol):
     mr                 = 0
     stealth            = 0
     weight             = 0
-    room               = 0
+    room               = 1
     holding            = {}
     wearing            = { 'arms':         None,
                            'head':         None,
@@ -57,7 +55,8 @@ class Users(StatefulTelnetProtocol):
     def disconnectClient(self):
         self.sendLine("Goodbye")
         self.factory.players.remove(self)
-        self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " has quit.")
+        self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just logged off.")
+        print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just logged off."
         self.transport.loseConnection()
 
     def connectionLost(self, reason):
@@ -66,6 +65,7 @@ class Users(StatefulTelnetProtocol):
             self.factory.players.remove(self)
         if self.name != "":
             self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just hung up!")
+            print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just hung up!."
 
     def lineReceived(self, line):
         minionsParser.commandParser(self, line)
@@ -109,6 +109,8 @@ class Users(StatefulTelnetProtocol):
 class SonzoFactory(ServerFactory):
     def __init__(self):
         self.players = []
+        self.RoomList = {}
+        minionsDB.LoadRooms(self)
  
     def sendMessageToAllClients(self, mesg):
         for client in self.players:
@@ -117,12 +119,10 @@ class SonzoFactory(ServerFactory):
 
 
 
+
 #Create server factory
 factory = SonzoFactory()
 # Start listener on port 23 (telnet)
 factory.protocol = lambda: TelnetTransport(Users)
-#application = Application("Minions MUD Server")
-#MinionsMUD = TCPServer(23, factory)
-#MinionsMUD.setServiceParent(application)
 reactor.listenTCP(23, factory)
 reactor.run()
