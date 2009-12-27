@@ -60,7 +60,8 @@ COMMANDS =       { '/quit':        0,
                    'emote':        4,
                    'help':         5,
                    'set password': 6,
-                   'set lastname': 7
+                   'set lastname': 7,
+                   'look':         8
                  }
 
 ########### Command List ################
@@ -71,6 +72,7 @@ COMMAND_DEFS  = { 0:            "Disconnect from the game.",
                   4:            "Used to make your own action.",
                   5:            "Command used to list commands.",
                   6:            "Change password: 'set password <password>'",
-                  7:            "Change lastname: 'set lastname <lastname>'"
+                  7:            "Change lastname: 'set lastname <lastname>'",
+                  8:            "Allows you to look around the room."
                 }
 

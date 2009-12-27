@@ -7,7 +7,7 @@ from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 import minionsParser, minionsPlayer, minionDefines, minionsLog
 import minionsRooms, minionsDB
 
-import sys 
+import sys
 from time import strftime, localtime
 
 
@@ -65,7 +65,7 @@ class Users(StatefulTelnetProtocol):
             self.factory.players.remove(self)
         if self.name != "":
             self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just hung up!")
-            print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just hung up!."
+            print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just hung up!"
 
     def lineReceived(self, line):
         minionsParser.commandParser(self, line)

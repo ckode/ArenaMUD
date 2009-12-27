@@ -18,16 +18,20 @@ def commandParser(player, line):
         NotPlayingDialog(player, line)
         return
 
-    commands = { '/quit': minionsCommands.Quit,
-                 'gossip': minionsCommands.Gossip,
-                 'emote': minionsCommands.Emote,
-                 'who': minionsCommands.Who,
-                 'set': minionsCommands.Set,
-                 'help': minionsCommands.Help,
-                 'look': minionsCommands.Look
+    # Map (dict) for commands to corosponding function
+    commands = { '/quit':    minionsCommands.Quit,
+                 'gossip':   minionsCommands.Gossip,
+                 'emote':    minionsCommands.Emote,
+                 'who':      minionsCommands.Who,
+                 'set':      minionsCommands.Set,
+                 'help':     minionsCommands.Help,
+                 'look':     minionsCommands.Look,
+                 'down':     minionsCommands.Down,
+                 'up':       minionsCommands.Up
                }
     cmd = line.split()
     if len(cmd) == 0:
+       minionsCommands.Look(player, player.room)
        return
     cmdstr = re.compile(cmd[0].lower())
     for each in commands.keys():
@@ -69,6 +73,16 @@ def commandParser(player, line):
           # Quit command
           elif each == "/quit":
              if len(cmd[0]) > 1:
+                commands[each](player)
+                return
+             continue
+          elif each == "up":
+             if len(cmd) == 1:
+                commands[each](player)
+                return
+             continue
+          elif each == "down":
+             if len(cmd) == 1:
                 commands[each](player)
                 return
              continue
