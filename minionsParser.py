@@ -35,7 +35,8 @@ def commandParser(player, line):
     if len(cmd) == 0:
        minionsCommands.Look(player, player.room)
        return
-    cmdstr = re.compile(cmd[0].lower())
+
+    cmdstr = re.compile(re.escape(cmd[0].lower()))
     for each in commands.keys():
        if cmdstr.match(each):
           # Gossip command
