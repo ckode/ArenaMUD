@@ -44,7 +44,7 @@ class Users(StatefulTelnetProtocol):
         
 
         # Limit how many can connect at one time
-        print "CONNECT!"
+        print str(self.transport.getPeer()[1]) + " CONNECTED!"
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
             self.disconnectClient()
