@@ -5,6 +5,7 @@ from twisted.internet import reactor
 from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 
 
+
 import minionsParser, minionsPlayer, minionDefines
 
 import minionsParser, minionsPlayer, minionDefines, minionsLog
@@ -42,19 +43,77 @@ class Users(StatefulTelnetProtocol):
                            'feet':         None,
                          }
 
+    delimiter_list = { 1: '\n', 2: '\r\n', 3: '\r\000', 4: '\r\0' }
+    delimiter = ""
+    __buffer = ""
 
     def connectionMade(self):
-        
+
 
         # Limit how many can connect at one time
         #print str(self.transport.host) + " CONNECTED!"
         print "Connected"
+        self.enableLocal(chr(1))
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
             self.disconnectClient()
         self.STATUS = minionDefines.LOGIN
         minionsParser.LoginPlayer(self, "")
 
+
+
+
+
+    def dataReceived(self, data):
+        """Protocol.dataReceived.
+        Translates bytes into lines, and calls lineReceived (or
+        rawDataReceived, depending on mode.)
+        """
+        print str(len(data)) + " " + repr(data)
+#        for each in data:
+#           print repr(each)
+#           if each == '\r\000':
+#               print "Found 000"
+ #              data1 = '\r\n'
+ #          elif each == '\r\0':
+ #              print "Found r null"
+ #              data1 = '\r\n'
+ #          elif each == '\r':
+ #              print "Found just r"
+ #              data1 = '\n'
+ #          else:
+#               data1 = each
+#        data = data1
+        #if '\r\000' in data:
+        #   print "Swap!"
+        #elif '\r\n' in data:
+        #   print "got the rn"
+
+        self.__buffer = self.__buffer+data
+        for key, value in self.delimiter_list.items():
+           if value in data:
+              print key
+              self.delimiter = value
+
+
+        while self.line_mode and not self.paused:
+            try:
+                line, self.__buffer = self.__buffer.split(self.delimiter, 1)
+            except ValueError:
+                if len(self.__buffer) > self.MAX_LENGTH:
+                    line, self.__buffer = self.__buffer, ''
+                    return self.lineLengthExceeded(line)
+                break
+            else:
+                print repr(line)
+                linelength = len(line)
+                if linelength > self.MAX_LENGTH:
+                    exceeded = line + self.__buffer
+                    self.__buffer = ''
+                    return self.lineLengthExceeded(exceeded)
+                why = self.lineReceived(line)
+                if why or self.transport and self.transport.disconnecting:
+                    return why
 
 
     def disconnectClient(self):
@@ -76,7 +135,7 @@ class Users(StatefulTelnetProtocol):
         minionsParser.commandParser(self, line)
         #self.say(line)
 
-
+    #def keystrokeReceived(
     def say(self, line):
         self.sendToPlayer("You say, " + line)
 
