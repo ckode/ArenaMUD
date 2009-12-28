@@ -1,16 +1,16 @@
 from twisted.internet.protocol import ServerFactory
 from twisted.internet import defer
+# Twisted specific imports
 from twisted.python import failure, util
 from twisted.internet import reactor
 from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 
-
-
+# Minions specific imports
 import minionsParser, minionsPlayer, minionDefines
-
 import minionsParser, minionsPlayer, minionDefines, minionsLog
 import minionsRooms, minionsDB
 
+# default Python library imports
 import sys
 from time import strftime, localtime
 
@@ -44,8 +44,8 @@ class Users(StatefulTelnetProtocol):
                          }
 
     delimiter_list = { 1: '\n', 2: '\r\n', 3: '\r\000', 4: '\r\0' }
-    delimiter = ""
-    __buffer = ""
+#    delimiter = "\r\n"
+#    __buffer = ""
 
     def connectionMade(self):
 
@@ -61,59 +61,66 @@ class Users(StatefulTelnetProtocol):
         minionsParser.LoginPlayer(self, "")
 
 
+#"""
+#    def dataReceived(self, data):
+#        delimiter = """
+#        """Protocol.dataReceived.
+#        Translates bytes into lines, and calls lineReceived (or
+#        rawDataReceived, depending on mode.)
+#        """
+#        print str(len(data)) + " " + repr(data)
+#        data1 = ""
+#        print data
+#        for each in data:
+#           print str(len(each)) + " " + each
+#           if each == '\000':
+#               print "Found 000"
+#          #     data1 = '\n\r'
+#           elif each == chr(0):
+#               print "Found r null"
+#         #      data1 = '\n\r'
+#           elif each == chr(0):
+#               print "Found null"
+#               pass
+#           elif each == chr(13):
+#               print "Found just r"
+#               data1 = data1 + '\r\n'
+#           elif each == chr(10):
+#               print "Found just n"
+#               data1 = data1 + '\r\n'
+#           else:
+##        data = data1
 
-
-
-    def dataReceived(self, data):
-        """Protocol.dataReceived.
-        Translates bytes into lines, and calls lineReceived (or
-        rawDataReceived, depending on mode.)
-        """
-        print str(len(data)) + " " + repr(data)
 #        for each in data:
 #           print repr(each)
-#           if each == '\r\000':
-#               print "Found 000"
- #              data1 = '\r\n'
- #          elif each == '\r\0':
- #              print "Found r null"
- #              data1 = '\r\n'
- #          elif each == '\r':
- #              print "Found just r"
- #              data1 = '\n'
- #          else:
-#               data1 = each
-#        data = data1
-        #if '\r\000' in data:
-        #   print "Swap!"
-        #elif '\r\n' in data:
-        #   print "got the rn"
-
-        self.__buffer = self.__buffer+data
-        for key, value in self.delimiter_list.items():
-           if value in data:
-              print key
-              self.delimiter = value
-
-
-        while self.line_mode and not self.paused:
-            try:
-                line, self.__buffer = self.__buffer.split(self.delimiter, 1)
-            except ValueError:
-                if len(self.__buffer) > self.MAX_LENGTH:
-                    line, self.__buffer = self.__buffer, ''
-                    return self.lineLengthExceeded(line)
-                break
-            else:
-                print repr(line)
-                linelength = len(line)
-                if linelength > self.MAX_LENGTH:
-                    exceeded = line + self.__buffer
-                    self.__buffer = ''
-                    return self.lineLengthExceeded(exceeded)
-                why = self.lineReceived(line)
-                if why or self.transport and self.transport.disconnecting:
-                    return why
+#        self.__buffer = self.__buffer+data
+#        for key, value in self.delimiter_list.items():
+#           if value in data:
+#              print key
+#              delimiter = value
+#
+#
+#        while self.line_mode and not self.paused:
+#"""            try:
+#                print "DELIMITER: " + repr(delimiter)
+#                line, self.__buffer = self.__buffer.split(delimiter, 1)
+#                print "LINE: " + line + " BUFFER: " + self.__buffer
+#                delimiter = ""
+#            except ValueError:
+#                if len(self.__buffer) > self.MAX_LENGTH:
+#                    line, self.__buffer = self.__buffer, ''
+#                    return self.lineLengthExceeded(line)
+#                break
+#            else:
+#                #print "LINE: " + repr(line)
+#                linelength = len(line)
+#                if linelength > self.MAX_LENGTH:
+#                    exceeded = line + self.__buffer
+#                    self.__buffer = ''
+#                    return self.lineLengthExceeded(exceeded)
+#                why = self.lineReceived(line)
+#                if why or self.transport and self.transport.disconnecting:
+#                    return why     """
 
 
     def disconnectClient(self):
@@ -127,7 +134,6 @@ class Users(StatefulTelnetProtocol):
         # If player hungup, disconnectClient() didn't remove the user, remove them now
         if self in self.factory.players:
             self.factory.players.remove(self)
-        if self.name != "":
             self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just hung up!")
             print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just hung up!"
 
