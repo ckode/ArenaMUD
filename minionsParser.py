@@ -202,7 +202,7 @@ def ComparePassword(player, line):
        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
        player.factory.players[player.playerid] = player
        # Put player in current room
-       player.factory.RoomList[player.room].Players.append(player.playerid)
+       minionsRooms.RoomList[player.room].Players[player.playerid] = player.playerid
        minionsCommands.Look(player, player.room)
        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
        return
@@ -225,7 +225,7 @@ def SetPassword(player, line):
         player.playerid = minionsDB.CreatePlayer(player)
         player.factory.players[player.playerid] = player
         # Put player in current room
-        player.factory.RoomList[player.room].Players.append(player.playerid)
+        minionsRooms.RoomList[player.room].Players[player.playerid] = player.playerid
         player.STATUS = minionDefines.PLAYING
         player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
         minionsCommands.Look(player, player.room)

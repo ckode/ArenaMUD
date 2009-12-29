@@ -43,14 +43,10 @@ class Users(StatefulTelnetProtocol):
                            'feet':         None,
                          }
 
-    delimiter_list = { 1: '\n', 2: '\r\n', 3: '\r\000', 4: '\r\0' }
-#    delimiter = "\r\n"
-#    __buffer = ""
-
     def connectionMade(self):
         # Limit how many can connect at one time
-        #print str(self.transport.host) + " CONNECTED!"
-        print "Connected"
+        print self.transport.getPeer().host + " CONNECTED!"
+        #print "Connected"
         self.enableLocal(chr(1))
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
@@ -89,11 +85,12 @@ class Users(StatefulTelnetProtocol):
     # Send to everyone in current room
     ################################################
     def sendToRoom(self, line):
-        print "Total Rooms: " + str(len(self.factory.RoomList))
+        global RoomList
+        print "Total Rooms: " + str(len(minionsRooms.RoomList))
         print "Room Number: " + str(self.room)
-        print "Players in room: " + str(self.factory.RoomList[self.room].Players)
+        print "Players in room: " + str(minionsRooms.RoomList[self.room].Players)
 
-        for pid in self.factory.RoomList[self.room].Players:
+        for pid in minionsRooms.RoomList[self.room].Players:
             print str(pid)
             if self.factory.players[pid] == self:
                 pass
@@ -120,7 +117,7 @@ class Users(StatefulTelnetProtocol):
 
 class SonzoFactory(ServerFactory):
     def __init__(self):
-        self.RoomList = {}
+        #self.RoomList = {}
         self.players = {}
         minionsDB.LoadRooms(self)
 
@@ -136,6 +133,5 @@ class SonzoFactory(ServerFactory):
 factory = SonzoFactory()
 # Start listener on port 23 (telnet)
 factory.protocol = lambda: TelnetTransport(Users)
-#factory.protocol = lambda: TelnetTransport(Users)
 reactor.listenTCP(23, factory)
 reactor.run()
