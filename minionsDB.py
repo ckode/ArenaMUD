@@ -196,10 +196,5 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].U                  = row[11]
         minionsRooms.RoomList[row[0]].D                  = row[12]
         minionsRooms.RoomList[row[0]].exits              = str(row[13])
-#        minionsRooms.RoomList[row[0]].Players            = {}
-#        minionsRooms.RoomList[row[0]].ItemsInRoom        = {}
-#        minionsRooms.RoomList[row[0]].ItemsInRoomCount   = {}
-#        minionsRooms.RoomList[row[0]].HiddenItems        = {}
-#        minionsRooms.RoomList[row[0]].HiddenItemsCount   = {}
 
     print "Loaded %d rooms." % (len(minionsRooms.RoomList),)

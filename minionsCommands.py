@@ -1,7 +1,7 @@
 from twisted.internet import reactor
 
 import minionDefines, minionsDB, minionsLog, minionsCommands
-import minionsRooms, minionsUtils
+import minionsRooms, minionsUtils, minionsParser
 
 import time
 
@@ -25,6 +25,7 @@ def Up(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit up!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " tried to go through the ceiling, but failed!" + minionDefines.WHITE)
+   player.moving = 0
 
 
 ################################################
@@ -47,7 +48,7 @@ def Down(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit down!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the floor!" + minionDefines.WHITE)
-
+   player.moving = 0
 
 ################################################
 # Command North
@@ -69,7 +70,8 @@ def North(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit north!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the north!" + minionDefines.WHITE)
-   
+   player.moving = 0
+
 
 ################################################
 # Command NorthEast
@@ -91,7 +93,8 @@ def NorthEast(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit northeast!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the northeast!" + minionDefines.WHITE)
-      
+   player.moving = 0
+
 
 ################################################
 # Command East
@@ -113,7 +116,7 @@ def East(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit east!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the east!" + minionDefines.WHITE)
-
+   player.moving = 0
 
 ################################################
 # Command SouthEast
@@ -135,8 +138,8 @@ def SouthEast(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit southeast!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the southeast!" + minionDefines.WHITE)
+   player.moving = 0
 
-      
 ################################################
 # Command South
 ################################################
@@ -157,7 +160,7 @@ def South(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit south!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the south!" + minionDefines.WHITE)
-
+   player.moving = 0
 
 ################################################
 # Command SouthWest
@@ -179,6 +182,8 @@ def SouthWest(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit southwest!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the southwest!" + minionDefines.WHITE)
+   player.moving = 0
+
 
 ################################################
 # Command West
@@ -200,6 +205,7 @@ def West(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit west!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the west!" + minionDefines.WHITE)
+   player.moving = 0
 
 
 ################################################
@@ -222,6 +228,7 @@ def NorthWest(player):
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit northwest!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the northwest!" + minionDefines.WHITE)
+   player.moving = 0
 
 
 ################################################
@@ -229,7 +236,7 @@ def NorthWest(player):
 ################################################
 def Quit(player):
    player.disconnectClient()
-   
+
 ################################################
 # Command -> Gossip
 ################################################
