@@ -167,7 +167,6 @@ def ChangeLastname(name, lastname):
 # Load all rooms from the database
 #################################################
 def LoadRooms(Sonzo):
-    #global RoomList
     global DB
 
     try:
