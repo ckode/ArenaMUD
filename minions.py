@@ -16,6 +16,7 @@ from time import strftime, localtime
 
 
 class Users(StatefulTelnetProtocol):
+    # User stats
     playerid           = None
     name               = ""
     lastname           = ""
@@ -32,6 +33,7 @@ class Users(StatefulTelnetProtocol):
     stealth            = 0
     weight             = 0
     room               = 1
+    moving             = 0
     holding            = {}
     wearing            = { 'arms':         None,
                            'head':         None,
@@ -47,7 +49,6 @@ class Users(StatefulTelnetProtocol):
         # Limit how many can connect at one time
         print self.transport.getPeer().host + " CONNECTED!"
         #print "Connected"
-        self.enableLocal(chr(1))
         if len(self.factory.players) > 10:
             self.transport.write("Too many connections, try later")
             self.disconnectClient()
