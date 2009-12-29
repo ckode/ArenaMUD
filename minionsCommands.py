@@ -24,6 +24,7 @@ def Up(player):
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit up!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " tried to go through the ceiling, but failed!" + minionDefines.WHITE)
 
 
 ################################################
@@ -45,6 +46,182 @@ def Down(player):
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit down!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the floor!" + minionDefines.WHITE)
+
+
+################################################
+# Command North
+################################################
+def North(player):
+   global RoomList
+   # Get new room ID
+   NewRoom = minionsRooms.RoomList[player.room].N
+   if NewRoom != 0:
+      # Remove user from old room
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the north.")
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.room = NewRoom
+      # Add player to that room
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the south.")
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit north!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the north!" + minionDefines.WHITE)
+   
+
+################################################
+# Command NorthEast
+################################################
+def NorthEast(player):
+   global RoomList
+   # Get new room ID
+   NewRoom = minionsRooms.RoomList[player.room].NE
+   if NewRoom != 0:
+      # Remove user from old room
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the northeast.")
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.room = NewRoom
+      # Add player to that room
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the southwest.")
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit northeast!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the northeast!" + minionDefines.WHITE)
+      
+
+################################################
+# Command East
+################################################
+def East(player):
+   global RoomList
+   # Get new room ID
+   NewRoom = minionsRooms.RoomList[player.room].E
+   if NewRoom != 0:
+      # Remove user from old room
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the east.")
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.room = NewRoom
+      # Add player to that room
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the west.")
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit east!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the east!" + minionDefines.WHITE)
+
+
+################################################
+# Command SouthEast
+################################################
+def SouthEast(player):
+   global RoomList
+   # Get new room ID
+   NewRoom = minionsRooms.RoomList[player.room].NE
+   if NewRoom != 0:
+      # Remove user from old room
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the southeast.")
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.room = NewRoom
+      # Add player to that room
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the northwest.")
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit southeast!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the southeast!" + minionDefines.WHITE)
+
+      
+################################################
+# Command South
+################################################
+def South(player):
+   global RoomList
+   # Get new room ID
+   NewRoom = minionsRooms.RoomList[player.room].S
+   if NewRoom != 0:
+      # Remove user from old room
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the south.")
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.room = NewRoom
+      # Add player to that room
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the north.")
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit south!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the south!" + minionDefines.WHITE)
+
+
+################################################
+# Command SouthWest
+################################################
+def SouthWest(player):
+   global RoomList
+   # Get new room ID
+   NewRoom = minionsRooms.RoomList[player.room].S
+   if NewRoom != 0:
+      # Remove user from old room
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the southwest.")
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.room = NewRoom
+      # Add player to that room
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the northeast.")
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit southwest!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the southwest!" + minionDefines.WHITE)
+
+################################################
+# Command West
+################################################
+def West(player):
+   global RoomList
+   # Get new room ID
+   NewRoom = minionsRooms.RoomList[player.room].W
+   if NewRoom != 0:
+      # Remove user from old room
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.room = NewRoom
+      # Add player to that room
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit west!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the west!" + minionDefines.WHITE)
+
+
+################################################
+# Command NorthWest
+################################################
+def NorthWest(player):
+   global RoomList
+   # Get new room ID
+   NewRoom = minionsRooms.RoomList[player.room].NW
+   if NewRoom != 0:
+      # Remove user from old room
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the northwest.")
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.room = NewRoom
+      # Add player to that room
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the southeast.")
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      player.sendLine(minionDefines.BLUE + "There is no exit northwest!" + minionDefines.WHITE)
+      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the northwest!" + minionDefines.WHITE)
 
 
 ################################################
