@@ -1,3 +1,5 @@
+from twisted.internet import reactor
+
 import minionDefines, minionsCommands, minionsDB
 import minionsRooms
 
@@ -10,6 +12,7 @@ def printtwo(line, line2):
     print line + " " + line2
 
 def commandParser(player, line):
+    #global reactor
     # Clean players input
     line = CleanPlayerInput(line)
 
@@ -28,6 +31,8 @@ def commandParser(player, line):
                  'look':     minionsCommands.Look,
                  'down':     minionsCommands.Down,
                  'up':       minionsCommands.Up,
+                 #'down':     minionsCommands.ChangeRoom,
+                 #'up':       minionsCommands.ChangeRoom,
                  'rofl':     minionsCommands.Rofl,
                  'wtf':      minionsCommands.Wtf
                }
@@ -91,12 +96,15 @@ def commandParser(player, line):
              continue
           elif each == "up":
              if len(cmd) == 1:
-                commands[each](player)
+
+                reactor.callLater(.5, minionsCommands.Up, player)
+                #d.addCallback(minionsCommands.Look, player, "")
                 return
              continue
           elif each == "down":
              if len(cmd) == 1:
-                commands[each](player)
+                reactor.callLater(.5, minionsCommands.Down, player)
+                #commands[each](player, 'D')
                 return
              continue
     # No command found so say it to the room
@@ -186,12 +194,15 @@ def GetPlayerName(player, line):
 # Get player password at logon and log them in
 ###############################################
 def ComparePassword(player, line):
+    global RoomList
     if line == minionsDB.GetPassword(player.name):
        minionsDB.LoadPlayer(player)
        player.Shout(minionDefines.BLUE + player.name + " has joined.")
        player.STATUS = minionDefines.PLAYING
        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
-       player.factory.players.append(player)
+       player.factory.players[player.playerid] = player
+       # Put player in current room
+       player.factory.RoomList[player.room].Players.append(player.playerid)
        minionsCommands.Look(player, player.room)
        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
        return
@@ -204,6 +215,7 @@ def ComparePassword(player, line):
 # Sets new player's password
 ###############################################
 def SetPassword(player, line):
+     global RoomList
      if line == "":
         player.transport.write("Blank passwords not allowed, enter a password: ")
         return
@@ -211,10 +223,11 @@ def SetPassword(player, line):
         player.Shout(minionDefines.BLUE + player.name + " has joined.")
         player.password = line
         player.playerid = minionsDB.CreatePlayer(player)
-        player.factory.players.append(player)
+        player.factory.players[player.playerid] = player
+        # Put player in current room
+        player.factory.RoomList[player.room].Players.append(player.playerid)
         player.STATUS = minionDefines.PLAYING
         player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
-        player.factory.RoomList[player.room]
         minionsCommands.Look(player, player.room)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " created an account and logged on."
         return
@@ -234,6 +247,11 @@ def LoginPlayer(player, line):
           name = name.capitalize()
           pid = minionsDB.GetUserID(name)
           if pid > 0:
+              if pid in player.factory.players.keys():
+                 player.transport.write("Username is already connected!\r\n")
+                 player.playerid = 0
+                 player.disconnectClient()
+                 return
               player.playerid     = pid
               player.name         = name
               player.STATUS       = minionDefines.COMPAREPASSWORD

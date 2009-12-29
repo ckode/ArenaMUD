@@ -25,5 +25,8 @@ class Room():
       #Full room display
       def DisplayRoom(self, player):
           player.sendToPlayer(minionDefine.LCYAN + self.Name + "\n" + minionDefines.WHITE + self.Description)
+          
+      def GetPlayers(self):
+          return Players
       
       #def AddPlayerToRoom(playerID)

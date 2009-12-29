@@ -48,8 +48,6 @@ class Users(StatefulTelnetProtocol):
 #    __buffer = ""
 
     def connectionMade(self):
-
-
         # Limit how many can connect at one time
         #print str(self.transport.host) + " CONNECTED!"
         print "Connected"
@@ -61,79 +59,18 @@ class Users(StatefulTelnetProtocol):
         minionsParser.LoginPlayer(self, "")
 
 
-#"""
-#    def dataReceived(self, data):
-#        delimiter = """
-#        """Protocol.dataReceived.
-#        Translates bytes into lines, and calls lineReceived (or
-#        rawDataReceived, depending on mode.)
-#        """
-#        print str(len(data)) + " " + repr(data)
-#        data1 = ""
-#        print data
-#        for each in data:
-#           print str(len(each)) + " " + each
-#           if each == '\000':
-#               print "Found 000"
-#          #     data1 = '\n\r'
-#           elif each == chr(0):
-#               print "Found r null"
-#         #      data1 = '\n\r'
-#           elif each == chr(0):
-#               print "Found null"
-#               pass
-#           elif each == chr(13):
-#               print "Found just r"
-#               data1 = data1 + '\r\n'
-#           elif each == chr(10):
-#               print "Found just n"
-#               data1 = data1 + '\r\n'
-#           else:
-##        data = data1
-
-#        for each in data:
-#           print repr(each)
-#        self.__buffer = self.__buffer+data
-#        for key, value in self.delimiter_list.items():
-#           if value in data:
-#              print key
-#              delimiter = value
-#
-#
-#        while self.line_mode and not self.paused:
-#"""            try:
-#                print "DELIMITER: " + repr(delimiter)
-#                line, self.__buffer = self.__buffer.split(delimiter, 1)
-#                print "LINE: " + line + " BUFFER: " + self.__buffer
-#                delimiter = ""
-#            except ValueError:
-#                if len(self.__buffer) > self.MAX_LENGTH:
-#                    line, self.__buffer = self.__buffer, ''
-#                    return self.lineLengthExceeded(line)
-#                break
-#            else:
-#                #print "LINE: " + repr(line)
-#                linelength = len(line)
-#                if linelength > self.MAX_LENGTH:
-#                    exceeded = line + self.__buffer
-#                    self.__buffer = ''
-#                    return self.lineLengthExceeded(exceeded)
-#                why = self.lineReceived(line)
-#                if why or self.transport and self.transport.disconnecting:
-#                    return why     """
-
-
     def disconnectClient(self):
         self.sendLine("Goodbye")
-        self.factory.players.remove(self)
-        self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just logged off.")
-        print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just logged off."
+        if self.factory.players.has_key(self.playerid):
+           del self.factory.players[self.playerid]
+           self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just logged off.")
+           print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just logged off."
         self.transport.loseConnection()
 
     def connectionLost(self, reason):
         # If player hungup, disconnectClient() didn't remove the user, remove them now
-        if self in self.factory.players:
-            self.factory.players.remove(self)
+        if self.factory.players.has_key(self.playerid):
+            del self.factory.players[self.playerid]
             self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just hung up!")
             print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just hung up!"
 
@@ -143,7 +80,7 @@ class Users(StatefulTelnetProtocol):
 
     #def keystrokeReceived(
     def say(self, line):
-        self.sendToPlayer("You say, " + line)
+        self.sendToPlayer("You say, " + line + minionsDefines.WHITE)
 
     def sendToPlayer(self, line):
         self.sendLine(line + minionDefines.WHITE)
@@ -152,18 +89,23 @@ class Users(StatefulTelnetProtocol):
     # Send to everyone in current room
     ################################################
     def sendToRoom(self, line):
-        for player in self.factory.players:
-            if player == self and player.STATUS == minionDefines.PLAYING:
-                pass #self.say(line)
+        print "Total Rooms: " + str(len(self.factory.RoomList))
+        print "Room Number: " + str(self.room)
+        print "Players in room: " + str(self.factory.RoomList[self.room].Players)
+
+        for pid in self.factory.RoomList[self.room].Players:
+            print str(pid)
+            if self.factory.players[pid] == self:
+                pass
             else:
-                if player.STATUS == minionDefines.PLAYING:
-                    player.sendToPlayer(line + minionDefines.WHITE)
+                if self.factory.players[pid].STATUS == minionDefines.PLAYING:
+                    self.factory.players[pid].sendToPlayer(line + minionDefines.WHITE)
                     
     ################################################
     # Shout to everyone                            #
     ################################################
     def Shout(self, line):
-        for player in self.factory.players:
+        for player in self.factory.players.values():
            if player.STATUS == minionDefines.PLAYING:
                player.sendToPlayer(line + minionDefines.WHITE)
 
@@ -178,13 +120,12 @@ class Users(StatefulTelnetProtocol):
 
 class SonzoFactory(ServerFactory):
     def __init__(self):
-
-        self.players = []
         self.RoomList = {}
+        self.players = {}
         minionsDB.LoadRooms(self)
 
     def sendMessageToAllClients(self, mesg):
-        for client in self.players:
+        for client in self.players.values():
             if client.STATUS == minionDefines.PLAYING:
                 client.sendLine(mesg + minionDefines.WHITE)
 
