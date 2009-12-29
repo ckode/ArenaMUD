@@ -14,13 +14,15 @@ def Up(player):
    if NewRoom != 0:
       # Remove user from old room
       print "Current Room: " + str(player.room)
-      print "Players in room after removal going up: " + str(RoomList[player.room].Players)
+      print "Players in room after removal going up: " + str(player.factory.RoomList[player.room].Players)
       player.factory.RoomList[player.room].Players.remove(player.playerid)
+      print "Players in room after removal going up: " + str(player.factory.RoomList[player.room].Players)
       player.room = NewRoom
       # Add player to that room
+      print "Players in new room UP: " + str(player.factory.RoomList[player.room].Players)
       player.factory.RoomList[NewRoom].Players.append(player.playerid)
       print "New Room: " + str(player.room)
-      print "Players in new room UP: " + str(RoomList[player.room].Players)
+      print "Players in new room UP: " + str(player.factory.RoomList[player.room].Players)
 
       minionsCommands.Look(player, player.room)
    else:
@@ -37,13 +39,15 @@ def Down(player):
    if NewRoom != 0:
       # Remove user from old room
       print "Current Room: " + str(player.room)
+      print "Players in room after removal going down: " + str(player.factory.RoomList[player.room].Players)
       player.factory.RoomList[player.room].Players.remove(player.playerid)
-      print "Players in room after removal going down: " + str(RoomList[player.room].Players)
+      print "Players in room after removal going down: " + str(player.factory.RoomList[player.room].Players)
       player.room = NewRoom
       # Add player to that room
+      print "Players in new room down: " + str(player.factory.RoomList[player.room].Players)
       player.factory.RoomList[NewRoom].Players.append(player.playerid)
       print "New Room: " + str(player.room)
-      print "Players in new room down: " + str(RoomList[player.room].Players)
+      print "Players in new room down: " + str(player.factory.RoomList[player.room].Players)
 
       minionsCommands.Look(player, player.room)
    else:
