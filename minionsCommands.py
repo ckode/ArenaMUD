@@ -1,7 +1,7 @@
 from twisted.internet import reactor
 
 import minionDefines, minionsDB, minionsLog, minionsCommands
-import minionsRooms
+import minionsRooms, minionsUtils
 
 import time
 
@@ -9,21 +9,16 @@ import time
 # Command Up
 ################################################
 def Up(player):
+   global RoomList
    # Get new room ID
-   NewRoom = player.factory.RoomList[player.room].U
+   NewRoom = minionsRooms.RoomList[player.room].U
    if NewRoom != 0:
       # Remove user from old room
-      print "Current Room: " + str(player.room)
-      print "Players in room after removal going up: " + str(player.factory.RoomList[player.room].Players)
-      player.factory.RoomList[player.room].Players.remove(player.playerid)
-      print "Players in room after removal going up: " + str(player.factory.RoomList[player.room].Players)
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      print "Players in new room UP: " + str(player.factory.RoomList[player.room].Players)
-      player.factory.RoomList[NewRoom].Players.append(player.playerid)
-      print "New Room: " + str(player.room)
-      print "Players in new room UP: " + str(player.factory.RoomList[player.room].Players)
-
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit up!" + minionDefines.WHITE)
@@ -35,36 +30,18 @@ def Up(player):
 def Down(player):
    global RoomList
    # Get new room ID
-   NewRoom = player.factory.RoomList[player.room].D
+   NewRoom = minionsRooms.RoomList[player.room].D
    if NewRoom != 0:
       # Remove user from old room
-      print "Current Room: " + str(player.room)
-      print "Players in room after removal going down: " + str(player.factory.RoomList[player.room].Players)
-      player.factory.RoomList[player.room].Players.remove(player.playerid)
-      print "Players in room after removal going down: " + str(player.factory.RoomList[player.room].Players)
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      print "Players in new room down: " + str(player.factory.RoomList[player.room].Players)
-      player.factory.RoomList[NewRoom].Players.append(player.playerid)
-      print "New Room: " + str(player.room)
-      print "Players in new room down: " + str(player.factory.RoomList[player.room].Players)
-
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit down!" + minionDefines.WHITE)
 
-
-################################################
-# Command ChangeRoom
-################################################
-#def ChangeRoom(player, Direction):
-#    d = defer.Deferred()
-#    if Direction == 'U':
-#       print "Here U"
-#       reactor.callLater(.5,
-#    elif Direction == 'D':
-#       print "Here D"
-#       d.addCallback(Down, player)
 
 ################################################
 # Command -> QUIT
@@ -130,11 +107,28 @@ def Wtf(player):
 # Command -> Look
 ################################################
 def Look(player, RoomNum):
+   global RoomList
+   x = 1
    if RoomNum == "":
       RoomNum = player.room
-   Room = player.factory.RoomList[RoomNum]
+   Room = minionsRooms.RoomList[RoomNum]
    player.sendLine(minionDefines.LCYAN + Room.Name)
-   player.sendLine(minionDefines.DEFAULT + Room.Description)
+   player.sendLine(minionDefines.WHITE + Room.Description)
+   PeopleInRoom = minionsUtils.WhoIsInTheRoom(player, RoomNum)
+   Count = len(PeopleInRoom)
+   if Count > 1:
+      names = minionDefines.GREEN + "Also here: " + minionDefines.LMAGENTA
+      for each in PeopleInRoom.values():
+         # You don't see yourself!
+         if each != player.name:
+            if (Count - 1) > x:
+               x += 1
+               names = names + each + ", "
+            else:
+               names = names + each + "." + minionDefines.WHITE
+
+      player.sendLine(names)
+
    player.sendLine(minionDefines.GREEN + "Obvious exits: " + Room.exits + minionDefines.WHITE)
 ################################################
 # Command -> Set <property>
