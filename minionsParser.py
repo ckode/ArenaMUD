@@ -6,11 +6,6 @@ import minionsRooms
 import re, string
 from time import strftime, localtime
 
-def printthis(line):
-    print line
-def printtwo(line, line2):
-    print line + " " + line2
-
 def commandParser(player, line):
     #global reactor
     # Clean players input

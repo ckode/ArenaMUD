@@ -86,12 +86,7 @@ class Users(StatefulTelnetProtocol):
     ################################################
     def sendToRoom(self, line):
         global RoomList
-        print "Total Rooms: " + str(len(minionsRooms.RoomList))
-        print "Room Number: " + str(self.room)
-        print "Players in room: " + str(minionsRooms.RoomList[self.room].Players)
-
         for pid in minionsRooms.RoomList[self.room].Players:
-            print str(pid)
             if self.factory.players[pid] == self:
                 pass
             else:
