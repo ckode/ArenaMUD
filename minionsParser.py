@@ -17,19 +17,29 @@ def commandParser(player, line):
         return
 
     # Map (dict) for commands to corosponding function
-    commands = { '/quit':    minionsCommands.Quit,
-                 'gossip':   minionsCommands.Gossip,
-                 'emote':    minionsCommands.Emote,
-                 'who':      minionsCommands.Who,
-                 'set':      minionsCommands.Set,
-                 'help':     minionsCommands.Help,
-                 'look':     minionsCommands.Look,
-                 'down':     minionsCommands.Down,
-                 'up':       minionsCommands.Up,
-                 #'down':     minionsCommands.ChangeRoom,
-                 #'up':       minionsCommands.ChangeRoom,
-                 'rofl':     minionsCommands.Rofl,
-                 'wtf':      minionsCommands.Wtf
+    commands = { '/quit':            minionsCommands.Quit,
+                 'gossip':           minionsCommands.Gossip,
+                 'emote':            minionsCommands.Emote,
+                 'who':              minionsCommands.Who,
+                 'set':              minionsCommands.Set,
+                 'help':             minionsCommands.Help,
+                 'look':             minionsCommands.Look,
+                 'down':             minionsCommands.Down,
+                 'up':               minionsCommands.Up,
+                 'north':            minionsCommands.North,
+                 'northeast':        minionsCommands.NorthEast,
+                 'ne':               minionsCommands.NorthEast,
+                 'east':             minionsCommands.East,
+                 'southeast':        minionsCommands.SouthEast,
+                 'se':               minionsCommands.SouthEast,
+                 'south':            minionsCommands.South,
+                 'southwest':        minionsCommands.SouthWest,
+                 'sw':               minionsCommands.SouthWest,
+                 'west':             minionsCommands.West,
+                 'northwest':        minionsCommands.NorthWest,
+                 'nw':               minionsCommands.NorthWest,
+                 'rofl':             minionsCommands.Rofl,
+                 'wtf':              minionsCommands.Wtf
                }
     cmd = line.split()
     if len(cmd) == 0:
@@ -91,18 +101,75 @@ def commandParser(player, line):
              continue
           elif each == "up":
              if len(cmd) == 1:
-
                 reactor.callLater(.5, minionsCommands.Up, player)
-                #d.addCallback(minionsCommands.Look, player, "")
                 return
              continue
           elif each == "down":
              if len(cmd) == 1:
                 reactor.callLater(.5, minionsCommands.Down, player)
-                #commands[each](player, 'D')
                 return
              continue
-    # No command found so say it to the room
+          elif each == "north":
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.North, player)
+                return
+             continue
+          elif each == "northeast":
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.NorthEast, player)
+                return
+             continue
+          elif each == "ne" and len(cmd[0]) == 2:
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.NorthEast, player)
+                return
+             continue
+          elif each == "east":
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.East, player)
+                return
+             continue
+          elif each == "southeast":
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.SouthEast, player)
+                return
+             continue
+          elif each == "se" and len(cmd[0]) == 2:
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.SouthEast, player)
+                return
+             continue
+          elif each == "south":
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.South, player)
+                return
+             continue
+          elif each == "southwest":
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.SouthWest, player)
+                return
+             continue
+          elif each == "sw" and len(cmd[0]) == 2:
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.SouthWest, player)
+                return
+             continue
+          elif each == "west":
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.West, player)
+                return
+             continue
+          elif each == "northwest":
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.NorthWest, player)
+                return
+             continue
+          elif each == "nw" and len(cmd[0]) == 2:
+             if len(cmd) == 1:
+                reactor.callLater(.5, minionsCommands.NorthWest, player)
+                return
+             continue
+     # No command found so say it to the room
     minionsCommands.Say(player, line)
     return
 
