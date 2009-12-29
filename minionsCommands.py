@@ -15,9 +15,11 @@ def Up(player):
    if NewRoom != 0:
       # Remove user from old room
       del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left up.")
       player.room = NewRoom
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name + " just arrived from below.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -33,10 +35,12 @@ def Down(player):
    NewRoom = minionsRooms.RoomList[player.room].D
    if NewRoom != 0:
       # Remove user from old room
+      player.sendToRoom(minionDefines.WHITE + player.name + " just left down.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from above.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
