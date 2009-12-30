@@ -57,16 +57,20 @@ class Users(StatefulTelnetProtocol):
 
 
     def disconnectClient(self):
+        global RoomList
         self.sendLine("Goodbye")
         if self.factory.players.has_key(self.playerid):
+           del minionsRooms.RoomList[self.room].Players[self.playerid]
            del self.factory.players[self.playerid]
            self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just logged off.")
            print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just logged off."
         self.transport.loseConnection()
 
     def connectionLost(self, reason):
+        global RoomList
         # If player hungup, disconnectClient() didn't remove the user, remove them now
         if self.factory.players.has_key(self.playerid):
+            del minionsRooms.RoomList[self.room].Players[self.playerid]
             del self.factory.players[self.playerid]
             self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just hung up!")
             print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just hung up!"
