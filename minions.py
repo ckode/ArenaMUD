@@ -3,12 +3,12 @@ from twisted.internet import defer
 # Twisted specific imports
 from twisted.python import failure, util
 from twisted.internet import reactor
+from twisted.internet.task import LoopingCall
 from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 
 # Minions specific imports
-import minionsParser, minionsPlayer, minionDefines
 import minionsParser, minionsPlayer, minionDefines, minionsLog
-import minionsRooms, minionsDB
+import minionsRooms, minionsDB, minionsUtils
 
 # default Python library imports
 import sys
@@ -21,18 +21,22 @@ class Users(StatefulTelnetProtocol):
     name               = ""
     lastname           = ""
     password           = ""
+    level              = 0
     strength           = 0
     agility            = 0
     intelligence       = 0
     wisdom             = 0
     charm              = 0
     health             = 0
-    hp                 = 0
-    mana               = 0
+    hp                 = 50
+    maxhp              = 100
+    mana               = 25
+    maxmana            = 50
     mr                 = 0
     stealth            = 0
     weight             = 0
     room               = 1
+    resting            = False
     moving             = 0
     holding            = {}
     wearing            = { 'arms':         None,
@@ -86,18 +90,36 @@ class Users(StatefulTelnetProtocol):
     def sendToPlayer(self, line):
         self.sendLine(line + minionDefines.WHITE)
 
+
+
     ################################################
     # Send to everyone in current room
     ################################################
     def sendToRoom(self, line):
         global RoomList
-        for pid in minionsRooms.RoomList[self.room].Players:
+        for pid in minionsRooms.RoomList[self.room].Players.keys():
             if self.factory.players[pid] == self:
                 pass
             else:
                 if self.factory.players[pid].STATUS == minionDefines.PLAYING:
                     self.factory.players[pid].sendToPlayer(line + minionDefines.WHITE)
-                    
+
+
+    ################################################
+    # Send to everyone in current room but victim and player
+    ################################################
+    def sendToRoomNotVictim(self, victim, line):
+        global RoomList
+        for pid in minionsRooms.RoomList[self.room].Players.keys():
+            if self.factory.players[pid] == self:
+                pass
+            elif pid == victim:
+                pass
+            else:
+                if self.factory.players[pid].STATUS == minionDefines.PLAYING:
+                    self.factory.players[pid].sendToPlayer(line + minionDefines.WHITE)
+
+
     ################################################
     # Shout to everyone                            #
     ################################################
@@ -123,8 +145,13 @@ class SonzoFactory(ServerFactory):
 
     def sendMessageToAllClients(self, mesg):
         for client in self.players.values():
-            if client.STATUS == minionDefines.PLAYING:
-                client.sendLine(mesg + minionDefines.WHITE)
+           if client.STATUS == minionDefines.PLAYING:
+               client.sendLine(mesg + minionDefines.WHITE)
+
+    def DoNaturalHealing(self):
+       for player in self.players.values():
+          if player.hp != player.maxhp or player.mana != player.maxmana:
+             minionsUtils.NaturalHealing(player)
 
 
 
@@ -134,4 +161,7 @@ factory = SonzoFactory()
 # Start listener on port 23 (telnet)
 factory.protocol = lambda: TelnetTransport(Users)
 reactor.listenTCP(23, factory)
+# Natural healing process ever 15 seconds
+Healer = LoopingCall(factory.DoNaturalHealing)
+Healer.start(15)
 reactor.run()

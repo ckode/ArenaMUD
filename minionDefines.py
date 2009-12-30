@@ -52,6 +52,13 @@ B_CYAN             = chr(27) + "[46m"
 B_WHITE            = chr(27) + "[47m"
 B_DEFAULT          = chr(27) + "[49m"
 
+#          Cursor and delete line
+DELETELINE         = chr(27) + "[2K"
+FIRSTCOL           = chr(27) + "[80D"
+SAVECUR            = chr(27) + "s"
+RESTORECUR         = chr(27) + "u"
+DELETELEFT         = chr(27) + "[1k"
+
 ########### Command Numbers #############
 COMMANDS =       { '/quit':        0,
                    'who':          1,

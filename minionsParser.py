@@ -38,7 +38,8 @@ def commandParser(player, line):
                  'northwest':        minionsCommands.NorthWest,
                  'nw':               minionsCommands.NorthWest,
                  'rofl':             minionsCommands.Rofl,
-                 'wtf':              minionsCommands.Wtf
+                 'wtf':              minionsCommands.Wtf,
+                 'slap':             minionsCommands.Slap
                }
     cmd = line.split()
     if len(cmd) == 0:
@@ -52,6 +53,15 @@ def commandParser(player, line):
           if each == "gossip":
              if len(cmd[0]) > 2 and len(cmd) > 1:
                 commands[each](player, line[(len(cmd[0]) + 1):])
+                return
+             continue
+          # Slap someone!
+          elif each == "slap":
+             if len(cmd[0]) == 4:
+                if len(cmd) > 1:
+                   minionsCommands.Slap(player, cmd[1])
+                else:
+                   minionsCommands.Slap(player, "")
                 return
              continue
           # Who command (who typed by itself)
@@ -304,7 +314,9 @@ def ComparePassword(player, line):
        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
        player.factory.players[player.playerid] = player
        # Put player in current room
-       minionsRooms.RoomList[player.room].Players[player.playerid] = player.playerid
+       print "Player's ID: " + str(player.playerid) + " Room: " + str(player.room)
+       player.room = 1
+       minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
        minionsCommands.Look(player, player.room)
        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
        return
@@ -327,7 +339,7 @@ def SetPassword(player, line):
         player.playerid = minionsDB.CreatePlayer(player)
         player.factory.players[player.playerid] = player
         # Put player in current room
-        minionsRooms.RoomList[player.room].Players[player.playerid] = player.playerid
+        minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
         player.STATUS = minionDefines.PLAYING
         player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
         minionsCommands.Look(player, player.room)

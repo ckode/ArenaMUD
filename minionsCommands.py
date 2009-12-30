@@ -18,13 +18,14 @@ def Up(player):
       player.sendToRoom(minionDefines.WHITE + player.name + " just left up.")
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name + " just arrived from below.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit up!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " tried to go through the ceiling, but failed!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 
@@ -41,13 +42,14 @@ def Down(player):
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from above.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit down!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the floor!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 ################################################
@@ -63,13 +65,14 @@ def North(player):
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the south.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit north!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the north!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 
@@ -86,13 +89,14 @@ def NorthEast(player):
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the southwest.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit northeast!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the northeast!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 
@@ -109,13 +113,14 @@ def East(player):
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the west.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit east!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the east!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 ################################################
@@ -131,13 +136,14 @@ def SouthEast(player):
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the northwest.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit southeast!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the southeast!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 ################################################
@@ -153,13 +159,14 @@ def South(player):
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the north.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit south!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the south!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 ################################################
@@ -175,13 +182,14 @@ def SouthWest(player):
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the northeast.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit southwest!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the southwest!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 
@@ -198,13 +206,14 @@ def West(player):
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit west!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the west!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 
@@ -221,13 +230,14 @@ def NorthWest(player):
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.room = NewRoom
       # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.playerid
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the southeast.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
       player.sendLine(minionDefines.BLUE + "There is no exit northwest!" + minionDefines.WHITE)
       player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the northwest!" + minionDefines.WHITE)
+      minionsUtils.StatLine(player)
    player.moving = 0
 
 
@@ -253,6 +263,7 @@ def Who(player):
     for user in player.factory.players.values():
         player.sendToPlayer(minionDefines.LCYAN + "  => " + minionDefines.LMAGENTA + user.name + " " + user.lastname)
     player.sendToPlayer(minionDefines.LCYAN + "<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=>>")
+    minionsUtils.StatLine(player)
 
 ################################################
 # Command -> Say
@@ -277,6 +288,26 @@ def Help(player):
         fill = width - (len(command) + 1)
         player.sendLine(minionDefines.MAGENTA + "   " + " " * fill + command + minionDefines.WHITE +  " => " +
                 minionDefines.COMMAND_DEFS[minionDefines.COMMANDS[command]])
+
+################################################
+# Command -> Slap
+################################################
+def Slap(player, victim):
+   global RoomList
+   vict = {}
+   if victim == "":
+      player.sendToPlayer(minionDefines.BLUE + "You slap yourself!")
+      player.sendToRoom(minionDefines.BLUE + player.name + " slaps himself!")
+   else:
+      vict = minionsUtils.FindPlayerInRoom(player, victim)
+      if len(vict) == 0:
+         return
+      else:
+         pid    = vict.keys()[0]
+         name   = vict.values()[0]
+         player.sendToPlayer(minionDefines.BLUE + "You slap " + name + "!")
+         player.factory.players[pid].sendToPlayer(minionDefines.BLUE + player.name + " slaps you!")
+         player.sendToRoomNotVictim(pid, minionDefines.BLUE + player.name + " slaps " + name + "!")
 
 ################################################
 # Command -> Rofl
@@ -318,6 +349,7 @@ def Look(player, RoomNum):
       player.sendLine(names)
 
    player.sendLine(minionDefines.GREEN + "Obvious exits: " + Room.exits + minionDefines.WHITE)
+   minionsUtils.StatLine(player)
 ################################################
 # Command -> Set <property>
 ################################################
