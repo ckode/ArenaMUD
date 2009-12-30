@@ -4,7 +4,9 @@ CREATE TABLE players (
     lastname          VARCHAR(20) NOT NULL,
     passwd            VARCHAR(20) NOT NULL,
     hp                INTEGER NOT NULL,
+    maxhp             INTEGER NOT NULL,
     mana              INTEGER NOT NULL,
+    maxmana           INTEGER NOT NULL,
     mr                INTEGER NOT NULL,
     stealth           INTEGER NOT NULL,
     room              INTEGER NOT NULL

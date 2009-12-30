@@ -94,7 +94,7 @@ def GetPassword(name):
 def CreatePlayer(player):
     global DB
     #return 0
-    data = [player.name, player.lastname, player.password, player.hp, player.mana, player.mr, player.stealth, player.room]
+    data = [player.name, player.lastname, player.password, player.hp, player.maxhp, player.mana, player.maxmana, player.mr, player.stealth, player.room]
 
     try:
         conn     = sqlite3.connect('minions.db')
@@ -104,7 +104,7 @@ def CreatePlayer(player):
         player.Shutdown()
     # Insert new player into the database
     try:
-        cur.execute( 'INSERT INTO players (name, lastname, passwd, hp, mana, mr, stealth, room) values (?, ?, ?, ?, ?, ?, ?, ?)', data )
+        cur.execute( 'INSERT INTO players (name, lastname, passwd, hp, maxhp, mana, maxmana, mr, stealth, room) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', data )
         conn.commit()
     except:
         minionsLog.Logit("Failed to insert new player into player table!")
