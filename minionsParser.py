@@ -26,16 +26,12 @@ def commandParser(player, line):
                  'down':             minionsCommands.Down,
                  'up':               minionsCommands.Up,
                  'north':            minionsCommands.North,
-                 'northeast':        minionsCommands.NorthEast,
                  'ne':               minionsCommands.NorthEast,
                  'east':             minionsCommands.East,
-                 'southeast':        minionsCommands.SouthEast,
                  'se':               minionsCommands.SouthEast,
                  'south':            minionsCommands.South,
-                 'southwest':        minionsCommands.SouthWest,
                  'sw':               minionsCommands.SouthWest,
                  'west':             minionsCommands.West,
-                 'northwest':        minionsCommands.NorthWest,
                  'nw':               minionsCommands.NorthWest,
                  'rofl':             minionsCommands.Rofl,
                  'wtf':              minionsCommands.Wtf,
@@ -135,15 +131,6 @@ def commandParser(player, line):
                 reactor.callLater(.5, minionsCommands.North, player)
                 return
              continue
-          elif each == "northeast" and len(cmd[0]) == 6:
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                player.moving = 1
-                reactor.callLater(.5, minionsCommands.NorthEast, player)
-                return
-             continue
           elif each == "ne" and len(cmd[0]) == 2:
              if len(cmd) == 1:
                 if player.moving == 1:
@@ -160,15 +147,6 @@ def commandParser(player, line):
                    return
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.East, player)
-                return
-             continue
-          elif each == "southeast" and len(cmd[0]) == 6:
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                player.moving = 1
-                reactor.callLater(.5, minionsCommands.SouthEast, player)
                 return
              continue
           elif each == "se" and len(cmd[0]) == 2:
@@ -189,15 +167,6 @@ def commandParser(player, line):
                 reactor.callLater(.5, minionsCommands.South, player)
                 return
              continue
-          elif each == "southwest" and len(cmd[0]) == 6:
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                player.moving = 1
-                reactor.callLater(.5, minionsCommands.SouthWest, player)
-                return
-             continue
           elif each == "sw" and len(cmd[0]) == 2:
              if len(cmd) == 1:
                 if player.moving == 1:
@@ -214,15 +183,6 @@ def commandParser(player, line):
                    return
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.West, player)
-                return
-             continue
-          elif each == "northwest" and len(cmd[0]) == 6:
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                player.moving = 1
-                reactor.callLater(.5, minionsCommands.NorthWest, player)
                 return
              continue
           elif each == "nw" and len(cmd[0]) == 2:
