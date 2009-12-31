@@ -1,3 +1,5 @@
+from twisted.internet import reactor
+
 import sqlite3, string
 import minionsLog, minionsRooms
 

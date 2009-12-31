@@ -38,6 +38,7 @@ class Users(StatefulTelnetProtocol):
     room               = 1
     resting            = False
     vision             = 1
+    spellcasting       = 0
     blind              = False
     moving             = 0
     holding            = {}
@@ -131,9 +132,7 @@ class Users(StatefulTelnetProtocol):
                player.sendToPlayer(line + minionDefines.WHITE)
 
 
-    def Shutdown(self):
-        self.reactor.stop()
-        #sys.exit()
+
 
 
 
@@ -156,7 +155,9 @@ class SonzoFactory(ServerFactory):
              minionsUtils.NaturalHealing(player)
 
 
-
+    def Shutdown(self):
+        reactor.stop()
+        #sys.exit()
 
 #Create server factory
 factory = SonzoFactory()
