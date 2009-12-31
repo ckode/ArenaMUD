@@ -331,6 +331,19 @@ def Look(player, RoomNum):
    if RoomNum == "":
       RoomNum = player.room
    Room = minionsRooms.RoomList[RoomNum]
+   if player.blind:
+      player.sendLine(minionDefeines.WHITE + "You are blind!")
+      minionsUtils.StatLine(player)
+      return
+   if player.vision < Room.LightLevel:
+      if Room.LightLevel == minionDefines.DARKVISION:
+         player.sendLine(minionDefines.WHITE + "The room is PITCH BLACK - you can't see anything!")
+         minionsUtils.StatLine(player)
+         return
+      else:
+         player.sendLine(minionDefines.WHITE + "The room is too dark, you can't see anything!")
+         minionsUtils.StatLine(player)
+         return
    player.sendLine(minionDefines.LCYAN + Room.Name)
    player.sendLine(minionDefines.WHITE + Room.Description)
    PeopleInRoom = minionsUtils.WhoIsInTheRoom(player, RoomNum)

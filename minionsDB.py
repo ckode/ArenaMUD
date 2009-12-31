@@ -185,16 +185,17 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].RoomNum            = row[0]
         minionsRooms.RoomList[row[0]].Name               = str(row[1])
         minionsRooms.RoomList[row[0]].Description        = str(row[2])
-        minionsRooms.RoomList[row[0]].N                  = row[3]
-        minionsRooms.RoomList[row[0]].NE                 = row[4]
-        minionsRooms.RoomList[row[0]].E                  = row[5]
-        minionsRooms.RoomList[row[0]].SE                 = row[6]
-        minionsRooms.RoomList[row[0]].S                  = row[7]
-        minionsRooms.RoomList[row[0]].SW                 = row[8]
-        minionsRooms.RoomList[row[0]].W                  = row[9]
-        minionsRooms.RoomList[row[0]].NW                 = row[10]
-        minionsRooms.RoomList[row[0]].U                  = row[11]
-        minionsRooms.RoomList[row[0]].D                  = row[12]
-        minionsRooms.RoomList[row[0]].exits              = str(row[13])
+        minionsRooms.RoomList[row[0]].LightLevel         = row[3]
+        minionsRooms.RoomList[row[0]].N                  = row[4]
+        minionsRooms.RoomList[row[0]].NE                 = row[5]
+        minionsRooms.RoomList[row[0]].E                  = row[6]
+        minionsRooms.RoomList[row[0]].SE                 = row[7]
+        minionsRooms.RoomList[row[0]].S                  = row[8]
+        minionsRooms.RoomList[row[0]].SW                 = row[9]
+        minionsRooms.RoomList[row[0]].W                  = row[10]
+        minionsRooms.RoomList[row[0]].NW                 = row[11]
+        minionsRooms.RoomList[row[0]].U                  = row[12]
+        minionsRooms.RoomList[row[0]].D                  = row[13]
+        minionsRooms.RoomList[row[0]].exits              = str(row[14])
 
     print "Loaded %d rooms." % (len(minionsRooms.RoomList),)

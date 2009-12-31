@@ -7,6 +7,7 @@ class Room():
          self.RoomNum          = 0
          self.Name             = ""
          self.Description      = ""
+         self.LightLevel       = 1
          self.N                = 0
          self.NE               = 0
          self.E                = 0
@@ -23,6 +24,7 @@ class Room():
          self.HiddenItems      = {}
          self.HiddenItemsCount = {}
          self.Players          = {}
+#         self.MagicWords        = {}
       
       #Full room display
       def DisplayRoom(self, player):

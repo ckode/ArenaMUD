@@ -37,6 +37,8 @@ class Users(StatefulTelnetProtocol):
     weight             = 0
     room               = 1
     resting            = False
+    vision             = 1
+    blind              = False
     moving             = 0
     holding            = {}
     wearing            = { 'arms':         None,
