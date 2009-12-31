@@ -274,7 +274,6 @@ def ComparePassword(player, line):
        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
        player.factory.players[player.playerid] = player
        # Put player in current room
-       print "Player's ID: " + str(player.playerid) + " Room: " + str(player.room)
        player.room = 1
        minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
        minionsCommands.Look(player, player.room)
