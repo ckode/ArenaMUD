@@ -47,8 +47,8 @@ def FindPlayerInRoom(player, Name):
    else:
       player.sendToPlayer("Who did you mean: ")
       for victim in victimList.values():
-         player.sendToPlayer(" - " + name)
-         return victimList
+         player.sendToPlayer(" - " + victim)
+      return {}
 
 #################################################
 # StatLine()
@@ -57,7 +57,7 @@ def FindPlayerInRoom(player, Name):
 #################################################
 def StatLine(player):
    # Send a players stat line
-   STATLINE = "[HP=%d/%d MANA=%d/%d]: " % (player.hp, 100, player.mana, 50)
+   STATLINE = "[HP=%d/%d MANA=%d/%d]: " % (player.hp, player.maxhp, player.mana, player.maxmana)
    STATSIZE = len(STATLINE)
    player.transport.write(minionDefines.SAVECUR)
    player.transport.write(minionDefines.FIRSTCOL)

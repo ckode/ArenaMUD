@@ -70,7 +70,8 @@ COMMANDS =       { '/quit':        0,
                    'set lastname': 7,
                    'look':         8,
                    'rofl':         9,
-                   'wtf':         10
+                   'wtf':         10,
+                   'slap':        11
                  }
 
 ########### Command List ################
@@ -84,6 +85,7 @@ COMMAND_DEFS  = { 0:            "Disconnect from the game.",
                   7:            "Change lastname: 'set lastname <lastname>'",
                   8:            "Allows you to look around the room.",
                   9:            "An action",
-                 10:            "An action"
+                 10:            "An action",
+                 11:            "slap <person>"
                 }
 
