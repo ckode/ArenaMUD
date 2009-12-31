@@ -35,7 +35,8 @@ def commandParser(player, line):
                  'nw':               minionsCommands.NorthWest,
                  'rofl':             minionsCommands.Rofl,
                  'wtf':              minionsCommands.Wtf,
-                 'slap':             minionsCommands.Slap
+                 'slap':             minionsCommands.Slap,
+                 'vision':           ""
                }
     cmd = line.split()
     if len(cmd) == 0:
@@ -45,8 +46,15 @@ def commandParser(player, line):
     cmdstr = re.compile(re.escape(cmd[0].lower()))
     for each in commands.keys():
        if cmdstr.match(each):
+          # TESTING, REMOVE VISION OPTION WHEN DONE!
+          if each == "vision":
+             if len(cmd[0]) > 4:
+                #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
+                player.vision = int(cmd[1])
+                player.sendToPlayer("%sVision changed." % (minionDefines.WHITE,) )
+                return
           # Gossip command
-          if each == "gossip":
+          elif each == "gossip":
              if len(cmd[0]) > 2 and len(cmd) > 1:
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
