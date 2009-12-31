@@ -59,6 +59,10 @@ SAVECUR            = chr(27) + "s"
 RESTORECUR         = chr(27) + "u"
 DELETELEFT         = chr(27) + "[1k"
 
+#          Light Levels
+NORMALVISION       = 1
+NIGHTVISION        = 2
+DARKVISION         = 3
 ########### Command Numbers #############
 COMMANDS =       { '/quit':        0,
                    'who':          1,
@@ -89,3 +93,25 @@ COMMAND_DEFS  = { 0:            "Disconnect from the game.",
                  11:            "slap <person>"
                 }
 
+STATS_ABILITIES = { 0:            "Armor Class",
+                    1:            "Damage Resistance",
+                    2:            "Magic Resistance",
+                    3:            "Strength",
+                    4:            "Intelligence",
+                    5:            "Wisdom",
+                    6:            "Agility",
+                    7:            "Charm",
+                    8:            "Health",
+                    9:            "Mana",
+                   10:            "Spell Casting",
+                   11:            "Stealth",
+                   12:            "Perception",
+                   13:            "Minimum Damage",
+                   14:            "Maximum Damage",
+                   15:            "Backstab Damage",
+                   16:            "Backstab Accuracy",
+                   17:            "Fire Resistance",
+                   18:            "Cold Resistance",
+                   19:            "Night Vision",
+                   20:            "Dark Vision"
+                  };

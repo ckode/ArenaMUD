@@ -16,6 +16,7 @@ CREATE TABLE rooms (
     id                INTEGER PRIMARY KEY,
     name              VARCHAR(30) NOT NULL,
     description       VARCHAR(255) NOT NULL,
+    light             INTEGER NOT NULL,
     exit_n            INTEGER NOT NULL,
     exit_ne           INTEGER NOT NULL,
     exit_e            INTEGER NOT NULL,
@@ -28,3 +29,4 @@ CREATE TABLE rooms (
     exit_d            INTEGER NOT NULL,
     exits             VARCHAR(25) NOT NULL
 );
+
