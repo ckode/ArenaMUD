@@ -27,6 +27,11 @@ CREATE TABLE rooms (
     exit_nw           INTEGER NOT NULL,
     exit_u            INTEGER NOT NULL,
     exit_d            INTEGER NOT NULL,
-    exits             VARCHAR(25) NOT NULL
+    exits             VARCHAR(25) NOT NULL,
+    altexits          VARCHAR(25) NOT NULL,
+    phrase            VARCHAR(20) NOT NULL,
+    secretdir         INTEGER NOT NULL,
+    secretroom        INTEGER NOT NULL,
+    actionID          INTEGER NOT NULL
 );
 

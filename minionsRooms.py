@@ -2,6 +2,10 @@ import minionDefines
 
 RoomList = {}
 
+RoomActionID = { 1: "%s pushs the wall.|The wall slides out of the way!"
+               }
+
+
 class Room():
       def __init__(self):
          self.RoomNum          = 0
@@ -19,12 +23,18 @@ class Room():
          self.U                = 0
          self.D                = 0
          self.exits            = ""
+         self.AltExits         = ""
+         self.SecretPhrase     = ""
+         self.ExitsToggle      = False
+         self.SecretDirection  = 0
+         self.SecretRoom       = 0
+         self.ActionID         = 0
          self.ItemsInRoom      = {}
          self.ItemsInRoomCount = {}
          self.HiddenItems      = {}
          self.HiddenItemsCount = {}
          self.Players          = {}
-#         self.MagicWords        = {}
+
       
       #Full room display
       def DisplayRoom(self, player):
@@ -32,5 +42,6 @@ class Room():
           
       def GetPlayers(self):
           return self.Players
-      
-      #def AddPlayerToRoom(playerID)
+
+
+

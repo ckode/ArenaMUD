@@ -199,5 +199,11 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].U                  = row[12]
         minionsRooms.RoomList[row[0]].D                  = row[13]
         minionsRooms.RoomList[row[0]].exits              = str(row[14])
+        minionsRooms.RoomList[row[0]].AltExits           = str(row[15])
+        minionsRooms.RoomList[row[0]].SecretPhrase       = str(row[16])
+        minionsRooms.RoomList[row[0]].SecretDirection    = row[17]
+        minionsRooms.RoomList[row[0]].SecretRoom         = row[18]
+        minionsRooms.RoomList[row[0]].ActionID           = row[19]
+        minionsRooms.RoomList[row[0]].ExitsToggle        = False
 
     print "Loaded %d rooms." % (len(minionsRooms.RoomList),)

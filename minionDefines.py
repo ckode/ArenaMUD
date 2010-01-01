@@ -63,6 +63,18 @@ DELETELEFT         = chr(27) + "[1k"
 NORMALVISION       = 1
 NIGHTVISION        = 2
 DARKVISION         = 3
+
+#          Directions
+NORTH              = 1
+NE                 = 2
+EAST               = 3
+SE                 = 4
+SOUTH              = 5
+SW                 = 6
+WEST               = 7
+NW                 = 8
+UP                 = 9
+DOWN               = 10
 ########### Command Numbers #############
 COMMANDS =       { '/quit':        0,
                    'who':          1,
