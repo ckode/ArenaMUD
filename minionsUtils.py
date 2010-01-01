@@ -88,3 +88,23 @@ def NaturalHealing(player):
    else:
       player.mana += manaRate
    StatLine(player)
+
+##################################################
+# DisplayAction()
+#
+# Displays action when secret door is opened
+##################################################
+def DisplayAction(player, ActionID):
+    global RoomList
+    global RoomActionID
+
+    ActionList = minionsRooms.RoomActionID[ActionID].split("|")
+    player.sendToPlayer(minionDefines.BLUE + ActionList[0] % ("You",) )
+    player.sendToRoom(minionDefines.BLUE + ActionList[0] % (player.name,) )
+    player.BroadcastToRoom(minionDefines.BLUE + ActionList[1])
+
+
+def ToggleSecretExit(RoomID, Value):
+    global RoomList
+
+    minionsRooms.RoomList[RoomID].ExitsToggle = Value

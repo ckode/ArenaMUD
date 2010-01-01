@@ -96,7 +96,7 @@ class Users(StatefulTelnetProtocol):
 
 
     ################################################
-    # Send to everyone in current room
+    # Send to everyone in current room but player
     ################################################
     def sendToRoom(self, line):
         global RoomList
@@ -107,6 +107,14 @@ class Users(StatefulTelnetProtocol):
                 if self.factory.players[pid].STATUS == minionDefines.PLAYING:
                     self.factory.players[pid].sendToPlayer(line + minionDefines.WHITE)
 
+    ################################################
+    # Send to everyone in current room
+    ################################################
+    def BroadcastToRoom(self, line):
+        global RoomList
+        for pid in minionsRooms.RoomList[self.room].Players.keys():
+            if self.factory.players[pid].STATUS == minionDefines.PLAYING:
+               self.factory.players[pid].sendToPlayer(line + minionDefines.WHITE)
 
     ################################################
     # Send to everyone in current room but victim and player

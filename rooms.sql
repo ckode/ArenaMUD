@@ -1,4 +1,4 @@
-INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits)
+INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
         values ( 1,
                  "Town Square",
                  "This is the Town Square of Dagnoroth!  You see trash piled up everywhere as the city has fallen from grace of the last few years.!",
@@ -11,12 +11,16 @@ INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_s
                  0,  -- SW
                  0,  -- W
                  0,  -- NW
-             --    0,  -- ?? Errors without it
                  0,  -- U
                  2,  -- D
-                 "north, down.");
+                 "north, down.",   -- Exits
+                 "None",           -- Alternet Exits
+                 "None",           -- Secret Phrase
+                 0,                -- Secret exit direction
+                 0,                -- Secret room number
+                 0);               -- Action message when secret exit is triggered
 
-INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits)
+INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
         values ( 2,
                  "Hole in the Ground",
                  "This is a big hole in the ground where most of the towns people defecate.  It smells like shit!",
@@ -29,12 +33,16 @@ INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_s
                  0,
                  0,
                  0,
-                -- 0,
                  1,
                  0,
-                 "up.");
+                 "up.",
+                 "None",
+                 "None",
+                 0,
+                 0,
+                 0);
 
-INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits)
+INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
         values ( 3,
                  "Northern Sonzo Ave.",
                  "This is a northern section of the main drag of through the city of Dagnoroth!",
@@ -47,12 +55,16 @@ INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_s
                  0,
                  0,
                  0,
-                -- 0,
                  0,
                  0,
-                 "north, south.");
+                 "north, south.",
+                 "None",
+                 "None",
+                 0,
+                 0,
+                 0);
 
-INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits)
+INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
         values ( 4,
                  "Northern Sonzo Ave.",
                  "This is a northern section of the main drag of through the city of Dagnoroth!",
@@ -65,12 +77,16 @@ INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_s
                  0,
                  0,
                  0,
-                -- 0,
                  0,
                  0,
-                 "north, south.");
+                 "north, south.",
+                 "None",
+                 "None",
+                 0,
+                 0,
+                 0);
 
-INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits)
+INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
         values ( 5,
                  "Cornor of Northern Sonzo and Markus St.",
                  "This is a northern section of the city of Dagnoroth!",
@@ -83,12 +99,16 @@ INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_s
                  0,
                  0,
                  0,
-               --  0,
                  0,
                  0,
-                 "south, east.");
+                 "south, east.",
+                 "None",
+                 "None",
+                 0,
+                 0,
+                 0);
 
-INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits)
+INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
         values ( 6,
                  "Markus St, Dark Alley.",
                  "You are dark alley on Markus St.  This appears to be a very dangerous section of town!",
@@ -101,12 +121,16 @@ INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_s
                  0,
                  5,
                  0,
-              --   0,
                  0,
                  0,
-                 "east, west.");
-                 
-INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits)
+                 "east, west.",
+                 "None",
+                 "None",
+                 0,
+                 0,
+                 0);
+
+INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
         values ( 7,
                  "Markus St Dead End.",
                  "You are at a dead end on Markus St.  This appears to be a very dangerous section of town!",
@@ -121,4 +145,31 @@ INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_s
                  0,
                  0,
                  0,
-                 "west.");
+                 "west.",
+                 "west, secret passage south.",
+                 "push wall",
+                 5,
+                 8,
+                 1);
+
+INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
+        values ( 8,
+                 "Secret Room",
+                 "You are in a secret room.  It appears though theives use this room as a hideout.  If found here, you maybe killed!",
+                 1,
+                 7,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 0,
+                 "north.",
+                 "None",
+                 "None",
+                 0,
+                 0,
+                 0);
