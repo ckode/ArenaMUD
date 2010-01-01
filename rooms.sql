@@ -133,7 +133,7 @@ INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_s
 INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
         values ( 7,
                  "Markus St Dead End.",
-                 "You are at a dead end on Markus St.  This appears to be a very dangerous section of town!",
+                 "You are at a dead end on Markus St.  On the southern wall there appears to be a perfectly straight horizontal crack in the wall and a soft glow coming from it.  This appears to be a very dangerous section of town!",
                  3,
                  0,
                  0,
@@ -154,8 +154,8 @@ INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_s
 
 INSERT INTO rooms (id, name, description, light, exit_n, exit_ne, exit_e, exit_se, exit_s, exit_sw, exit_w, exit_nw, exit_u, exit_d, exits, altexits, phrase, secretdir, secretroom, actionID)
         values ( 8,
-                 "Secret Room",
-                 "You are in a secret room.  It appears though theives use this room as a hideout.  If found here, you maybe killed!",
+                 "Gang Hideout",
+                 "You are in the notorious gang The PorkLord's hideout. If found here, you surly will be killed!",
                  1,
                  7,
                  0,
