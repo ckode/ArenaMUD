@@ -35,12 +35,12 @@ class Users(StatefulTelnetProtocol):
     mr                 = 0
     stealth            = 0
     weight             = 0
-    room               = 1
+    room               = 11
     resting            = False
     vision             = 1
     spellcasting       = 0
     blind              = False
-    briefDesc          = 0
+    briefDesc          = 1
     moving             = 0
     holding            = {}
     wearing            = { 'arms':         None,

@@ -37,9 +37,12 @@ def commandParser(player, line):
                  'wtf':              minionsCommands.Wtf,
                  'slap':             minionsCommands.Slap,
                  'vision':           "",
-                 'brief':            minionsCommands.Brief
+                 'brief':            minionsCommands.Brief,
+                 'open':             minionsCommands.Open,
+                 'close':            minionsCommands.Close
                }
     cmd = line.split()
+    # Player just hit enter, look around the room.
     if len(cmd) == 0:
        minionsCommands.Look(player, player.room)
        return
@@ -54,6 +57,19 @@ def commandParser(player, line):
                 player.vision = int(cmd[1])
                 player.sendToPlayer("%sVision changed." % (minionDefines.WHITE,) )
                 return
+             continue
+          # Open Command (open doors etc)
+          elif each == "open":
+             if len(cmd) > 1 and len(cmd) > 1:
+                commands[each](player, line[(len(cmd[0]) + 1):])
+                return
+             continue
+          # Close Command (open doors etc)
+          elif each == "close":
+             if len(cmd) > 1 and len(cmd) > 1:
+                commands[each](player, line[(len(cmd[0]) + 1):])
+                return
+             continue
           # Brief command (for brief room desc)
           elif each == "brief":
              if len(cmd[0]) == 5 and len(cmd) == 1:
@@ -137,7 +153,7 @@ def commandParser(player, line):
                 return
              continue
           elif each == "north":
-             if len(cmd) == 1:
+             if len(cmd) == 1 and len(cmd[0]) != 2:
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
@@ -173,7 +189,7 @@ def commandParser(player, line):
                 return
              continue
           elif each == "south":
-             if len(cmd) == 1:
+             if len(cmd) == 1 and len(cmd[0]) != 2:
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return

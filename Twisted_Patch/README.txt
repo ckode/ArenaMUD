@@ -1,0 +1,1 @@
+telnet.py:  %PYTHON_HOME%\C:\Python25\Lib\site-packages\twisted\conch\telnet.py

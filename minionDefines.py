@@ -75,6 +75,10 @@ WEST               = 7
 NW                 = 8
 UP                 = 9
 DOWN               = 10
+
+DIRECTIONS         = ['north', 'ne', 'northeast', 'east', 'se', 'southeast', 'south',
+                      'sw', 'southwest', 'west', 'nw', 'northwest', 'up', 'down' ]
+                      
 ########### Command Numbers #############
 COMMANDS =       { '/quit':        0,
                    'who':          1,
