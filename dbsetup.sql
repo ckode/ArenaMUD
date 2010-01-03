@@ -15,7 +15,11 @@ CREATE TABLE players (
 CREATE TABLE rooms (
     id                INTEGER PRIMARY KEY,       -- Room ID
     name              VARCHAR(30) NOT NULL,      -- Room Short Description
-    description       VARCHAR(255) NOT NULL,     -- Room Long Description
+    desc1             VARCHAR(75) NOT NULL,      -- Room Long Description line 1
+    desc2             VARCHAR(75) NOT NULL,      -- Room Long Description line 2
+    desc3             VARCHAR(75) NOT NULL,      -- Room Long Description line 3
+    desc4             VARCHAR(75) NOT NULL,      -- Room Long Description line 4
+    desc5             VARCHAR(75) NOT NULL,      -- Room Long Description line 5
     RoomType          INTEGER NOT NULL,          -- Room Type (normal, regen, shop, Hall of the Dead, etc
     light             INTEGER NOT NULL,          -- Light Level (1 normal, 2 nightvision, 3 dark vision)
     phrase            VARCHAR(20) NOT NULL,      -- Secret phrase that changes something in room.
