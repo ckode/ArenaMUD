@@ -3,7 +3,7 @@ from twisted.internet import reactor
 import minionDefines, minionsDB, minionsLog, minionsCommands
 import minionsRooms, minionsUtils, minionsParser
 
-import time
+import time, re
 
 
 NONE         =  0
@@ -18,11 +18,12 @@ NW           =  8
 UP           =  9
 DOWN         = 10
 
+
 ################################################
 # Command Up
 ################################################
 def Up(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[UP].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[UP].ToRoom
@@ -36,8 +37,10 @@ def Up(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit up!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " tried to go through the ceiling, but failed!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[UP].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the up!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the up!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -46,7 +49,7 @@ def Up(player):
 # Command Down
 ################################################
 def Down(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[DOWN].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[DOWN].ToRoom
@@ -60,8 +63,10 @@ def Down(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit down!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the floor!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[DOWN].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the down!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the down!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -69,7 +74,7 @@ def Down(player):
 # Command North
 ################################################
 def North(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[NORTH].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[NORTH].ToRoom
@@ -83,8 +88,10 @@ def North(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit north!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the north!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[NORTH].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the north!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the north!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -93,7 +100,7 @@ def North(player):
 # Command NorthEast
 ################################################
 def NorthEast(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[NE].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[NE].ToRoom
@@ -107,8 +114,10 @@ def NorthEast(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit northeast!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the northeast!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[NE].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the northeast!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the northeast!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -117,7 +126,7 @@ def NorthEast(player):
 # Command East
 ################################################
 def East(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[EAST].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[EAST].ToRoom
@@ -131,8 +140,10 @@ def East(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit east!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the east!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[EAST].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the east!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the east!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -140,7 +151,7 @@ def East(player):
 # Command SouthEast
 ################################################
 def SouthEast(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[SE].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[SE].ToRoom
@@ -154,8 +165,10 @@ def SouthEast(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit southeast!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the southeast!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[SE].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the southeast!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the southeast!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -163,7 +176,7 @@ def SouthEast(player):
 # Command South
 ################################################
 def South(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[SOUTH].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[SOUTH].ToRoom
@@ -177,8 +190,10 @@ def South(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit south!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the south!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[SOUTH].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the south!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the south!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -186,7 +201,7 @@ def South(player):
 # Command SouthWest
 ################################################
 def SouthWest(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[SW].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[SW].ToRoom
@@ -200,8 +215,10 @@ def SouthWest(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit southwest!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the southwest!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[SW].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the southwest!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the southwest!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -210,7 +227,7 @@ def SouthWest(player):
 # Command West
 ################################################
 def West(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[WEST].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[WEST].ToRoom
@@ -224,8 +241,10 @@ def West(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit west!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the west!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[WEST].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the west!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the west!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -234,7 +253,7 @@ def West(player):
 # Command NorthWest
 ################################################
 def NorthWest(player):
-   global RoomList
+   global RoomList, BLOCKEDTEXT
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[NW].Passable == True:
       NewRoom = minionsRooms.RoomList[player.room].Doors[NW].ToRoom
@@ -248,8 +267,10 @@ def NorthWest(player):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      player.sendLine(minionDefines.BLUE + "There is no exit northwest!" + minionDefines.WHITE)
-      player.sendToRoom(minionDefines.WHITE + player.name + " ran into the wall to the northwest!" + minionDefines.WHITE)
+      DoorType = minionsRooms.RoomList[player.room].Doors[NW].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the northwest!", minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the northwest!", minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -259,6 +280,135 @@ def NorthWest(player):
 ################################################
 def Quit(player):
    player.disconnectClient()
+
+################################################
+# Command -> Open
+################################################
+def Open(player, something):
+    global DIRECTIONS
+
+    objList = something.split()[0]
+    obj = re.compile(re.escape(objList[0].lower()))
+    # Only doors exist now
+    if obj.match('north'):
+       OpenDoor(player, NORTH)
+       return
+    elif obj.match('ne') and len(objList[0]) == 2 or obj.match('northeast') and len(objList[0]) > 5:
+       OpenDoor(player, NE)
+       return
+    elif obj.match('east'):
+       OpenDoor(player, EAST)
+       return
+    elif obj.match('se') and len(objList[0]) == 2 or obj.match('southeast') and len(objList[0]) > 5:
+       OpenDoor(player, EAST)
+       return
+    elif obj.match('south'):
+       OpenDoor(player, SOUTH)
+       return
+    elif obj.match('sw') and len(objList[0]) == 2 or obj.match('southwest') and len(objList[0]) > 5:
+       OpenDoor(player, SW)
+       return
+    elif obj.match('west'):
+       OpenDoor(player, WEST)
+       return
+    elif obj.match('nw') and len(objList[0]) == 2 or obj.match('northwest') and len(objList[0]) > 5:
+       OpenDoor(player, NW)
+       return
+    elif obj.match('up'):
+       OpenDoor(player, UP)
+       return
+    elif obj.match('down'):
+       OpenDoor(player, DOWN)
+       return
+
+################################################
+# Command -> Close
+################################################
+def Close(player, something):
+    global DIRECTIONS
+
+    objList = something.split()[0]
+    obj = re.compile(re.escape(objList[0].lower()))
+    # Only doors exist now
+    if obj.match('north'):
+       CloseDoor(player, NORTH)
+       return
+    elif obj.match('ne') and len(objList[0]) == 2 or obj.match('northeast') and len(objList[0]) > 5:
+       CloseDoor(player, NE)
+       return
+    elif obj.match('east'):
+       CloseDoor(player, EAST)
+       return
+    elif obj.match('se') and len(objList[0]) == 2 or obj.match('southeast') and len(objList[0]) > 5:
+       CloseDoor(player, EAST)
+       return
+    elif obj.match('south'):
+       CloseDoor(player, SOUTH)
+       return
+    elif obj.match('sw') and len(objList[0]) == 2 or obj.match('southwest') and len(objList[0]) > 5:
+       CloseDoor(player, SW)
+       return
+    elif obj.match('west'):
+       CloseDoor(player, WEST)
+       return
+    elif obj.match('nw') and len(objList[0]) == 2 or obj.match('northwest') and len(objList[0]) > 5:
+       CloseDoor(player, NW)
+       return
+    elif obj.match('up'):
+       CloseDoor(player, UP)
+       return
+    elif obj.match('down'):
+       CloseDoor(player, DOWN)
+       return
+
+################################################
+# Command -> OpenDoor
+################################################
+def OpenDoor(player, DIRECTION):
+    global RoomList
+    CurDoor = minionsRooms.RoomList[player.room].Doors[DIRECTION]
+    if CurDoor.Passable:
+       player.sendToPlayer("%s%s is already open." % (minionDefines.WHITE, DIRLIST[DIRECTION]) )
+    else:
+       print "LOCKED?: " + str(CurDoor.DoorLocked)
+       if CurDoor.DoorStatus != NONE:
+          if CurDoor.DoorLocked == 1:
+             player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, CurDoor.Exits[2], " is locked.") )
+          else:
+             minionsRooms.RoomList[player.room].Doors[DIRECTION].Passable = True
+             minionsRooms.RoomList[player.room].Doors[DIRECTION].DoorStatus = minionsRooms.OPEN
+             OtherRoom = minionsRooms.RoomList[player.room].Doors[DIRECTION].ToRoom
+             if minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorType == CurDoor.DoorType:
+                minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].Passable = True
+                minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorStatus = minionsRooms.OPEN
+
+             player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You open the ", minionsRooms.DOORTYPE[CurDoor.DoorType]) )
+             player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, player.name, " opens the ", minionsRooms.DOORTYPE[CurDoor.DoorType]) )
+       else:
+          player.sendToPlayer("%s%s%s%s" % (minionDefines.WHITE, "you do not see a ", minionsRooms.DOORTYPE[CurDoor.DoorType], " ", minionsRooms.DIRTEXT[DIRECTION] ) )
+
+################################################
+# Command -> CloseDoor
+################################################
+def CloseDoor(player, DIRECTION):
+    global RoomList
+    CurDoor = minionsRooms.RoomList[player.room].Doors[DIRECTION]
+    if CurDoor.DoorType == 2 or CurDoor.DoorType == 4:
+       if CurDoor.Passable == False:
+          player.sendToPlayer("%s%s is already closed." % (minionDefines.WHITE, minionsRooms.DIRLIST[DIRECTION]) )
+       else:
+          minionsRooms.RoomList[player.room].Doors[DIRECTION].Passable = False
+          minionsRooms.RoomList[player.room].Doors[DIRECTION].DoorStatus = minionsRooms.CLOSED
+          OtherRoom = minionsRooms.RoomList[player.room].Doors[DIRECTION].ToRoom
+          if minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorType == CurDoor.DoorType:
+             minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].Passable = False
+             minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorStatus = minionsRooms.CLOSED
+
+          player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You close the ", minionsRooms.DOORTYPE[CurDoor.DoorType]) )
+          player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, player.name, " closes the ", minionsRooms.DOORTYPE[CurDoor.DoorType]) )
+    else:
+       player.sendToPlayer("%s%s%s%s" % (minionDefines.WHITE, "you do not see a ", minionsRooms.DOORTYPE[CurDoor.DoorType], " ", minionsRooms.DIRTEXT[DIRECTION] ) )
+
 
 ################################################
 # Command -> Gossip

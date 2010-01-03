@@ -23,9 +23,48 @@ NODOOR         = 0
 PATHWAY        = 1
 DOOR           = 2
 SECRETDOOR     = 3
+GATE           = 4
 
+# Door Status
+HIDDEN         = 0
+OPEN           = 2
+CLOSED         = 1
 
+# Text displayed when your path is blocked
+# Should match Door Types listed above
+BLOCKEDTEXT    = { 0: "You run into the wall | runs into the wall ",
+                   1: " | ",
+                   2: "You run into the door | runs into the door ",
+                   3: "You run into the wall | runs into the wall ",
+                   4: "You run into the gate | runs into the gate "
+                 }
 
+# Door type names
+DOORTYPE       = { 2: "door",
+                   3: "gate"
+                 }
+OPPOSITEDOOR   =  { NORTH: SOUTH,
+                    NE: SW,
+                    EAST: WEST,
+                    SE: NW,
+                    SOUTH: NORTH,
+                    SW: NE,
+                    WEST: EAST,
+                    NW: SE,
+                    UP: DOWN,
+                    DOWN: UP
+                 }
+DIRTEXT        = { 1: 'north',
+                   2: 'northeast',
+                   3: 'east',
+                   4: 'southeast',
+                   5: 'south',
+                   6: 'southwest',
+                   7: 'west',
+                   8: 'northwest',
+                   9: 'up',
+                  10: 'down'
+                 }
 
 class Room():
       def __init__(self):
@@ -178,8 +217,19 @@ class Room():
             else:
                return ""
 
-
-
+##############################################
+# ResetDoor()
+#
+# Resets the door to it's default status
+# Locked, hidden, etc based on DoorType
+##############################################
+      def ResetDoor(self):
+         if self.DoorType == SECRETDOOR:
+            self.DoorStatus = HIDDEN
+            self.Passable = False
+         else:
+            self.DoorStatus = CLOSED
+            self.Passable = False
 
 
 ##############################################
