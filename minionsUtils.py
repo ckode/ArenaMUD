@@ -64,7 +64,7 @@ def StatLine(player):
    player.transport.write(chr(27) + "[" + str(STATSIZE) + ";C")
    player.transport.write(minionDefines.DELETELEFT)
    player.transport.write(minionDefines.FIRSTCOL)
-   player.transport.write(STATLINE + minionDefines.RESTORECUR)#  + chr(27) + "[" + str(STATSIZE) + "C")
+   player.transport.write(STATLINE + minionDefines.RESTORECUR)
 
 
 #################################################
@@ -103,8 +103,3 @@ def DisplayAction(player, ActionID):
     player.sendToRoom(minionDefines.BLUE + ActionList[0] % (player.name,) )
     player.BroadcastToRoom(minionDefines.BLUE + ActionList[1])
 
-
-def ToggleSecretExit(RoomID, Value):
-    global RoomList
-
-    minionsRooms.RoomList[RoomID].ExitsToggle = Value
