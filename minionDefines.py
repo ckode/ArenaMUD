@@ -57,7 +57,7 @@ DELETELINE         = chr(27) + "[2K"
 FIRSTCOL           = chr(27) + "[80D"
 SAVECUR            = chr(27) + "s"
 RESTORECUR         = chr(27) + "u"
-DELETELEFT         = chr(27) + "[1k"
+DELETELEFT         = chr(27) + "[1K"
 
 #          Light Levels
 NORMALVISION       = 1

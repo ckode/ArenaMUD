@@ -51,6 +51,12 @@ class Users(StatefulTelnetProtocol):
                            'legs':         None,
                            'neck':         None,
                            'feet':         None,
+                           'face':         None,
+                           'waist':        None,
+                           'wielded':      None,
+                           'off-hand':     None,
+                           'l_wrist':      None,
+                           'r_wrist':      None
                          }
 
     def connectionMade(self):
@@ -92,8 +98,10 @@ class Users(StatefulTelnetProtocol):
         self.sendToPlayer("You say, " + line + minionsDefines.WHITE)
 
     def sendToPlayer(self, line):
+        self.transport.write(minionDefines.DELETELEFT)
+        self.transport.write(minionDefines.FIRSTCOL)
         self.sendLine(line + minionDefines.WHITE)
-
+        minionsUtils.StatLine(self)
 
 
     ################################################
@@ -106,7 +114,10 @@ class Users(StatefulTelnetProtocol):
                 pass
             else:
                 if self.factory.players[pid].STATUS == minionDefines.PLAYING:
+                    self.transport.write(minionDefines.DELETELEFT)
+                    self.transport.write(minionDefines.FIRSTCOL)
                     self.factory.players[pid].sendToPlayer(line + minionDefines.WHITE)
+                    minionsUtils.StatLine(self)
 
     ################################################
     # Send to everyone in current room
@@ -114,8 +125,11 @@ class Users(StatefulTelnetProtocol):
     def BroadcastToRoom(self, line):
         global RoomList
         for pid in minionsRooms.RoomList[self.room].Players.keys():
-            if self.factory.players[pid].STATUS == minionDefines.PLAYING:
+           if self.factory.players[pid].STATUS == minionDefines.PLAYING:
+               self.transport.write(minionDefines.DELETELEFT)
+               self.transport.write(minionDefines.FIRSTCOL)
                self.factory.players[pid].sendToPlayer(line + minionDefines.WHITE)
+               minionsUtils.StatLine(self)
 
     ################################################
     # Send to everyone in current room but victim and player
@@ -129,7 +143,9 @@ class Users(StatefulTelnetProtocol):
                 pass
             else:
                 if self.factory.players[pid].STATUS == minionDefines.PLAYING:
+                    self.transport.write(minionDefines.DELETELEFT)
                     self.factory.players[pid].sendToPlayer(line + minionDefines.WHITE)
+                    minionsUtils.StatLine(self)
 
 
     ################################################
@@ -160,8 +176,8 @@ class SonzoFactory(ServerFactory):
 
     def DoNaturalHealing(self):
        for player in self.players.values():
-          if player.hp != player.maxhp or player.mana != player.maxmana:
-             minionsUtils.NaturalHealing(player)
+          #if player.hp != player.maxhp or player.mana != player.maxmana:
+          minionsUtils.NaturalHealing(player)
 
 
     def Shutdown(self):

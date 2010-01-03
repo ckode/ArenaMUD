@@ -283,14 +283,16 @@ def Who(player):
 ################################################
 def Say(player, line):
     player.sendToRoom(minionDefines.GREEN + player.name + " says: " + minionDefines.WHITE + line)
-    player.sendLine(minionDefines.GREEN + "You say: " + minionDefines.WHITE + line + minionDefines.WHITE)
+    player.transport.write(minionDefines.DELETELEFT)
+    player.transport.write(minionDefines.FIRSTCOL)
+    player.sendToPlayer(minionDefines.GREEN + "You say: " + minionDefines.WHITE + line + minionDefines.WHITE)
 
 ################################################
 # Command -> Emote
 ################################################
 def Emote(player, line):
     player.sendToRoom(minionDefines.BLUE + player.name + " " + line)
-    player.sendLine(minionDefines.BLUE + player.name + " " + line + minionDefines.WHITE)
+    player.sendToPlayer(minionDefines.BLUE + player.name + " " + line + minionDefines.WHITE)
 
 ################################################
 # Command -> Brief
@@ -298,10 +300,10 @@ def Emote(player, line):
 def Brief(player):
     if player.briefDesc == 1:
        player.briefDesc = 0
-       player.sendLine(minionDefines.WHITE + "Verbose mode set.")
+       player.sendToPlayer(minionDefines.WHITE + "Verbose mode set.")
     else:
        player.briefDesc = 1
-       player.sendLine(minionDefines.WHITE + "Quiet mode set.")
+       player.sendToPlayer(minionDefines.WHITE + "Quiet mode set.")
 
 ################################################
 # Command -> Help
@@ -338,13 +340,13 @@ def Slap(player, victim):
 ################################################
 def Rofl(player):
     player.sendToRoom(minionDefines.GREEN + player.name + " rolls on the floor laughing!" + minionDefines.WHITE)
-    player.sendLine(minionDefines.GREEN + "You roll on the floor laughing!" + minionDefines.WHITE)
+    player.sendToPlayer(minionDefines.GREEN + "You roll on the floor laughing!" + minionDefines.WHITE)
 ################################################
 # Command -> Say
 ################################################
 def Wtf(player):
     player.sendToRoom(minionDefines.GREEN + player.name + " yells, What the fuck!" + minionDefines.WHITE)
-    player.sendLine(minionDefines.GREEN + "You yell, What the fuck!" + minionDefines.WHITE)
+    player.sendToPlayer(minionDefines.GREEN + "You yell, What the fuck!" + minionDefines.WHITE)
 
 ################################################
 # Command -> Look
