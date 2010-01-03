@@ -36,7 +36,8 @@ def commandParser(player, line):
                  'rofl':             minionsCommands.Rofl,
                  'wtf':              minionsCommands.Wtf,
                  'slap':             minionsCommands.Slap,
-                 'vision':           ""
+                 'vision':           "",
+                 'brief':            minionsCommands.Brief
                }
     cmd = line.split()
     if len(cmd) == 0:
@@ -52,6 +53,11 @@ def commandParser(player, line):
                 #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
                 player.vision = int(cmd[1])
                 player.sendToPlayer("%sVision changed." % (minionDefines.WHITE,) )
+                return
+          # Brief command (for brief room desc)
+          elif each == "brief":
+             if len(cmd[0]) == 5 and len(cmd) == 1:
+                commands[each](player)
                 return
           # Gossip command
           elif each == "gossip":

@@ -98,7 +98,7 @@ class Room():
           # East
           if self.Doors[EAST].DoorType != NODOOR:
              tmpSize = len(ObviousExits)
-             ObviousExits += GetDoorExit(EAST, DoorCount)
+             ObviousExits += self.GetDoorExit(EAST, DoorCount)
              if len(ObviousExits) > tmpSize:
                 DoorCount += 1
 
