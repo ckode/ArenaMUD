@@ -202,15 +202,15 @@ def commandParser(player, line):
                 reactor.callLater(.5, minionsCommands.NorthWest, player)
                 return
              continue
-       elif minionsRooms.RoomList[player.room].SecretDirection > 0:
-          if line.lower() == minionsRooms.RoomList[player.room].SecretPhrase.lower():
-             RoomID = player.room
-             minionsUtils.ToggleSecretExit(RoomID, True)
-
-             if minionsRooms.RoomList[player.room].ActionID > 0:
-                minionsUtils.DisplayAction(player, minionsRooms.RoomList[player.room].ActionID)
-             reactor.callLater( 120, minionsUtils.ToggleSecretExit, RoomID, False)
-             return
+#       elif minionsRooms.RoomList[player.room].SecretDirection > 0:
+#          if line.lower() == minionsRooms.RoomList[player.room].SecretPhrase.lower():
+#             RoomID = player.room
+#             minionsUtils.ToggleSecretExit(RoomID, True)
+#
+#             if minionsRooms.RoomList[player.room].ActionID > 0:
+#                minionsUtils.DisplayAction(player, minionsRooms.RoomList[player.room].ActionID)
+#             reactor.callLater( 120, minionsUtils.ToggleSecretExit, RoomID, False)
+#             return
 
 
 

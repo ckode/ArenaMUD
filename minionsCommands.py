@@ -5,14 +5,27 @@ import minionsRooms, minionsUtils, minionsParser
 
 import time
 
+
+NONE         =  0
+NORTH        =  1
+NE           =  2
+EAST         =  3
+SE           =  4
+SOUTH        =  5
+SW           =  6
+WEST         =  7
+NW           =  8
+UP           =  9
+DOWN         = 10
+
 ################################################
 # Command Up
 ################################################
 def Up(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].U
-   if NewRoom != 0:
+   if minionsRooms.RoomList[player.room].Doors[UP].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[UP].ToRoom
       # Remove user from old room
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.sendToRoom(minionDefines.WHITE + player.name + " just left up.")
@@ -20,17 +33,6 @@ def Up(player):
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name + " just arrived from below.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.UP:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -46,8 +48,8 @@ def Up(player):
 def Down(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].D
-   if NewRoom != 0:
+   if minionsRooms.RoomList[player.room].Doors[DOWN].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[DOWN].ToRoom
       # Remove user from old room
       player.sendToRoom(minionDefines.WHITE + player.name + " just left down.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
@@ -55,17 +57,6 @@ def Down(player):
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from above.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.DOWN:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -80,8 +71,8 @@ def Down(player):
 def North(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].N
-   if NewRoom != 0:
+   if minionsRooms.RoomList[player.room].Doors[NORTH].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[NORTH].ToRoom
       # Remove user from old room
       player.sendToRoom(minionDefines.WHITE + player.name + " just left to the north.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
@@ -89,17 +80,6 @@ def North(player):
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the south.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.NORTH:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -115,8 +95,8 @@ def North(player):
 def NorthEast(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].NE
-   if NewRoom != 0:
+   if minionsRooms.RoomList[player.room].Doors[NE].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[NE].ToRoom
       # Remove user from old room
       player.sendToRoom(minionDefines.WHITE + player.name + " just left to the northeast.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
@@ -124,17 +104,6 @@ def NorthEast(player):
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the southwest.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.NE:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -150,8 +119,8 @@ def NorthEast(player):
 def East(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].E
-   if NewRoom != 0:
+   if minionsRooms.RoomList[player.room].Doors[EAST].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[EAST].ToRoom
       # Remove user from old room
       player.sendToRoom(minionDefines.WHITE + player.name + " just left to the east.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
@@ -159,17 +128,6 @@ def East(player):
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the west.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.EAST:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -184,8 +142,8 @@ def East(player):
 def SouthEast(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].NE
-   if NewRoom != 0:
+   if minionsRooms.RoomList[player.room].Doors[SE].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[SE].ToRoom
       # Remove user from old room
       player.sendToRoom(minionDefines.WHITE + player.name + " just left to the southeast.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
@@ -193,17 +151,6 @@ def SouthEast(player):
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the northwest.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.SE:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -218,8 +165,8 @@ def SouthEast(player):
 def South(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].S
-   if NewRoom != 0:
+   if minionsRooms.RoomList[player.room].Doors[SOUTH].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[SOUTH].ToRoom
       # Remove user from old room
       player.sendToRoom(minionDefines.WHITE + player.name + " just left to the south.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
@@ -227,17 +174,6 @@ def South(player):
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the north.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.SOUTH:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -252,8 +188,8 @@ def South(player):
 def SouthWest(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].S
-   if NewRoom != 0:
+   if minionsRooms.RoomList[player.room].Doors[SW].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[SW].ToRoom
       # Remove user from old room
       player.sendToRoom(minionDefines.WHITE + player.name + " just left to the southwest.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
@@ -261,17 +197,6 @@ def SouthWest(player):
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the northeast.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.SW:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -287,19 +212,8 @@ def SouthWest(player):
 def West(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].W
-   if NewRoom != 0:
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.WEST:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
+   if minionsRooms.RoomList[player.room].Doors[WEST].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[WEST].ToRoom
       # Remove user from old room
       player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
@@ -322,8 +236,8 @@ def West(player):
 def NorthWest(player):
    global RoomList
    # Get new room ID
-   NewRoom = minionsRooms.RoomList[player.room].NW
-   if NewRoom != 0:
+   if minionsRooms.RoomList[player.room].Doors[NW].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[NW].ToRoom
       # Remove user from old room
       player.sendToRoom(minionDefines.WHITE + player.name + " just left to the northwest.")
       del minionsRooms.RoomList[player.room].Players[player.playerid]
@@ -331,17 +245,6 @@ def NorthWest(player):
       # Add player to that room
       minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
       player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the southeast.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   elif minionsRooms.RoomList[player.room].ExitsToggle and minionsRooms.RoomList[player.room].SecretDirection == minionDefines.NW:
-      NewRoom = minionsRooms.RoomList[player.room].SecretRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
@@ -471,10 +374,7 @@ def Look(player, RoomNum):
 
       player.sendLine(names)
 
-   if Room.ExitsToggle:
-      player.sendLine(minionDefines.GREEN + "Obvious exits: " + Room.AltExits + minionDefines.WHITE)
-   else:
-      player.sendLine(minionDefines.GREEN + "Obvious exits: " + Room.exits + minionDefines.WHITE)
+   player.sendLine(Room.DisplayExits() + minionDefines.WHITE)
    minionsUtils.StatLine(player)
 ################################################
 # Command -> Set <property>
