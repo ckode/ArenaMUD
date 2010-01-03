@@ -41,7 +41,7 @@ BLOCKEDTEXT    = { 0: "You run into the wall | runs into the wall ",
 
 # Door type names
 DOORTYPE       = { 2: "door",
-                   3: "gate"
+                   4: "gate"
                  }
 OPPOSITEDOOR   =  { NORTH: SOUTH,
                     NE: SW,

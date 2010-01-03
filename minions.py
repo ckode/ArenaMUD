@@ -122,9 +122,9 @@ class Users(StatefulTelnetProtocol):
     ################################################
     # Send to everyone in current room
     ################################################
-    def BroadcastToRoom(self, line):
+    def BroadcastToRoom(self, line, RoomNumber):
         global RoomList
-        for pid in minionsRooms.RoomList[self.room].Players.keys():
+        for pid in minionsRooms.RoomList[RoomNumber].Players.keys():
            if self.factory.players[pid].STATUS == minionDefines.PLAYING:
                self.transport.write(minionDefines.DELETELEFT)
                self.transport.write(minionDefines.FIRSTCOL)
