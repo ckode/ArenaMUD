@@ -1,5 +1,5 @@
 import string
-# Game player status defines
+# Game player status defines      
 LOGOUT           = 0
 LOGIN            = 1
 GETNAME          = 2
