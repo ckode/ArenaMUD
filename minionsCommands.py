@@ -293,6 +293,17 @@ def Emote(player, line):
     player.sendLine(minionDefines.BLUE + player.name + " " + line + minionDefines.WHITE)
 
 ################################################
+# Command -> Brief
+################################################
+def Brief(player):
+    if player.briefDesc == 1:
+       player.briefDesc = 0
+       player.sendLine(minionDefines.WHITE + "Verbose mode set.")
+    else:
+       player.briefDesc = 1
+       player.sendLine(minionDefines.WHITE + "Quiet mode set.")
+
+################################################
 # Command -> Help
 ################################################
 def Help(player):
@@ -358,15 +369,16 @@ def Look(player, RoomNum):
          minionsUtils.StatLine(player)
          return
    player.sendLine(minionDefines.LCYAN + Room.Name)
-   player.sendLine(minionDefines.WHITE + Room.Desc1)
-   if Room.Desc2 != "*":
-      player.sendLine(minionDefines.WHITE + Room.Desc2)
-   if Room.Desc3 != "*":
-      player.sendLine(minionDefines.WHITE + Room.Desc3)
-   if Room.Desc4 != "*":
-      player.sendLine(minionDefines.WHITE + Room.Desc4)
-   if Room.Desc5 != "*":
-      player.sendLine(minionDefines.WHITE + Room.Desc5)
+   if player.briefDesc != 1:
+      player.sendLine(minionDefines.WHITE + Room.Desc1)
+      if Room.Desc2 != "*":
+         player.sendLine(minionDefines.WHITE + Room.Desc2)
+      if Room.Desc3 != "*":
+         player.sendLine(minionDefines.WHITE + Room.Desc3)
+      if Room.Desc4 != "*":
+         player.sendLine(minionDefines.WHITE + Room.Desc4)
+      if Room.Desc5 != "*":
+         player.sendLine(minionDefines.WHITE + Room.Desc5)
    PeopleInRoom = minionsUtils.WhoIsInTheRoom(player, RoomNum)
    Count = len(PeopleInRoom)
    if Count > 1:

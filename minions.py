@@ -40,6 +40,7 @@ class Users(StatefulTelnetProtocol):
     vision             = 1
     spellcasting       = 0
     blind              = False
+    briefDesc          = 0
     moving             = 0
     holding            = {}
     wearing            = { 'arms':         None,
