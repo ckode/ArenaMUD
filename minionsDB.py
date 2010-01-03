@@ -222,7 +222,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[NORTH].Exits[1]           = str(row[19])
         minionsRooms.RoomList[row[0]].Doors[NORTH].Exits[2]           = str(row[20])
         if minionsRooms.RoomList[row[0]].Doors[NORTH].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[NORTH].DoorLocked = 1
 
         minionsRooms.RoomList[row[0]].Doors[NORTHEAST].DoorType       = row[21]
         minionsRooms.RoomList[row[0]].Doors[NORTHEAST].ToRoom         = row[22]
@@ -234,7 +234,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[NORTHEAST].Exits[1]       = str(row[28])
         minionsRooms.RoomList[row[0]].Doors[NORTHEAST].Exits[2]       = str(row[29])
         if minionsRooms.RoomList[row[0]].Doors[NORTHEAST].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[NORTHEAST].DoorLocked = 1
 
         minionsRooms.RoomList[row[0]].Doors[EAST].DoorType            = row[30]
         minionsRooms.RoomList[row[0]].Doors[EAST].ToRoom              = row[31]
@@ -246,7 +246,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[EAST].Exits[1]            = str(row[37])
         minionsRooms.RoomList[row[0]].Doors[EAST].Exits[2]            = str(row[38])
         if minionsRooms.RoomList[row[0]].Doors[EAST].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[EAST].DoorLocked = 1
 
         minionsRooms.RoomList[row[0]].Doors[SOUTHEAST].DoorType       = row[39]
         minionsRooms.RoomList[row[0]].Doors[SOUTHEAST].ToRoom         = row[40]
@@ -258,7 +258,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[SOUTHEAST].Exits[1]       = str(row[46])
         minionsRooms.RoomList[row[0]].Doors[SOUTHEAST].Exits[2]       = str(row[47])
         if minionsRooms.RoomList[row[0]].Doors[SOUTHEAST].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[SOUTHEAST].DoorLocked = 1
 
         minionsRooms.RoomList[row[0]].Doors[SOUTH].DoorType           = row[48]
         minionsRooms.RoomList[row[0]].Doors[SOUTH].ToRoom             = row[49]
@@ -270,7 +270,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[SOUTH].Exits[1]           = str(row[55])
         minionsRooms.RoomList[row[0]].Doors[SOUTH].Exits[2]           = str(row[56])
         if minionsRooms.RoomList[row[0]].Doors[SOUTH].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[SOUTH].DoorLocked = 1
 
         minionsRooms.RoomList[row[0]].Doors[SOUTHWEST].DoorType       = row[57]
         minionsRooms.RoomList[row[0]].Doors[SOUTHWEST].ToRoom         = row[58]
@@ -282,7 +282,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[SOUTHWEST].Exits[1]       = str(row[64])
         minionsRooms.RoomList[row[0]].Doors[SOUTHWEST].Exits[2]       = str(row[65])
         if minionsRooms.RoomList[row[0]].Doors[SOUTHWEST].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[SOUTHWEST].DoorLocked = 1
 
         minionsRooms.RoomList[row[0]].Doors[WEST].DoorType           = row[66]
         minionsRooms.RoomList[row[0]].Doors[WEST].ToRoom             = row[67]
@@ -294,7 +294,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[WEST].Exits[1]           = str(row[73])
         minionsRooms.RoomList[row[0]].Doors[WEST].Exits[2]           = str(row[74])
         if minionsRooms.RoomList[row[0]].Doors[WEST].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[WEST].DoorLocked = 1
 
         minionsRooms.RoomList[row[0]].Doors[NORTHWEST].DoorType       = row[75]
         minionsRooms.RoomList[row[0]].Doors[NORTHWEST].ToRoom         = row[76]
@@ -306,7 +306,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[NORTHWEST].Exits[1]       = str(row[82])
         minionsRooms.RoomList[row[0]].Doors[NORTHWEST].Exits[2]       = str(row[83])
         if minionsRooms.RoomList[row[0]].Doors[NORTHWEST].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[NORTHWEST].DoorLocked = 1
 
         minionsRooms.RoomList[row[0]].Doors[UP].DoorType              = row[84]
         minionsRooms.RoomList[row[0]].Doors[UP].ToRoom                = row[85]
@@ -318,7 +318,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[UP].Exits[1]              = str(row[91])
         minionsRooms.RoomList[row[0]].Doors[UP].Exits[2]              = str(row[92])
         if minionsRooms.RoomList[row[0]].Doors[UP].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[UP].DoorLocked = 1
 
         minionsRooms.RoomList[row[0]].Doors[DOWN].DoorType           = row[93]
         minionsRooms.RoomList[row[0]].Doors[DOWN].ToRoom             = row[94]
@@ -330,6 +330,6 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].Doors[DOWN].Exits[1]           = str(row[100])
         minionsRooms.RoomList[row[0]].Doors[DOWN].Exits[2]           = str(row[101])
         if minionsRooms.RoomList[row[0]].Doors[DOWN].DoesLock == 1:
-           minionsRooms.RoomList[row[0]].DoorLocked = 1
+           minionsRooms.RoomList[row[0]].Doors[DOWN].DoorLocked = 1
 
     print "Loaded %d rooms." % (len(minionsRooms.RoomList),)

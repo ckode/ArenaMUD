@@ -365,49 +365,55 @@ def Close(player, something):
 # Command -> OpenDoor
 ################################################
 def OpenDoor(player, DIRECTION):
-    global RoomList
+    global RoomList, DIRTEXT
     CurDoor = minionsRooms.RoomList[player.room].Doors[DIRECTION]
     if CurDoor.Passable:
-       player.sendToPlayer("%s%s is already open." % (minionDefines.WHITE, DIRLIST[DIRECTION]) )
+       player.sendToPlayer("%s%s is already open." % (minionDefines.WHITE, minionsRooms.DIRTEXT[DIRECTION].capitalize()) )
     else:
-       print "LOCKED?: " + str(CurDoor.DoorLocked)
-       if CurDoor.DoorStatus != NONE:
+       # Is this a door and is it visable?
+       if CurDoor.DoorType == 2 or CurDoor.DoorType == 4:
+          # If locked, say so
           if CurDoor.DoorLocked == 1:
-             player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, CurDoor.Exits[2], " is locked.") )
+             player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, CurDoor.Exits[1].capitalize(), " is locked.") )
           else:
+             CurDoor.DoorType == 2 or CurDoor.DoorType == 4
+             # Open the door on both sides of the door.
              minionsRooms.RoomList[player.room].Doors[DIRECTION].Passable = True
              minionsRooms.RoomList[player.room].Doors[DIRECTION].DoorStatus = minionsRooms.OPEN
              OtherRoom = minionsRooms.RoomList[player.room].Doors[DIRECTION].ToRoom
              if minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorType == CurDoor.DoorType:
                 minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].Passable = True
                 minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorStatus = minionsRooms.OPEN
+                player.BroadcastToRoom("%sThe %s to the %s opens." % (minionDefines.WHITE, minionsRooms.DOORTYPE[CurDoor.DoorType], minionsRooms.DIRTEXT[minionsRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoom)
 
              player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You open the ", minionsRooms.DOORTYPE[CurDoor.DoorType]) )
              player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, player.name, " opens the ", minionsRooms.DOORTYPE[CurDoor.DoorType]) )
-       else:
-          player.sendToPlayer("%s%s%s%s" % (minionDefines.WHITE, "you do not see a ", minionsRooms.DOORTYPE[CurDoor.DoorType], " ", minionsRooms.DIRTEXT[DIRECTION] ) )
+       else: # You don't see a door!
+          player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You do not see anything to open to the ", minionsRooms.DIRTEXT[DIRECTION]) )
 
 ################################################
 # Command -> CloseDoor
 ################################################
 def CloseDoor(player, DIRECTION):
-    global RoomList
+    global RoomList, DIRTEXT
     CurDoor = minionsRooms.RoomList[player.room].Doors[DIRECTION]
+    # Is this a door of type door or gate? (need to fix this so I just check 1 thing)
     if CurDoor.DoorType == 2 or CurDoor.DoorType == 4:
        if CurDoor.Passable == False:
-          player.sendToPlayer("%s%s is already closed." % (minionDefines.WHITE, minionsRooms.DIRLIST[DIRECTION]) )
+          player.sendToPlayer("%s%s is already closed." % (minionDefines.WHITE, minionsRooms.DIRTEXT[DIRECTION].capitalize()) )
        else:
           minionsRooms.RoomList[player.room].Doors[DIRECTION].Passable = False
           minionsRooms.RoomList[player.room].Doors[DIRECTION].DoorStatus = minionsRooms.CLOSED
           OtherRoom = minionsRooms.RoomList[player.room].Doors[DIRECTION].ToRoom
           if minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorType == CurDoor.DoorType:
              minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].Passable = False
-             minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorStatus = minionsRooms.CLOSED
+             minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorStatus = minionsRooms.CLOSED  
+             player.BroadcastToRoom("%sThe %s to the %s closes." % (minionDefines.WHITE, minionsRooms.DOORTYPE[CurDoor.DoorType], minionsRooms.DIRTEXT[minionsRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoom)
 
           player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You close the ", minionsRooms.DOORTYPE[CurDoor.DoorType]) )
           player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, player.name, " closes the ", minionsRooms.DOORTYPE[CurDoor.DoorType]) )
     else:
-       player.sendToPlayer("%s%s%s%s" % (minionDefines.WHITE, "you do not see a ", minionsRooms.DOORTYPE[CurDoor.DoorType], " ", minionsRooms.DIRTEXT[DIRECTION] ) )
+       player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You do not see anything to close to the ", minionsRooms.DIRTEXT[DIRECTION]) )
 
 
 ################################################
