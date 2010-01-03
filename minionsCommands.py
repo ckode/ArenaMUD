@@ -358,7 +358,15 @@ def Look(player, RoomNum):
          minionsUtils.StatLine(player)
          return
    player.sendLine(minionDefines.LCYAN + Room.Name)
-   player.sendLine(minionDefines.WHITE + Room.Description)
+   player.sendLine(minionDefines.WHITE + Room.Desc1)
+   if Room.Desc2 != "*":
+      player.sendLine(minionDefines.WHITE + Room.Desc2)
+   if Room.Desc3 != "*":
+      player.sendLine(minionDefines.WHITE + Room.Desc3)
+   if Room.Desc4 != "*":
+      player.sendLine(minionDefines.WHITE + Room.Desc4)
+   if Room.Desc5 != "*":
+      player.sendLine(minionDefines.WHITE + Room.Desc5)
    PeopleInRoom = minionsUtils.WhoIsInTheRoom(player, RoomNum)
    Count = len(PeopleInRoom)
    if Count > 1:

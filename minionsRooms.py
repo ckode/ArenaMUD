@@ -33,7 +33,11 @@ class Room():
 
          self.RoomNum          = 0
          self.Name             = ""
-         self.Description      = ""
+         self.Desc1            = ""
+         self.Desc2            = ""
+         self.Desc3            = ""
+         self.Desc4            = ""
+         self.Desc5            = ""
          self.RoomType         = 0
          self.LightLevel       = 1
          self.SecretPhrase     = ""
