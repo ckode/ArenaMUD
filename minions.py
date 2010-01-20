@@ -22,6 +22,7 @@ class Users(StatefulTelnetProtocol):
     lastname           = ""
     password           = ""
     level              = 0
+    energy             = 0
     strength           = 0
     agility            = 0
     intelligence       = 0
