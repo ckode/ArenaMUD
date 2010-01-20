@@ -32,7 +32,7 @@ def LoadPlayer(player):
     player.mana     = row[5]
     player.mr       = row[6]
     player.stealth  = row[7]
-    player.room     = 11 #row[8]
+    player.room     = row[8]
     conn.close()
 
        
