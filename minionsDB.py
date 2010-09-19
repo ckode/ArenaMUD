@@ -11,7 +11,7 @@ import minionsLog, minionsRooms
 def LoadPlayer(player):
     global DB
     try:
-        conn     = sqlite3.connect('minions.db')
+        conn     = sqlite3.connect('data\\players.db')
         cur      = conn.cursor()
     except:
         minionsLog.Logit("Failed to open database!")
@@ -35,7 +35,7 @@ def LoadPlayer(player):
     player.room     = row[8]
     conn.close()
 
-       
+
 #################################################
 # GetUserID()
 #
@@ -43,9 +43,9 @@ def LoadPlayer(player):
 #################################################
 def GetUserID(name):
     global DB
-    
+
     try:
-        conn     = sqlite3.connect('minions.db')
+        conn     = sqlite3.connect('data\\players.db')
         cur      = conn.cursor()
     except:
         minionsLog.Logit("Failed to open database!")
@@ -72,9 +72,9 @@ def GetUserID(name):
 #################################################
 def GetPassword(name):
     global DB
-    
+
     try:
-        conn     = sqlite3.connect('minions.db')
+        conn     = sqlite3.connect('data\\players.db')
         cur      = conn.cursor()
     except:
         minionsLog.Logit("Failed to open database!")
@@ -99,7 +99,7 @@ def CreatePlayer(player):
     data = [player.name, player.lastname, player.password, player.hp, player.maxhp, player.mana, player.maxmana, player.mr, player.stealth, player.room]
 
     try:
-        conn     = sqlite3.connect('minions.db')
+        conn     = sqlite3.connect('data\\players.db')
         cur      = conn.cursor()
     except:
         minionsLog.Logit("Failed to open database!")
@@ -118,7 +118,7 @@ def CreatePlayer(player):
     uid = cur.fetchone()[0]
     conn.close()
     return uid
-    
+
 #################################################
 # ChangePassword()
 #
@@ -128,7 +128,7 @@ def ChangePassword(name, password):
     global DB
 
     try:
-        conn     = sqlite3.connect('minions.db')
+        conn     = sqlite3.connect('data\\players.db')
         cur      = conn.cursor()
     except:
         minionsLog.Logit("Failed to open database!")
@@ -150,7 +150,7 @@ def ChangeLastname(name, lastname):
     global DB
 
     try:
-        conn     = sqlite3.connect('minions.db')
+        conn     = sqlite3.connect('data\\players.db')
         cur      = conn.cursor()
     except:
         minionsLog.Logit("Failed to open database!")
@@ -186,7 +186,7 @@ def LoadRooms(Sonzo):
     DOWN         = 10
 
     try:
-        conn     = sqlite3.connect('minions.db')
+        conn     = sqlite3.connect('data\\rooms.db')
         cur      = conn.cursor()
     except:
         minionsLog.Logit("Failed to open database!")
