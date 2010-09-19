@@ -1,6 +1,7 @@
 import minionDefines
 
 RoomList = {}
+DoorList = {}
 
 RoomActionID = { 1: "%s pushs the wall.|The wall slides out of the way!"
                }
@@ -66,6 +67,68 @@ DIRTEXT        = { 1: 'north',
                   10: 'down'
                  }
 
+
+# New room Object
+# *** Not currently in use ***
+class RoomObj():
+    def __init__(self):
+        self.RoomNum           = 0   # Room ID
+        self.Name              = ""  # Title of the room
+        self.Desc              = 0   # Full room discription
+        self.Doors             = {}  # Doors{direction: DoorID}
+        self.LightLevel        = 0   # Light level in room
+        self.RoomSpell         = 0   # The ID of a spell that continuously casts in the room.
+        self.PlayerTrap        = 0   # Trap set by player, only lands once then is gone.
+        self.RoomTrap          = 0   # Room trap, hits everytime you enter room
+
+        self.ItemsInRoom       = {}  # Items laying on the ground in the room
+        self.ItemsInRoomCount  = {}  # Count of how many items are on the ground (do we need this?)
+        self.Players           = {}  # List of players currently in the room
+
+
+    def NewDisplayExits(self):
+          DoorCount = 0
+          # Start string
+          ObviousExits = "%sObvious exits: " % (minionDefines.GREEN,)
+          EmptySize = len(ObviousExits)
+
+          # Cycle through the doors in the room and build the obvious exits string
+          for _door in self.Doors.keys:
+
+              # Make current door local var to shorten the var mapping code
+              CurDoor = self.Doors[_door]
+
+              # If the door is NOT invisable, this go ahead.
+              if CurDoor.DoorStatus != 0:
+
+                  DoorCount =+ 1
+                  # Is it only a pathway and not a door that requires more of a discription?
+                  if CurDoor.DoorType == PATHWAY:
+                      # Just display direction (east)
+                      if DoorCount > 1:
+                          ObviousExits =+ ", " + DIRTEXT[_door]
+                      else:
+                          ObviousExits =+ DIRTEXT[_door]
+                  # Display door type, status, and direction (door open east)
+                  else:
+                      if DoorCount > 1:
+                          ObviousExits =+ ", " + MESSAGES[CurDoor.DoorDesc[CurDoor.DoorStatus]] + " " + DIRTEXT[_door]
+                      else:
+                          ObviousExits =+ MESSAGES[CurDoor.DoorDesc[CurDoor.DoorStatus]] + " " + DIRTEXT[_door]
+
+
+          # Return NONE, or add the finally period to close the sentence
+          if DoorCount == 0:
+              ObviousExits =+ "NONE!"
+          else:
+              ObviousExits =+ "."
+
+          return ObviousExits
+
+
+################################################################
+# Currently in use, but to be removed once new code is ready
+################################################################
 class Room():
       def __init__(self):
 # Define Door Types
@@ -82,7 +145,7 @@ class Room():
          self.SecretPhrase     = ""
          self.PhraseFunctionID = 0
          self.ActionID         = 0
-         # Room doors/directions (holds Door class objects)   
+         # Room doors/directions (holds Door class objects)
          self.Doors            = { 1:    Door(), # North
                                    2:    Door(), # NE
                                    3:    Door(), # East
@@ -247,5 +310,18 @@ class Door():
         self.Passable             = 0         # Can go through it. (0 no, 1 yes)
         self.Exits                = { 1: "", 2: "" }  # The display for Obvisous exits (1=open, 2=closed)
 
+###############################################
+# New Door Object to replace old door object
+# *** Not currently in use ***
+###############################################
+class DoorObj():
+    def __init__(self):
+        self.DoorType             = 0         # TextBlock lookup for door description (pathway, door, secret passage, gate)
+        self.DoorStatus           = 0         # Status of the exit. (0 = don't display, 1 = display open, 2 = display closed)
+        self.Passable             = 0         # Can pass through door
+        self.DoesLock             = 0         # lockable?
+        self.Locked               = 0         # Is it currently locked?
+        self.DoorDesc             = {}        # DoorDesc[DoorStatus] returns description ID from Description lookup table
+        self.ExitRoom             = {}        # ExitRoom[CurrentRoom] returns room number of the exit room
 
 

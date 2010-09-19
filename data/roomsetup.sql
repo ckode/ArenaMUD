@@ -112,3 +112,16 @@ CREATE TABLE rooms (
     D_EXIT1           VARCHAR(15) NOT NULL,
     D_EXIT2           VARCHAR(15) NOT NULL
 );
+
+
+CREATE TABLES Doors (
+    id                INTEGER PRIMARY KEY,       -- Door ID
+    Passable          INTEGER NOT NULL,
+    DoorStatus        INTEGER NOT NULL,
+    DoesLock          INTEGER NOT NULL,
+    Locked            INTEGER NOT NULL,
+    DoorDesc          INTEGER NOT NULL,
+    ExitRoom1         INTEGER NOT NULL,
+    ExitRoom2         INTEGER NOT NULL
+);
+

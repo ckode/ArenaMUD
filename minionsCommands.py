@@ -19,6 +19,33 @@ UP           =  9
 DOWN         = 10
 
 
+
+################################################
+# MovePlayer() function
+################################################
+def MovePlayer(player, MoveText, Direction):
+   global RoomList, BLOCKEDTEXT
+   ActionText = MoveText.split("|")
+   # Get new room ID
+   if minionsRooms.RoomList[player.room].Doors[Direction].Passable == True:
+      NewRoom = minionsRooms.RoomList[player.room].Doors[UP].ToRoom
+      # Remove user from old room
+      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      player.sendToRoom(minionDefines.WHITE + player.name + ActionText[0])
+      player.room = NewRoom
+      # Add player to that room
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
+      player.sendToRoom(minionDefines.WHITE + player.name + ActionText[1])
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      DoorType = minionsRooms.RoomList[player.room].Doors[UP].DoorType
+      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
+      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], ActionText[2], minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], ActionText[3], minionDefines.WHITE) )
+      minionsUtils.StatLine(player)
+   player.moving = 0
+
 ################################################
 # Command Up
 ################################################
@@ -407,7 +434,7 @@ def CloseDoor(player, DIRECTION):
           OtherRoom = minionsRooms.RoomList[player.room].Doors[DIRECTION].ToRoom
           if minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorType == CurDoor.DoorType:
              minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].Passable = False
-             minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorStatus = minionsRooms.CLOSED  
+             minionsRooms.RoomList[OtherRoom].Doors[minionsRooms.OPPOSITEDOOR[DIRECTION]].DoorStatus = minionsRooms.CLOSED
              player.BroadcastToRoom("%sThe %s to the %s closes." % (minionDefines.WHITE, minionsRooms.DOORTYPE[CurDoor.DoorType], minionsRooms.DIRTEXT[minionsRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoom)
 
           player.sendToPlayer("%sYou close the %s to the %s" % (minionDefines.WHITE, minionsRooms.DOORTYPE[CurDoor.DoorType], minionsRooms.DIRTEXT[DIRECTION]) )

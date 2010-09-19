@@ -163,6 +163,39 @@ def ChangeLastname(name, lastname):
         minionsLog.Logit("Failed to update users lastname from the database where user was: %s" % (name,))
     conn.close()
 
+
+################################################
+# LoadDoors()
+#  *** NOT CURRENTLY IN USE ***
+# Loads Doors from database
+################################################
+def LoadDoors(Sonzo):
+    global DoorList
+    global DB
+    try:
+        conn     = sqlite3.connect('data\\rooms.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+
+    try:
+        cur.execute( 'SELECT * from doors')
+    except:
+        minionsLog.Logit("Failed to get door data from the database.")
+    for row in cur:
+        minionsRooms.DoorList[row[0]] = minionsRooms.DoorObj()
+        minionsRooms.DoorList[row[0]].DoorNum                         = row[0]
+        minionsRooms.DoorList[row[0]].Passable                        = row[1]
+        minionsRooms.DoorList[row[0]].DoorStatus                      = row[2]
+        minionsRooms.DoorList[row[0]].DoesLock                        = row[3]
+        minionsRooms.DoorList[row[0]].Locked                          = row[4]
+        minionsRooms.DoorList[row[0]].DoorDesc                        = row[5]
+        Room1                                                         = row[6]
+        Room2                                                         = row[7]
+        minionsRooms.DoorList[row[0]].ExitRoom                        = {Room1: Room2, Room2: Room1}
+    conn.close()
+
 #################################################
 # LoadRooms()
 #
