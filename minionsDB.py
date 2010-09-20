@@ -1,7 +1,7 @@
 from twisted.internet import reactor
 
 import sqlite3, string
-import minionsLog, minionsRooms
+import minionsLog, minionsRooms, minionsUtils
 
 ################################################
 # LoadPlayer()
@@ -163,6 +163,28 @@ def ChangeLastname(name, lastname):
         minionsLog.Logit("Failed to update users lastname from the database where user was: %s" % (name,))
     conn.close()
 
+################################################
+# LoadMessages()
+#  *** NOT CURRENTLY IN USE ***
+# Loads Messages from database
+################################################
+def LoadMessages(Sonzo):
+    global MessageList
+    global DB
+    try:
+        conn     = sqlite3.connect('data\\messages.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+
+    try:
+        cur.execute( 'SELECT * from messages')
+    except:
+        minionsLog.Logit("Failed to get door data from the database.")
+    for row in cur:
+        minionsUtils.MessageList[row[0]] = str(row[1])
+    conn.close()
 
 ################################################
 # LoadDoors()
@@ -195,6 +217,7 @@ def LoadDoors(Sonzo):
         Room2                                                         = row[7]
         minionsRooms.DoorList[row[0]].ExitRoom                        = {Room1: Room2, Room2: Room1}
     conn.close()
+
 
 #################################################
 # LoadRooms()

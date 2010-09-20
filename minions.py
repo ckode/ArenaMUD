@@ -169,6 +169,7 @@ class SonzoFactory(ServerFactory):
         #self.RoomList = {}
         self.players = {}
         minionsDB.LoadRooms(self)
+        minionsDB.LoadMessages(self)
 
     def sendMessageToAllClients(self, mesg):
         for client in self.players.values():

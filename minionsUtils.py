@@ -4,6 +4,7 @@ import minionsRooms, minionDefines
 
 import re
 
+MessageList = {}
 
 #################################################
 # WhoIsInThheRoom()
