@@ -165,7 +165,6 @@ def ChangeLastname(name, lastname):
 
 ################################################
 # LoadMessages()
-#  *** NOT CURRENTLY IN USE ***
 # Loads Messages from database
 ################################################
 def LoadMessages(Sonzo):
