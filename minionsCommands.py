@@ -24,11 +24,12 @@ DOWN         = 10
 # MovePlayer() function
 ################################################
 def MovePlayer(player, MoveText, Direction):
-   global RoomList, BLOCKEDTEXT
+   global RoomList
    ActionText = MoveText.split("|")
    # Get new room ID
    if minionsRooms.RoomList[player.room].Doors[Direction].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[UP].ToRoom
+      leaves = minionsParser.CleanPlayerInput(ActionText[0])
+      NewRoom = minionsRooms.RoomList[player.room].Doors[Direction].ToRoom
       # Remove user from old room
       del minionsRooms.RoomList[player.room].Players[player.playerid]
       player.sendToRoom(minionDefines.WHITE + player.name + ActionText[0])
@@ -40,9 +41,8 @@ def MovePlayer(player, MoveText, Direction):
       minionsCommands.Look(player, player.room)
    else:
       DoorType = minionsRooms.RoomList[player.room].Doors[UP].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], ActionText[2], minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], ActionText[3], minionDefines.WHITE) )
+      player.sendToPlayer("%s%s%s" % (minionDefines.BLUE, ActionText[2], minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, player.name, ActionText[3], minionDefines.WHITE) )
       minionsUtils.StatLine(player)
    player.moving = 0
 
@@ -50,257 +50,71 @@ def MovePlayer(player, MoveText, Direction):
 # Command Up
 ################################################
 def Up(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[UP].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[UP].ToRoom
-      # Remove user from old room
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left up.")
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name + " just arrived from below.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[UP].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the up!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the up!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
-
+   global MessageList
+   MovePlayer(player, minionsUtils.MessageList[9], UP)
+   return
 
 ################################################
 # Command Down
 ################################################
 def Down(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[DOWN].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[DOWN].ToRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left down.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from above.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[DOWN].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the down!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the down!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
+   MovePlayer(player, minionsUtils.MessageList[10], DOWN)
+   return
 
 ################################################
 # Command North
 ################################################
 def North(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[NORTH].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[NORTH].ToRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the north.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the south.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[NORTH].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the north!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the north!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
-
+   MovePlayer(player, minionsUtils.MessageList[1], NORTH)
+   return
 
 ################################################
 # Command NorthEast
 ################################################
 def NorthEast(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[NE].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[NE].ToRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the northeast.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the southwest.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[NE].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the northeast!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the northeast!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
-
+   MovePlayer(player, minionsUtils.MessageList[2], NORTHEAST)
+   return
 
 ################################################
 # Command East
 ################################################
 def East(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[EAST].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[EAST].ToRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the east.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the west.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[EAST].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the east!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the east!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
+   MovePlayer(player, minionsUtils.MessageList[3], EAST)
+   return
 
 ################################################
 # Command SouthEast
 ################################################
 def SouthEast(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[SE].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[SE].ToRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the southeast.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the northwest.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[SE].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the southeast!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the southeast!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
+   MovePlayer(player, minionsUtils.MessageList[4], SOUTHEAST)
+   return
 
 ################################################
 # Command South
 ################################################
 def South(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[SOUTH].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[SOUTH].ToRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the south.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the north.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[SOUTH].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the south!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the south!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
+   MovePlayer(player, minionsUtils.MessageList[5], SOUTH)
 
 ################################################
 # Command SouthWest
 ################################################
 def SouthWest(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[SW].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[SW].ToRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the southwest.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the northeast.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[SW].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the southwest!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the southwest!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
-
+   MovePlayer(player, minionsUtils.MessageList[6], SOUTHWEST)
+   return
 
 ################################################
 # Command West
 ################################################
 def West(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[WEST].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[WEST].ToRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the west.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the east.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[WEST].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the west!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the west!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
-
+   MovePlayer(player, minionsUtils.MessageList[7], WEST)
+   return
 
 ################################################
 # Command NorthWest
 ################################################
 def NorthWest(player):
-   global RoomList, BLOCKEDTEXT
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[NW].Passable == True:
-      NewRoom = minionsRooms.RoomList[player.room].Doors[NW].ToRoom
-      # Remove user from old room
-      player.sendToRoom(minionDefines.WHITE + player.name + " just left to the northwest.")
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name +" just arrived from the southeast.")
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[NW].DoorType
-      BLOCKED = minionsRooms.BLOCKEDTEXT[DoorType].split("|")
-      player.sendToPlayer("%s%s%s%s" % (minionDefines.BLUE, BLOCKED[0], "to the northwest!", minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s%s" % (minionDefines.WHITE, player.name, BLOCKED[1], "to the northwest!", minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
-
+   MovePlayer(player, minionsUtils.MessageList[8], NORTHWEST)
+   return
 
 ################################################
 # Command -> QUIT
