@@ -86,6 +86,9 @@ class RoomObj():
         self.Players           = {}  # List of players currently in the room
 
 
+    ##########################
+    # FIX THIS FOR MessageList reading for door text (open door)
+    #########################
     def NewDisplayExits(self):
           DoorCount = 0
           # Start string

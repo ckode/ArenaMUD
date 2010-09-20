@@ -19,6 +19,39 @@ UP           =  9
 DOWN         = 10
 
 
+################################################
+# NewMovePlayer() function
+# *** NOT IN USE YET ***
+################################################
+def NewMovePlayer(player, MoveText, Direction):
+   global RoomList
+   ActionText = MoveText.split("|")
+   # Get current room and door and make local to shorten var mapping
+   CurRoom = minionsRooms.RoomList[player.room]
+   CurDoor = CurRoom.Doors[Direction]
+
+   # Is the door in a passable state?
+   if CurDoor.Passable == True:
+      # Get new room's room number, remove player from old room.
+      NewRoom = CurDoor.ExitRoom[player.room]
+      del CurRoom.Players[player.playerid]
+
+      # Set players room num in his profile and tell room he left
+      player.room = NewRoom
+      player.sendToRoom(minionDefines.WHITE + player.name + ActionText[0])
+
+      # Add player to that room and tell everyone
+      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
+      player.sendToRoom(minionDefines.WHITE + player.name + ActionText[1])
+
+      # Show the player the room he/she just entered
+      minionsCommands.Look(player, player.room)
+   else:
+      #DoorType = CurRoom.Doors[UP].DoorType
+      player.sendToPlayer("%s%s%s" % (minionDefines.BLUE, ActionText[2], minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, player.name, ActionText[3], minionDefines.WHITE) )
+      minionsUtils.StatLine(player)
+   player.moving = 0
 
 ################################################
 # MovePlayer() function
@@ -26,12 +59,15 @@ DOWN         = 10
 def MovePlayer(player, MoveText, Direction):
    global RoomList
    ActionText = MoveText.split("|")
-   # Get new room ID
-   if minionsRooms.RoomList[player.room].Doors[Direction].Passable == True:
-      leaves = minionsParser.CleanPlayerInput(ActionText[0])
-      NewRoom = minionsRooms.RoomList[player.room].Doors[Direction].ToRoom
+   # Get current room and door and make local to shorten var mapping
+   CurRoom = minionsRooms.RoomList[player.room]
+   CurDoor = CurRoom.Doors[Direction]
+
+   # Is the door in a passable state?
+   if CurDoor.Passable == True:
+      NewRoom = CurDoor.ToRoom
       # Remove user from old room
-      del minionsRooms.RoomList[player.room].Players[player.playerid]
+      del CurRoom.Players[player.playerid]
       player.sendToRoom(minionDefines.WHITE + player.name + ActionText[0])
       player.room = NewRoom
       # Add player to that room
@@ -40,7 +76,7 @@ def MovePlayer(player, MoveText, Direction):
       # Show the player the room he/she just entered
       minionsCommands.Look(player, player.room)
    else:
-      DoorType = minionsRooms.RoomList[player.room].Doors[UP].DoorType
+      #Players smacks into wall, tell everyone
       player.sendToPlayer("%s%s%s" % (minionDefines.BLUE, ActionText[2], minionDefines.WHITE) )
       player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, player.name, ActionText[3], minionDefines.WHITE) )
       minionsUtils.StatLine(player)
