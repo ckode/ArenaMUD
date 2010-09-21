@@ -1,6 +1,7 @@
 import minionDefines
 
 RoomList = {}
+RoomList1 = {}
 DoorList = {}
 
 RoomActionID = { 1: "%s pushs the wall.|The wall slides out of the way!"
@@ -74,7 +75,12 @@ class RoomObj():
     def __init__(self):
         self.RoomNum           = 0   # Room ID
         self.Name              = ""  # Title of the room
-        self.Desc              = 0   # Full room discription
+        self.Desc1              = 0   # Full room discription
+        self.Desc2              = 0   # Full room discription
+        self.Desc3              = 0   # Full room discription
+        self.Desc4              = 0   # Full room discription
+        self.Desc5              = 0   # Full room discription
+
         self.Doors             = {}  # Doors{direction: DoorID}
         self.LightLevel        = 0   # Light level in room
         self.RoomSpell         = 0   # The ID of a spell that continuously casts in the room.
@@ -319,12 +325,13 @@ class Door():
 ###############################################
 class DoorObj():
     def __init__(self):
+        self.id                   = 0         # Door ID
         self.DoorType             = 0         # TextBlock lookup for door description (pathway, door, secret passage, gate)
         self.DoorStatus           = 0         # Status of the exit. (0 = don't display, 1 = display open, 2 = display closed)
         self.Passable             = 0         # Can pass through door
         self.DoesLock             = 0         # lockable?
         self.Locked               = 0         # Is it currently locked?
-        self.DoorDesc             = {}        # DoorDesc[DoorStatus] returns description ID from Description lookup table
+        self.DoorDesc             = 0         # DoorDesc[DoorStatus] returns description ID from Description lookup table
         self.ExitRoom             = {}        # ExitRoom[CurrentRoom] returns room number of the exit room
 
 
