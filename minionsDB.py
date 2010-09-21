@@ -184,6 +184,7 @@ def LoadMessages(Sonzo):
     for row in cur:
         minionsUtils.MessageList[row[0]] = str(row[1])
     conn.close()
+    print "Loaded %d messages." % (len(minionsUtils.MessageList),)
 
 ################################################
 # LoadDoors()
@@ -207,16 +208,54 @@ def LoadDoors(Sonzo):
     for row in cur:
         minionsRooms.DoorList[row[0]] = minionsRooms.DoorObj()
         minionsRooms.DoorList[row[0]].DoorNum                         = row[0]
-        minionsRooms.DoorList[row[0]].Passable                        = row[1]
-        minionsRooms.DoorList[row[0]].DoorStatus                      = row[2]
-        minionsRooms.DoorList[row[0]].DoesLock                        = row[3]
-        minionsRooms.DoorList[row[0]].Locked                          = row[4]
-        minionsRooms.DoorList[row[0]].DoorDesc                        = row[5]
-        Room1                                                         = row[6]
-        Room2                                                         = row[7]
+        minionsRooms.DoorList[row[0]].DoorType                        = row[1]
+        minionsRooms.DoorList[row[0]].Passable                        = row[2]
+        minionsRooms.DoorList[row[0]].DoorStatus                      = row[3]
+        minionsRooms.DoorList[row[0]].DoesLock                        = row[4]
+        minionsRooms.DoorList[row[0]].Locked                          = row[5]
+        minionsRooms.DoorList[row[0]].DoorDesc                        = row[6]
+        Room1                                                         = row[7]
+        Room2                                                         = row[8]
         minionsRooms.DoorList[row[0]].ExitRoom                        = {Room1: Room2, Room2: Room1}
     conn.close()
+    print "Loaded %d doors." % (len(minionsRooms.DoorList),)
 
+
+#################################################
+# LoadRooms1()
+#
+# Load all rooms from the database
+#################################################
+def LoadRooms1(Sonzo):
+    global RoomList1
+    global DB
+
+    try:
+        conn     = sqlite3.connect('data\\rooms.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM rooms1")
+    except:
+        minionsLog.Logit("Failed to query database for room information!")
+    for row in cur:
+        # Room
+        minionsRooms.RoomList1[row[0]] = minionsRooms.RoomObj()
+        minionsRooms.RoomList1[row[0]].RoomNum                         = row[0]
+        minionsRooms.RoomList1[row[0]].Name                            = str(row[1])
+        minionsRooms.RoomList1[row[0]].Desc1                           = str(row[2])
+        minionsRooms.RoomList1[row[0]].Desc2                           = str(row[3])
+        minionsRooms.RoomList1[row[0]].Desc3                           = str(row[4])
+        minionsRooms.RoomList1[row[0]].Desc4                           = str(row[5])
+        minionsRooms.RoomList1[row[0]].Desc5                           = str(row[6])
+        minionsRooms.RoomList1[row[0]].Doors                           = str(row[7])
+        minionsRooms.RoomList1[row[0]].LightLevel                      = row[8]
+        minionsRooms.RoomList1[row[0]].RoomSpell                       = row[9]
+        minionsRooms.RoomList1[row[0]].trap                            = row[10]
+
+    print "Loaded %d rooms." % (len(minionsRooms.RoomList1),)
 
 #################################################
 # LoadRooms()

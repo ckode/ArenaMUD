@@ -60,3 +60,4 @@ INSERT INTO messages (id, message, BriefDesc, MessageType) values (41,  "closed 
 INSERT INTO messages (id, message, BriefDesc, MessageType) values (42,  "closed gate|open gate", "message for gate and obvious exits", 2);
 INSERT INTO messages (id, message, BriefDesc, MessageType) values (43,  "trade door|open trade door", "message for trap door and obvious exits", 2);
 INSERT INTO messages (id, message, BriefDesc, MessageType) values (44,  "BLANK|open secret passage", "message for secret passage and obvious exits", 2);
+INSERT INTO messages (id, message, BriefDesc, MessageType) values (45,  "BLANK|BLANK", "Just an open doorway, no messages", 2);
