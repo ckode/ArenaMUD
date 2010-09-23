@@ -1,4 +1,4 @@
-CREATE TABLE rooms (
+CREATE TABLE rooms1 (
     id                INTEGER PRIMARY KEY,       -- Room ID
     name              VARCHAR(30) NOT NULL,      -- Room Short Description
     desc1             VARCHAR(75) NOT NULL,      -- Room Long Description line 1
@@ -114,7 +114,7 @@ CREATE TABLE rooms (
 );
 
 
-CREATE TABLE rooms1 (
+CREATE TABLE rooms (
     id                INTEGER PRIMARY KEY,       -- Door ID
     name              VARCHAR(30) NOT NULL,
     desc1             VARCHAR(75) NOT NULL,      -- Room Long Description line 1
