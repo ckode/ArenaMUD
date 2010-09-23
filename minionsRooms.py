@@ -95,42 +95,43 @@ class RoomObj():
     ##########################
     # FIX THIS FOR MessageList reading for door text (open door)
     #########################
-    def NewDisplayExits(self):
+    def DisplayExits(self):
           DoorCount = 0
           # Start string
           ObviousExits = "%sObvious exits: " % (minionDefines.GREEN,)
           EmptySize = len(ObviousExits)
 
           # Cycle through the doors in the room and build the obvious exits string
-          for _door in self.Doors.keys:
+          for _door in self.Doors.keys():
+              _door = int(_door)
 
               # Make current door local var to shorten the var mapping code
-              CurDoor = self.Doors[_door]
+              CurDoor = DoorList[_door]
 
               # If the door is NOT invisable, this go ahead.
               if CurDoor.DoorStatus != 0:
 
-                  DoorCount =+ 1
+                  DoorCount = DoorCount + 1
                   # Is it only a pathway and not a door that requires more of a discription?
                   if CurDoor.DoorType == PATHWAY:
                       # Just display direction (east)
                       if DoorCount > 1:
-                          ObviousExits =+ ", " + DIRTEXT[_door]
+                          ObviousExits += ", " + DIRTEXT[_door]
                       else:
-                          ObviousExits =+ DIRTEXT[_door]
+                          ObviousExits += DIRTEXT[_door]
                   # Display door type, status, and direction (door open east)
                   else:
                       if DoorCount > 1:
-                          ObviousExits =+ ", " + MESSAGES[CurDoor.DoorDesc[CurDoor.DoorStatus]] + " " + DIRTEXT[_door]
+                          ObviousExits += ", " + MESSAGES[CurDoor.DoorDesc[CurDoor.DoorStatus]] + " " + DIRTEXT[_door]
                       else:
-                          ObviousExits =+ MESSAGES[CurDoor.DoorDesc[CurDoor.DoorStatus]] + " " + DIRTEXT[_door]
+                          ObviousExits += MESSAGES[CurDoor.DoorDesc[CurDoor.DoorStatus]] + " " + DIRTEXT[_door]
 
 
           # Return NONE, or add the finally period to close the sentence
           if DoorCount == 0:
-              ObviousExits =+ "NONE!"
+              ObviousExits += "NONE!"
           else:
-              ObviousExits =+ "."
+              ObviousExits += "."
 
           return ObviousExits
 

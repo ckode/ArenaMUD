@@ -21,66 +21,47 @@ DOWN         = 10
 
 ################################################
 # NewMovePlayer() function
-# *** NOT IN USE YET ***
-################################################
-def NewMovePlayer(player, MoveText, Direction):
-   global RoomList
-   ActionText = MoveText.split("|")
-   # Get current room and door and make local to shorten var mapping
-   CurRoom = minionsRooms.RoomList[player.room]
-   CurDoor = CurRoom.Doors[Direction]
-
-   # Is the door in a passable state?
-   if CurDoor.Passable == True:
-      # Get new room's room number, remove player from old room.
-      NewRoom = CurDoor.ExitRoom[player.room]
-      del CurRoom.Players[player.playerid]
-
-      # Set players room num in his profile and tell room he left
-      player.room = NewRoom
-      player.sendToRoom(minionDefines.WHITE + player.name + ActionText[0])
-
-      # Add player to that room and tell everyone
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name + ActionText[1])
-
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
-   else:
-      #DoorType = CurRoom.Doors[UP].DoorType
-      player.sendToPlayer("%s%s%s" % (minionDefines.BLUE, ActionText[2], minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, player.name, ActionText[3], minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
-   player.moving = 0
-
-################################################
-# MovePlayer() function
 ################################################
 def MovePlayer(player, MoveText, Direction):
    global RoomList
    ActionText = MoveText.split("|")
-   # Get current room and door and make local to shorten var mapping
-   CurRoom = minionsRooms.RoomList[player.room]
-   CurDoor = CurRoom.Doors[Direction]
+
+   # Sub function that can be called when a player's path is blocked.
+   def RunIntoWall(Action2, Action3, playerName):
+      #DoorType = CurRoom.Doors[UP].DoorType
+      player.sendToPlayer("%s%s%s" % (minionDefines.BLUE, Action2, minionDefines.WHITE) )
+      player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, playerName, Action3, minionDefines.WHITE) )
+      minionsUtils.StatLine(player)
 
    # Is the door in a passable state?
-   if CurDoor.Passable == True:
-      NewRoom = CurDoor.ToRoom
-      # Remove user from old room
-      del CurRoom.Players[player.playerid]
-      player.sendToRoom(minionDefines.WHITE + player.name + ActionText[0])
-      player.room = NewRoom
-      # Add player to that room
-      minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-      player.sendToRoom(minionDefines.WHITE + player.name + ActionText[1])
-      # Show the player the room he/she just entered
-      minionsCommands.Look(player, player.room)
+   if minionsRooms.RoomList[player.room].Doors.has_key(Direction):
+      CurDoorNum = minionsRooms.RoomList[player.room].Doors[Direction]
+
+      if minionsRooms.DoorList[CurDoorNum].Passable == True:
+         # Get new room's room number, remove player from old room.
+         NewRoom = minionsRooms.DoorList[CurDoorNum].ExitRoom[player.room]
+
+         del minionsRooms.RoomList[player.room].Players[player.playerid]
+
+
+         # Set players room num in his profile and tell room he left
+
+         player.sendToRoom(minionDefines.WHITE + player.name + ActionText[0])
+         player.room = NewRoom
+
+         # Add player to that room and tell everyone
+         minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
+         player.sendToRoom(minionDefines.WHITE + player.name + ActionText[1])
+
+         # Show the player the room he/she just entered
+         minionsCommands.Look(player, player.room)
+      else:
+         RunIntoWall(ActionText[2], ActionText[3], player.name)
    else:
-      #Players smacks into wall, tell everyone
-      player.sendToPlayer("%s%s%s" % (minionDefines.BLUE, ActionText[2], minionDefines.WHITE) )
-      player.sendToRoom("%s%s%s%s" % (minionDefines.WHITE, player.name, ActionText[3], minionDefines.WHITE) )
-      minionsUtils.StatLine(player)
+       RunIntoWall(ActionText[2], ActionText[3], player.name)
+
    player.moving = 0
+
 
 ################################################
 # Command Up
@@ -108,7 +89,7 @@ def North(player):
 # Command NorthEast
 ################################################
 def NorthEast(player):
-   MovePlayer(player, minionsUtils.MessageList[2], NORTHEAST)
+   MovePlayer(player, minionsUtils.MessageList[2], NE)
    return
 
 ################################################
@@ -122,7 +103,7 @@ def East(player):
 # Command SouthEast
 ################################################
 def SouthEast(player):
-   MovePlayer(player, minionsUtils.MessageList[4], SOUTHEAST)
+   MovePlayer(player, minionsUtils.MessageList[4], SE)
    return
 
 ################################################
@@ -130,12 +111,12 @@ def SouthEast(player):
 ################################################
 def South(player):
    MovePlayer(player, minionsUtils.MessageList[5], SOUTH)
-
+   return
 ################################################
 # Command SouthWest
 ################################################
 def SouthWest(player):
-   MovePlayer(player, minionsUtils.MessageList[6], SOUTHWEST)
+   MovePlayer(player, minionsUtils.MessageList[6], SW)
    return
 
 ################################################
@@ -149,7 +130,7 @@ def West(player):
 # Command NorthWest
 ################################################
 def NorthWest(player):
-   MovePlayer(player, minionsUtils.MessageList[8], NORTHWEST)
+   MovePlayer(player, minionsUtils.MessageList[8], NW)
    return
 
 ################################################

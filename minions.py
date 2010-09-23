@@ -110,6 +110,7 @@ class Users(StatefulTelnetProtocol):
     ################################################
     def sendToRoom(self, line):
         global RoomList
+
         for pid in minionsRooms.RoomList[self.room].Players.keys():
             if self.factory.players[pid] == self:
                 pass
@@ -168,10 +169,10 @@ class SonzoFactory(ServerFactory):
     def __init__(self):
         #self.RoomList = {}
         self.players = {}
-        minionsDB.LoadRooms(self)
-        minionsDB.LoadRooms1(self)
-        minionsDB.LoadMessages(self)
         minionsDB.LoadDoors(self)
+        minionsDB.LoadRooms(self)
+        minionsDB.LoadMessages(self)
+
 
     def sendMessageToAllClients(self, mesg):
         for client in self.players.values():
