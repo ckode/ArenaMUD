@@ -14,9 +14,9 @@ CREATE TABLE rooms (
 
 CREATE TABLE Doors (
     id                INTEGER PRIMARY KEY,       -- Door ID
-    DoorType          INTEGER NOT NULL,
+    DoorType          INTEGER NOT NULL,          -- PATHWAY, Gate, S
     Passable          INTEGER NOT NULL,
-    DoorStatus        INTEGER NOT NULL,
+    DoorStatus        INTEGER NOT NULL,          -- 1 open, 2 closed
     DoesLock          INTEGER NOT NULL,
     Locked            INTEGER NOT NULL,
     DoorDesc          INTEGER NOT NULL,
