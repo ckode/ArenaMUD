@@ -36,7 +36,7 @@ class Users(StatefulTelnetProtocol):
     mr                 = 0
     stealth            = 0
     weight             = 0
-    room               = 11
+    room               = 1
     resting            = False
     vision             = 1
     spellcasting       = 0

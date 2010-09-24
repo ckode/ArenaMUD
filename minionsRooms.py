@@ -1,4 +1,4 @@
-import minionDefines
+import minionDefines, minionsUtils
 
 RoomList = {}
 RoomList1 = {}
@@ -42,7 +42,8 @@ BLOCKEDTEXT    = { 0: "You run into the wall | runs into the wall ",
                  }
 
 # Door type names
-DOORTYPE       = { 2: "door",
+DOORTYPE       = {
+                   2: "door",
                    4: "gate"
                  }
 OPPOSITEDOOR   =  { NORTH: SOUTH,
@@ -106,7 +107,7 @@ class RoomObj():
               _door = int(_door)
 
               # Make current door local var to shorten the var mapping code
-              CurDoor = DoorList[_door]
+              CurDoor = DoorList[self.Doors[_door]]
 
               # If the door is NOT invisable, this go ahead.
               if CurDoor.DoorStatus != 0:
@@ -121,10 +122,12 @@ class RoomObj():
                           ObviousExits += DIRTEXT[_door]
                   # Display door type, status, and direction (door open east)
                   else:
+                      DoorText = minionsUtils.MessageList[CurDoor.DoorDesc].split('|')[CurDoor.DoorStatus]
+
                       if DoorCount > 1:
-                          ObviousExits += ", " + MESSAGES[CurDoor.DoorDesc[CurDoor.DoorStatus]] + " " + DIRTEXT[_door]
+                          ObviousExits += ", " + DoorText + " " + DIRTEXT[_door]
                       else:
-                          ObviousExits += MESSAGES[CurDoor.DoorDesc[CurDoor.DoorStatus]] + " " + DIRTEXT[_door]
+                          ObviousExits += DoorText + " " + DIRTEXT[_door]
 
 
           # Return NONE, or add the finally period to close the sentence
@@ -305,20 +308,6 @@ class Room():
             self.Passable = False
 
 
-##############################################
-class Door():
-
-    def __init__(self):
-        self.DoorType             = 0         # index of room type. ie. no door, path way (with no door), door, secret passage (hidden)
-        self.DoorStatus           = 0         # Status of the exit. (0 = don't display, 1 = display open, 2 = display closed)
-        self.Passable             = 0
-        self.ToRoom               = 0         # Room number Door leads too
-        self.DoorLocked           = 0         #(0 = not locked, 1 = locked)
-        self.DoesLock             = 0         # Does the door lock?
-        self.RequiredKey          = 0
-        self.PickDiff             = 0
-        self.Passable             = 0         # Can go through it. (0 no, 1 yes)
-        self.Exits                = { 1: "", 2: "" }  # The display for Obvisous exits (1=open, 2=closed)
 
 ###############################################
 # New Door Object to replace old door object
@@ -326,7 +315,7 @@ class Door():
 ###############################################
 class DoorObj():
     def __init__(self):
-        self.id                   = 0         # Door ID
+        self.DoorNum              = 0         # Door ID
         self.DoorType             = 0         # TextBlock lookup for door description (pathway, door, secret passage, gate)
         self.DoorStatus           = 0         # Status of the exit. (0 = don't display, 1 = display open, 2 = display closed)
         self.Passable             = 0         # Can pass through door

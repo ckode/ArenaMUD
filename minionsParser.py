@@ -61,12 +61,16 @@ def commandParser(player, line):
           # Open Command (open doors etc)
           elif each == "open":
              if len(cmd) > 1 and len(cmd) > 1:
+                player.sendToPlayer("%s%s" % (minionDefines.WHITE, "Command disabled.") )
+                return
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue
           # Close Command (open doors etc)
           elif each == "close":
              if len(cmd) > 1 and len(cmd) > 1:
+                player.sendToPlayer("%s%s" % (minionDefines.WHITE, "Command disabled.") )
+                return
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue
@@ -308,7 +312,7 @@ def GetPlayerName(player, line):
 ###############################################
 def ComparePassword(player, line):
     global RoomList
-    
+
     if line == minionsDB.GetPassword(player.name):
        minionsDB.LoadPlayer(player)
        player.Shout(minionDefines.BLUE + player.name + " has joined.")

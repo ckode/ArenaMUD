@@ -22,12 +22,12 @@ INSERT INTO "rooms" VALUES(1,'Town Square','This is the Town Square of Dagnoroth
 INSERT INTO "rooms" VALUES(2,'Northern Sonzo Ave','You are on Northern Sonzo Ave.  Sonzo Ave is the main thoroughfare and','it splits the city of Dagnoroth almost down the middle.  There are many','shops and other busineses located here.  There is a large underworld that','exists in Dagnoroth, though they usually avoid Sonzo Ave for the most part','due to the guard patrols that frequent here.', "1:2|5:1", 1, 0, 0);
 INSERT INTO "rooms" VALUES(3,'Northern Sonzo Ave','You are on Northern Sonzo Ave.  Sonzo Ave is the main thoroughfare and','it splits the city of Dagnoroth almost down the middle.  There are many','shops and other busineses located here.  There is a large underworld that','exists in Dagnoroth, though they usually avoid Sonzo Ave for the most part','due to the guard patrols that frequent here.', "1:3|5:2", 1, 0, 0);
 INSERT INTO "rooms" VALUES(4,'Northern Sonzo Ave','You are on Northern Sonzo Ave.  Sonzo Ave is the main thoroughfare and','it splits the city of Dagnoroth almost down the middle.  There are many','shops and other busineses located here.  There is a large underworld that','exists in Dagnoroth, though they usually avoid Sonzo Ave for the most part','due to the guard patrols that frequent here.', "1:4|5:3", 1, 0, 0);
-INSERT INTO "rooms" VALUES(5,'Northern Sonzo Ave','You are on Northern Sonzo Ave.  Sonzo Ave is the main thoroughfare and','it splits the city of Dagnoroth almost down the middle.  There are many','shops and other busineses located here.  There is a large underworld that','exists in Dagnoroth, though they usually avoid Sonzo Ave for the most part','due to the guard patrols that frequent here.', "5:4", 1, 0, 0);
+INSERT INTO "rooms" VALUES(5,'Northern Sonzo Ave','You are on Northern Sonzo Ave.  Sonzo Ave is the main thoroughfare and','it splits the city of Dagnoroth almost down the middle.  There are many','shops and other busineses located here.  There is a large underworld that','exists in Dagnoroth, though they usually avoid Sonzo Ave for the most part','due to the guard patrols that frequent here.', "1:5|5:4", 1, 0, 0);
 
 -- new doors
 
-INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (1, 1, 1, 1, 0, 0, 45, 1, 2);
-INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (2, 1, 1, 1, 0, 0, 45, 2, 3);
-INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (3, 1, 1, 1, 0, 0, 45, 3, 4);
-INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (4, 1, 1, 1, 0, 0, 45, 4, 5);
-INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (5, 1, 0, 11, 0, 0, 45, 5, 0);
+INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (1, 1, 1, 2, 0, 0, 45, 1, 2);
+INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (2, 1, 1, 2, 0, 0, 45, 2, 3);
+INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (3, 1, 1, 2, 0, 0, 45, 3, 4);
+INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (4, 1, 1, 2, 0, 0, 45, 4, 5);
+INSERT INTO doors (id, DoorType, Passable, DoorStatus, DoesLock, Locked, DoorDesc, ExitRoom1, ExitRoom2) VALUES (5, 4, 0, 1, 0, 0, 42, 5, 1);
