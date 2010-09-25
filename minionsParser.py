@@ -39,7 +39,8 @@ def commandParser(player, line):
                  'vision':           "",
                  'brief':            minionsCommands.Brief,
                  'open':             minionsCommands.Open,
-                 'close':            minionsCommands.Close
+                 'close':            minionsCommands.Close,
+                 'remote':           ""
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -104,6 +105,14 @@ def commandParser(player, line):
           elif each == "emote":
              if len(cmd[0]) > 2 and len(cmd) > 1:
                 commands[each](player, line[(len(cmd[0]) + 1):])
+                return
+             continue
+          # Remote command
+          elif each == "remote":
+             if len(cmd[0]) > 2 and len(cmd) > 2:
+                for user in player.factory.players.values().capitalize():
+                    if user.name == cmd[1]:
+                       commandParser(user, line[(len(cmd[0]) + len(cmd[1]) + 2):])
                 return
              continue
           # Help command (help typed by itself)
