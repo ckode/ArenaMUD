@@ -474,7 +474,7 @@ def LookAt(player, lookwhere):
 
     if len(victimList) > 0:
         if len(victimList) == 1:
-            LookPlayer(player, victimList.keys())
+            LookPlayer(player, victimList.keys()[0])
             return
         else:
             player.sendToPlayer("Who did you mean: ")
