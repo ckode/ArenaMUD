@@ -1,7 +1,6 @@
 import minionDefines, minionsUtils
 
 RoomList = {}
-RoomList1 = {}
 DoorList = {}
 
 RoomActionID = { 1: "%s pushs the wall.|The wall slides out of the way!"
@@ -81,8 +80,9 @@ DIRLOOKUP      = { "n": 1,
                    "d": 10
                  }
 
+#################################
 # New room Object
-# *** Not currently in use ***
+#################################
 class RoomObj():
     def __init__(self):
         self.RoomNum           = 0   # Room ID
@@ -149,9 +149,19 @@ class RoomObj():
 
           return ObviousExits
 
+    ###########################################
+    # Return the Door ID for said direction
+    ###########################################
+    def GetDoorID(self, Direction):
+        if self.Doors.has_key(Direction):
+            return self.Doors[Direction]
+        # No door, return zero
+        return 0
+
+
 
 ################################################################
-# Currently in use, but to be removed once new code is ready
+# Not currently in use
 ################################################################
 class Room():
       def __init__(self):
@@ -335,4 +345,13 @@ class DoorObj():
         self.DoorDesc             = 0         # DoorDesc[DoorStatus] returns description ID from Description lookup table
         self.ExitRoom             = {}        # ExitRoom[CurrentRoom] returns room number of the exit room
 
+    ##################################################
+    # Get the Room ID on the other side of the door
+    ##################################################
+    def GetOppositeRoomID(self, Direction):
+        if self.ExitRoom[Direction] > 0:
+            return self.ExitRoom[OPPOSITEDOOR[Direction]]
+
+        # If zero, return zero
+        return 0
 

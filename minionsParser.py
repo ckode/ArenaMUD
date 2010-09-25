@@ -75,16 +75,16 @@ def commandParser(player, line):
           # Open Command (open doors etc)
           elif each == "open":
              if len(cmd) > 1 and len(cmd) > 1:
-                player.sendToPlayer("%s%s" % (minionDefines.WHITE, "Command disabled.") )
-                return
+                #player.sendToPlayer("%s%s" % (minionDefines.WHITE, "Command disabled.") )
+                #return
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue
           # Close Command (open doors etc)
           elif each == "close":
              if len(cmd) > 1 and len(cmd) > 1:
-                player.sendToPlayer("%s%s" % (minionDefines.WHITE, "Command disabled.") )
-                return
+                #player.sendToPlayer("%s%s" % (minionDefines.WHITE, "Command disabled.") )
+                #return
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue
