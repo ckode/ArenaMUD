@@ -40,16 +40,18 @@ def FindPlayerInRoom(player, Name):
          if NameSearch.match( pname.lower() ):
             victimList[pid] = pname
 
-   if len(victimList) == 0:
-      player.sendToPlayer("You do not see " + Name + " here!")
-      return victimList
-   elif len(victimList) == 1:
-      return victimList
-   else:
-      player.sendToPlayer("Who did you mean: ")
-      for victim in victimList.values():
-         player.sendToPlayer(" - " + victim)
-      return {}
+   return victimList
+
+ #  if len(victimList) == 0:
+ #     player.sendToPlayer("You do not see " + Name + " here!")
+ #     return victimList
+ #  elif len(victimList) == 1:
+ #     return victimList
+ #  else:
+ #     player.sendToPlayer("Who did you mean: ")
+ #     for victim in victimList.values():
+ #        player.sendToPlayer(" - " + victim)
+ #     return {}
 
 #################################################
 # StatLine()

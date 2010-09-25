@@ -69,6 +69,17 @@ DIRTEXT        = { 1: 'north',
                   10: 'down'
                  }
 
+DIRLOOKUP      = { "n": 1,
+                   "ne": 2,
+                   "e": 3,
+                   "se": 4,
+                   "s": 5,
+                   "sw": 6,
+                   "w": 7,
+                   "nw": 8,
+                   "u": 9,
+                   "d": 10
+                 }
 
 # New room Object
 # *** Not currently in use ***
