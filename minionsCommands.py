@@ -420,7 +420,7 @@ def Look(player, RoomNum):
       for each in PeopleInRoom.values():
          # You don't see yourself!
          if each != player.name:
-            if (Count - 1) > x:
+            if ((Count - 1) > x and player.room == RoomNum) or (Count > x and player.room != RoomNum):
                x += 1
                names = names + each + ", "
             else:
@@ -472,7 +472,7 @@ def LookAt(player, lookwhere):
 
     victimList = minionsUtils.FindPlayerInRoom(player, lookwhere)
 
-    if len(victimList) > 0:
+    if len(victimList) > 0 and len(lookwhere) > 1:
         if len(victimList) == 1:
             LookPlayer(player, victimList.keys()[0])
             return
@@ -496,7 +496,8 @@ def LookAt(player, lookwhere):
             player.sendLine("%s%s%s%s" % (minionDefines.DEFAULT, "You don't see anything ", minionsRooms.DIRTEXT[Direction], minionDefines.WHITE) )
             minionsUtils.StatLine(player)
             return
-
+    player.sendLine("You don't see %s here!" % lookwhere)
+    minionsUtils.StatLine(player)
 ################################################
 # Command -> LookPlayer(player, otherplayerID)
 ################################################
