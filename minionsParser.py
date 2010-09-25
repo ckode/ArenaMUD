@@ -40,7 +40,8 @@ def commandParser(player, line):
                  'brief':            minionsCommands.Brief,
                  'open':             minionsCommands.Open,
                  'close':            minionsCommands.Close,
-                 'remote':           ""
+                 'remote':           "",
+                 'look':             minionsCommands.LookAt
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -57,6 +58,18 @@ def commandParser(player, line):
                 #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
                 player.vision = int(cmd[1])
                 player.sendToPlayer("%sVision changed." % (minionDefines.WHITE,) )
+                return
+             continue
+          # Look
+          elif each == "look":
+             # if nothing to look at supplied, just look around the room
+             if len(cmd) == 1:
+                minionsCommands.Look(player, player.room)
+                return
+             # If it's 2, that means it's not a sentence we are looking at something
+             elif len(cmd) == 2:
+                # Call LookAt() to determine what they are looking at
+                commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue
           # Open Command (open doors etc)
@@ -110,8 +123,8 @@ def commandParser(player, line):
           # Remote command
           elif each == "remote":
              if len(cmd[0]) > 2 and len(cmd) > 2:
-                for user in player.factory.players.values().capitalize():
-                    if user.name == cmd[1]:
+                for user in player.factory.players.values():
+                    if user.name == cmd[1].capitalize():
                        commandParser(user, line[(len(cmd[0]) + len(cmd[1]) + 2):])
                 return
              continue

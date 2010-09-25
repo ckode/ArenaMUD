@@ -461,4 +461,40 @@ def Set(player, line):
     else:
        player.sendLine(minionDefines.DEFAULT + "Usage: SET <PROPERTY> <VALUE> - type 'help' for more help" + minionDefines.WHITE)
 
+#################################################
+# Command -> LookAt
+#
+# This determins what you want to look at
+# and then calls the proper function to do it
+#################################################
+def LookAt(player, lookwhere):
+    #cmdstr = re.compile(re.escape(lookwhere.lower()))
+
+    victimList = minionsUtils.FindPlayerInRoom(player, lookwhere)
+
+    if len(victimList) > 0:
+        if len(victimList) == 1:
+            #LookPlayer(player, victimList.keys())
+            return
+        else:
+            player.sendToPlayer("Who did you mean: ")
+            for victim in victimList.values():
+              player.sendToPlayer(" - " + victim)
+            return
+    # Is the player trying to look in a direction?
+    elif minionsRooms.DIRLOOKUP.has_key(lookwhere):
+        Direction = minionsRooms.DIRLOOKUP[lookwhere]
+
+        if minionsRooms.RoomList[player.room].Doors.has_key(Direction):
+            _door = minionsRooms.RoomList[player.room].Doors[Direction]
+            # Tell the room you are looking said direction
+            player.sendToRoom("%s looks %s" % (player.name, minionsRooms.DIRTEXT[Direction]))
+            # Look into the other room (display)
+            Look(player, minionsRooms.DoorList[_door].ExitRoom[player.room])
+            return
+        else:
+            player.sendLine("%s%s%s%s" % (minionDefines.DEFAULT, "You don't see anything ", minionsRooms.DIRTEXT[Direction], minionDefines.WHITE) )
+            minionsUtils.StatLine(player)
+            return
+
 
