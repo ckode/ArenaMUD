@@ -474,7 +474,7 @@ def LookAt(player, lookwhere):
 
     if len(victimList) > 0:
         if len(victimList) == 1:
-            #LookPlayer(player, victimList.keys())
+            LookPlayer(player, victimList.keys())
             return
         else:
             player.sendToPlayer("Who did you mean: ")
@@ -497,4 +497,12 @@ def LookAt(player, lookwhere):
             minionsUtils.StatLine(player)
             return
 
+################################################
+# Command -> LookPlayer(player, otherplayerID)
+################################################
+def LookPlayer(player, otherplayerID):
 
+    victim = {}
+    victim = player.factory.players[otherplayerID]
+
+    player.sendToPlayer(minionDefines.BLUE + victim.name + " looks like a complete idiot!")
