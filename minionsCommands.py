@@ -415,7 +415,7 @@ def Look(player, RoomNum):
          player.sendLine(minionDefines.WHITE + Room.Desc5)
    PeopleInRoom = minionsUtils.WhoIsInTheRoom(player, RoomNum)
    Count = len(PeopleInRoom)
-   if Count > 1:
+   if (Count > 1 and player.room == RoomNum) or (Count > 0 and player.room != RoomNum) :
       names = minionDefines.GREEN + "Also here: " + minionDefines.LMAGENTA
       for each in PeopleInRoom.values():
          # You don't see yourself!
