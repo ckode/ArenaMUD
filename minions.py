@@ -182,9 +182,13 @@ class SonzoFactory(ServerFactory):
 
     def DoNaturalHealing(self):
        for player in self.players.values():
-          #if player.hp != player.maxhp or player.mana != player.maxmana:
           minionsUtils.NaturalHealing(player)
 
+    def TimeBasedSpell(self):
+       for player in self.players.values():
+          minionsUtils.PlayerTimeBasedSpells(player)
+       for roomid in minionsRooms.RoomList:
+           minionsUtils.RoomTimeBasedSpells(self, roomid)
 
     def Shutdown(self):
         reactor.stop()
@@ -195,6 +199,11 @@ factory = SonzoFactory()
 # Start listener on port 23 (telnet)
 factory.protocol = lambda: TelnetTransport(Users)
 reactor.listenTCP(23, factory)
+
+# Time Based Spell effects.
+TimeBasedSpells = LoopingCall(factory.TimeBasedSpell)
+TimeBasedSpells.start(2)
+
 # Natural healing process ever 15 seconds
 Healer = LoopingCall(factory.DoNaturalHealing)
 Healer.start(15)
