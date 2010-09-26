@@ -60,7 +60,7 @@ def FindPlayerInRoom(player, Name):
 #################################################
 def StatLine(player):
    # Send a players stat line
-   STATLINE = "[HP=%d/%d MANA=%d/%d]: " % (player.hp, player.maxhp, player.mana, player.maxmana)
+   STATLINE = "[HP=%d/%d]: " % (player.hp, player.maxhp)
    STATSIZE = len(STATLINE)
    player.transport.write(minionDefines.SAVECUR)
    player.transport.write(minionDefines.FIRSTCOL)

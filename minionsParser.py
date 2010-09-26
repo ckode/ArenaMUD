@@ -42,7 +42,8 @@ def commandParser(player, line):
                  'close':            minionsCommands.Close,
                  'remote':           "",
                  'look':             minionsCommands.LookAt,
-                 'bash':             minionsCommands.Bash
+                 'bash':             minionsCommands.Bash,
+                 'superuser':        ""
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -55,12 +56,20 @@ def commandParser(player, line):
        if cmdstr.match(each):
           # TESTING, REMOVE VISION OPTION WHEN DONE!
           if each == "vision":
-             if len(cmd[0]) > 4:
-                #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
-                player.vision = int(cmd[1])
-                player.sendToPlayer("%sVision changed." % (minionDefines.WHITE,) )
+              if isAdmin == True:
+                if len(cmd[0]) > 4:
+                   #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
+                   player.vision = int(cmd[1])
+                   player.sendToPlayer("%sVision changed." % (minionDefines.WHITE,) )
+                   return
+                continue
+          # Become an admin (access admin commands)
+          elif each == "superuser":
+             if len(cmd) == 2:
+                Superuser(player, line[(len(cmd[0]) + 1):])
                 return
-             continue
+             else:
+                minionsUtils.StatLine(player)
           # Look
           elif each == "look":
              # if nothing to look at supplied, just look around the room
@@ -129,12 +138,13 @@ def commandParser(player, line):
              continue
           # Remote command
           elif each == "remote":
-             if len(cmd[0]) > 2 and len(cmd) > 2:
-                for user in player.factory.players.values():
-                    if user.name == cmd[1].capitalize():
-                       commandParser(user, line[(len(cmd[0]) + len(cmd[1]) + 2):])
-                return
-             continue
+             if player.isAdmin == True:
+                if len(cmd[0]) > 2 and len(cmd) > 2:
+                   for user in player.factory.players.values():
+                       if user.name == cmd[1].capitalize():
+                          commandParser(user, line[(len(cmd[0]) + len(cmd[1]) + 2):])
+                   return
+                continue
           # Help command (help typed by itself)
           elif each == "help":
              if len(cmd) == 1 and len(cmd[0]) == 4:
@@ -409,3 +419,8 @@ def LoginPlayer(player, line):
        else:
           player.STATUS           = minionDefines.GETNAME
           player.transport.write("Enter the name you would like to go by: ")
+
+def Superuser(player, password):
+    if password == "digital":
+        player.isAdmin = True
+        minionsUtils.StatLine(player)
