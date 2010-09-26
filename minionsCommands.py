@@ -557,7 +557,7 @@ def LookAt(player, lookwhere):
             # Look into the other room (display)
             Look(player, minionsRooms.DoorList[_door].ExitRoom[player.room])
             #tell the room that is being looked into that someone is peeking in
-            player.BroadcastToRoom("%s%s peeks in from the %s." % (minionDefines.WHITE, player.name, minionsRooms.DIRTEXT[minionsRooms.OPPOSITEDOOR[Direction]]), OtherRoomID )
+            player.BroadcastToRoom("%s%s peeks in from the %s." % (minionDefines.CYAN, player.name, minionsRooms.DIRTEXT[minionsRooms.OPPOSITEDOOR[Direction]]), OtherRoomID )
             return
         else:
             player.sendLine("%s%s%s%s" % (minionDefines.DEFAULT, "You don't see anything ", minionsRooms.DIRTEXT[Direction], minionDefines.WHITE) )

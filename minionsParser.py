@@ -56,7 +56,7 @@ def commandParser(player, line):
        if cmdstr.match(each):
           # TESTING, REMOVE VISION OPTION WHEN DONE!
           if each == "vision":
-              if isAdmin == True:
+              if player.isAdmin == True:
                 if len(cmd[0]) > 4:
                    #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
                    player.vision = int(cmd[1])
