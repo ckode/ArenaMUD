@@ -29,6 +29,7 @@ class Users(StatefulTelnetProtocol):
     wisdom             = 0
     charm              = 0
     health             = 0
+    isAdmin            = 0
     hp                 = 50
     maxhp              = 100
     mana               = 25
