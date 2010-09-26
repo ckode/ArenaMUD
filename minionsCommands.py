@@ -238,12 +238,78 @@ def Close(player, something):
        return
 
 ################################################
+# Command -> Bash
+################################################
+def Bash(player, something):
+    global DIRECTIONS
+
+    objList = something.split()[0]
+    obj = re.compile(re.escape(objList[0].lower()))
+    # Only doors exist now
+    if obj.match('north'):
+       BashDoor(player, NORTH)
+       return
+    elif obj.match('ne') and len(objList[0]) == 2 or obj.match('northeast') and len(objList[0]) > 5:
+       BashDoor(player, NE)
+       return
+    elif obj.match('east'):
+       BashDoor(player, EAST)
+       return
+    elif obj.match('se') and len(objList[0]) == 2 or obj.match('southeast') and len(objList[0]) > 5:
+       BashDoor(player, EAST)
+       return
+    elif obj.match('south'):
+       BashDoor(player, SOUTH)
+       return
+    elif obj.match('sw') and len(objList[0]) == 2 or obj.match('southwest') and len(objList[0]) > 5:
+       BashDoor(player, SW)
+       return
+    elif obj.match('west'):
+       BashDoor(player, WEST)
+       return
+    elif obj.match('nw') and len(objList[0]) == 2 or obj.match('northwest') and len(objList[0]) > 5:
+       BashDoor(player, NW)
+       return
+    elif obj.match('up'):
+       BashDoor(player, UP)
+       return
+    elif obj.match('down'):
+       BashDoor(player, DOWN)
+       return
+
+
+################################################
+# Command -> BashDoor
+################################################
+def BashDoor(player, DIRECTION):
+    global RoomList, DIRTEXT
+    CurDoorID = minionsRooms.RoomList[player.room].GetDoorID(DIRECTION)
+    OtherRoomID = minionsRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
+    CurDoor = minionsRooms.DoorList[CurDoorID]
+
+    if CurDoor.Passable:
+       player.sendToPlayer("%s%s is already open." % (minionDefines.WHITE, minionsRooms.DIRTEXT[DIRECTION].capitalize()) )
+    else:
+       # Is this a door and is it visable?
+       if CurDoor.DoorType == 2 or CurDoor.DoorType == 4:
+          # Open the door on both sides of the door.
+          minionsRooms.DoorList[CurDoorID].Passable = True
+          minionsRooms.DoorList[CurDoorID].DoorStatus = minionsRooms.OPEN
+          player.BroadcastToRoom("%sThe %s to the %s flies open." % (minionDefines.WHITE, minionsRooms.DOORTYPE[CurDoor.DoorType], minionsRooms.DIRTEXT[minionsRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoomID)
+          player.sendToPlayer("%sYou bash the %s to the %s open!" % (minionDefines.WHITE, minionsRooms.DOORTYPE[CurDoor.DoorType], minionsRooms.DIRTEXT[DIRECTION]) )
+          player.sendToRoom("%s%s bashes the %s to the %s open!" % (minionDefines.WHITE, player.name, minionsRooms.DOORTYPE[CurDoor.DoorType], minionsRooms.DIRTEXT[DIRECTION]) )
+       else: # You don't see a door!
+          player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You do not see anything to bash open to the ", minionsRooms.DIRTEXT[DIRECTION]) )
+
+
+
+################################################
 # Command -> OpenDoor
 ################################################
 def OpenDoor(player, DIRECTION):
     global RoomList, DIRTEXT
     CurDoorID = minionsRooms.RoomList[player.room].GetDoorID(DIRECTION)
-    OtherRoomID = minionsRooms.DoorList[CurDoorID].GetOppositeRoomID(DIRECTION)
+    OtherRoomID = minionsRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
     CurDoor = minionsRooms.DoorList[CurDoorID]
 
     if CurDoor.Passable:
@@ -253,7 +319,7 @@ def OpenDoor(player, DIRECTION):
        if CurDoor.DoorType == 2 or CurDoor.DoorType == 4:
           # If locked, say so
           if CurDoor.Locked == 1:
-             player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, CurDoor.Exits[1].capitalize(), " is locked.") )
+             player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, minionsRooms.DIRTEXT[DIRECTION].capitalize(), " is locked.") )
           else:
              CurDoor.DoorType == 2 or CurDoor.DoorType == 4
              # Open the door on both sides of the door.
@@ -271,7 +337,7 @@ def OpenDoor(player, DIRECTION):
 def CloseDoor(player, DIRECTION):
     global RoomList, DIRTEXT
     CurDoorID = minionsRooms.RoomList[player.room].GetDoorID(DIRECTION)
-    OtherRoomID = minionsRooms.DoorList[CurDoorID].GetOppositeRoomID(DIRECTION)
+    OtherRoomID = minionsRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
     CurDoor = minionsRooms.DoorList[CurDoorID]
 
     # Is this a door of type door or gate? (need to fix this so I just check 1 thing)
