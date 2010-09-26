@@ -41,7 +41,8 @@ def commandParser(player, line):
                  'open':             minionsCommands.Open,
                  'close':            minionsCommands.Close,
                  'remote':           "",
-                 'look':             minionsCommands.LookAt
+                 'look':             minionsCommands.LookAt,
+                 'bash':             minionsCommands.Bash
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -85,6 +86,12 @@ def commandParser(player, line):
              if len(cmd) > 1 and len(cmd) > 1:
                 #player.sendToPlayer("%s%s" % (minionDefines.WHITE, "Command disabled.") )
                 #return
+                commands[each](player, line[(len(cmd[0]) + 1):])
+                return
+             continue
+          # bash Command (open doors etc)
+          elif each == "bash":
+             if len(cmd) > 1 and len(cmd) > 1:
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
              continue

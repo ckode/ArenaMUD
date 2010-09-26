@@ -68,16 +68,16 @@ DIRTEXT        = { 1: 'north',
                   10: 'down'
                  }
 
-DIRLOOKUP      = { "n": 1,
-                   "ne": 2,
-                   "e": 3,
-                   "se": 4,
-                   "s": 5,
-                   "sw": 6,
-                   "w": 7,
-                   "nw": 8,
-                   "u": 9,
-                   "d": 10
+DIRLOOKUP      = { "n":    1,
+                   "ne":   2,
+                   "e":    3,
+                   "se":   4,
+                   "s":    5,
+                   "sw":   6,
+                   "w":    7,
+                   "nw":   8,
+                   "u":    9,
+                   "d":   10
                  }
 
 #################################
@@ -314,20 +314,6 @@ class Room():
             else:
                return ""
 
-##############################################
-# ResetDoor()
-#
-# Resets the door to it's default status
-# Locked, hidden, etc based on DoorType
-##############################################
-      def ResetDoor(self):
-         if self.DoorType == SECRETDOOR:
-            self.DoorStatus = HIDDEN
-            self.Passable = False
-         else:
-            self.DoorStatus = CLOSED
-            self.Passable = False
-
 
 
 ###############################################
@@ -348,10 +334,28 @@ class DoorObj():
     ##################################################
     # Get the Room ID on the other side of the door
     ##################################################
-    def GetOppositeRoomID(self, Direction):
-        if self.ExitRoom[Direction] > 0:
-            return self.ExitRoom[OPPOSITEDOOR[Direction]]
+    def GetOppositeRoomID(self, CurRoom):
+
+        if self.ExitRoom[CurRoom] > 0:
+            return self.ExitRoom[CurRoom]
 
         # If zero, return zero
         return 0
+##############################################
+# ResetDoor()
+#
+# This needs lots of work for closing and locking
+# doors, telling the rooms they closed and locked
+# No call to this implemented yet
+#
+# Resets the door to it's default status
+# Locked, hidden, etc based on DoorType
+##############################################
+    def ResetDoor(self):
+        if self.DoorType == SECRETDOOR:
+           self.DoorStatus = HIDDEN
+           self.Passable = False
+        else:
+           self.DoorStatus = CLOSED
+           self.Passable = False
 
