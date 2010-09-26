@@ -1,6 +1,6 @@
 from twisted.internet import reactor
 
-import minionsRooms, minionDefines
+import minionsRooms, minionDefines, minionsCommands
 
 import re
 
@@ -105,4 +105,64 @@ def DisplayAction(player, ActionID):
     player.sendToPlayer(minionDefines.BLUE + ActionList[0] % ("You",) )
     player.sendToRoom(minionDefines.BLUE + ActionList[0] % (player.name,) )
     player.BroadcastToRoom(minionDefines.BLUE + ActionList[1])
+
+###################################################
+# PlayerTimeBasedSpells()
+#
+# *** Add code to make this work, dummy function for now ***
+#
+# Applies over time based spell effects (like DoT and healing spells)
+###################################################
+def PlayerTimeBasedSpells(player):
+    return
+
+###################################################
+# RoomTimeBasedSpells()
+#
+# *** Add code to make this work, dummy function ***
+#
+# Applies and over time spells that are attach to a room
+# (ie, lava, fumse, fire / heat in the room.)
+###################################################
+def RoomTimeBasedSpells(factory, roomid):
+    global players
+
+    spell = 1
+    room = minionsRooms.RoomList[roomid]
+    if room.RoomNum == 2:
+        for _playerid in room.Players.keys():
+            _player = factory.players[_playerid]
+
+            ApplySpellEffects(_player, spell)
+
+###################################################
+# ApplySpellEffects()
+#
+# ** Apply Spells effects to player
+###################################################
+def ApplySpellEffects(player, spell):
+
+    player.sendToPlayer("You feel sick.")
+    player.hp = player.hp - 4
+    if player.hp < 1:
+        KillPlayer(player)
+
+###################################################
+# KillPlayer()
+#
+# Kill the fool, and tell him to stay off my lines!
+###################################################
+def KillPlayer(player):
+    player.hp = player.maxhp
+    player.sendToPlayer("You are dead.")
+    player.sendToRoom("%s collapses in a heap and dies." % (player.name))
+    del minionsRooms.RoomList[player.room].Players[player.playerid]
+    minionsRooms.RoomList[1].Players[player.playerid] = player.name
+    player.room = 1
+    minionsCommands.Look(player, player.room)
+    player.sendToRoom("%s%s appears in a flash!%s" % (minionDefines.YELLOW, player.name, minionDefines.WHITE) )
+
+
+
+
 
