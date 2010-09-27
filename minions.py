@@ -170,8 +170,10 @@ class Users(StatefulTelnetProtocol):
 
 class SonzoFactory(ServerFactory):
     def __init__(self):
-        #self.RoomList = {}
+
         self.players = {}
+
+        # Load map details for the database
         minionsDB.LoadDoors(self)
         minionsDB.LoadRooms(self)
         minionsDB.LoadRoomTraps(self)
