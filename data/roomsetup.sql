@@ -24,4 +24,19 @@ CREATE TABLE Doors (
     ExitRoom2         INTEGER NOT NULL
 );
 
+CREATE TABLE RoomSpells (
+    id                INTEGER PRIMARY KEY,
+    hp_adjust         INTEGER NOT NULL,
+    desc              VARCHAR(75) NOT NULL,
+    name              VARCHAR(25) NOT NULL
+);
 
+CREATE TABLE RoomTraps (
+    id                INTEGER PRIMARY KEY,
+    stat              INTEGER NOT NULL,
+    value             INTEGER NOT NULL,
+    duration          INTEGER NOT NULL,
+    playerdesc        VARCHAR(75) NOT NULL,
+    roomdesc          VARCHAR(75) NOT NULL,
+    name              VARCHAR(25) NOT NULL
+);

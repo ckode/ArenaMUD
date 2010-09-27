@@ -68,6 +68,10 @@ def MovePlayer(player, Direction):
          minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
          player.sendToRoom(minionDefines.WHITE + player.name + MOVING[1])
 
+         # Is there a trap room trap in the room? Spring it!
+         if minionsRooms.RoomList[NewRoom].RoomTrap > 0:
+             minionsUtils.SpringRoomTrap(player, minionsRooms.RoomList[NewRoom].RoomTrap)
+
          # Show the player the room he/she just entered
          minionsCommands.Look(player, player.room)
       else:
@@ -309,6 +313,11 @@ def BashDoor(player, DIRECTION):
 def OpenDoor(player, DIRECTION):
     global RoomList, DIRTEXT
     CurDoorID = minionsRooms.RoomList[player.room].GetDoorID(DIRECTION)
+    if CurDoorID == 0:
+       # Door doesn't exist.
+       player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You do not see anything to close to the ", minionsRooms.DIRTEXT[DIRECTION]) )
+       return
+
     OtherRoomID = minionsRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
     CurDoor = minionsRooms.DoorList[CurDoorID]
 
@@ -336,7 +345,12 @@ def OpenDoor(player, DIRECTION):
 ################################################
 def CloseDoor(player, DIRECTION):
     global RoomList, DIRTEXT
+
     CurDoorID = minionsRooms.RoomList[player.room].GetDoorID(DIRECTION)
+    if CurDoorID == 0:
+       # Door doesn't exist.
+       player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You do not see anything to close to the ", minionsRooms.DIRTEXT[DIRECTION]) )
+       return
     OtherRoomID = minionsRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
     CurDoor = minionsRooms.DoorList[CurDoorID]
 
@@ -367,10 +381,11 @@ def Gossip(player, line):
 # Command -> Who
 ################################################
 def Who(player):
-    player.sendToPlayer(minionDefines.LCYAN + "<<=-=-=-=-= Whos Online =-=-=-=>>")
+    player.sendToPlayer(minionDefines.LCYAN + "<<=-=-=-=-=-=-=-=-=-=-=-=-=-= Whos Online =-=-=-=-=-=-=-=-=-=-=-=-=--=>>")
+    player.sendToPlayer(minionDefines.LCYAN + "    Player                             Kills              Deaths")
     for user in player.factory.players.values():
-        player.sendToPlayer(minionDefines.LCYAN + "  => " + minionDefines.LMAGENTA + user.name + " " + user.lastname)
-    player.sendToPlayer(minionDefines.LCYAN + "<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=>>")
+        player.sendToPlayer("%s => %s%s%s%s %s" % (minionDefines.LCYAN, minionDefines.LMAGENTA, user.name.ljust(34, ' '), minionDefines.LCYAN, str(user.kills).rjust(5, ' '), str(user.deaths).rjust(19, ' ')) )
+    player.sendToPlayer(minionDefines.LCYAN + "<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->>")
     minionsUtils.StatLine(player)
 
 ################################################

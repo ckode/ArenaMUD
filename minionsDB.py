@@ -260,8 +260,66 @@ def LoadRooms(Sonzo):
 
         minionsRooms.RoomList[row[0]].LightLevel                      = row[8]
         minionsRooms.RoomList[row[0]].RoomSpell                       = row[9]
-        minionsRooms.RoomList[row[0]].trap                            = row[10]
+        minionsRooms.RoomList[row[0]].RoomTrap                        = row[10]
 
 
     print "Loaded %d rooms." % (len(minionsRooms.RoomList),)
 
+#################################################
+# LoadRoomSpells()
+#
+# Load all rooms spells from the database
+#################################################
+def LoadRoomSpells(Sonzo):
+    global RoomSpellList
+    global DB
+
+    try:
+        conn     = sqlite3.connect('data\\rooms.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM RoomSpells")
+    except:
+        minionsLog.Logit("Failed to query database for room information!")
+    for row in cur:
+        # Room
+        minionsRooms.RoomSpellList[row[0]] = minionsRooms.RoomSpell()
+        minionsRooms.RoomSpellList[row[0]].RoomNum                         = row[0]
+        minionsRooms.RoomSpellList[row[0]].hp_adjust                       = row[1]
+        minionsRooms.RoomSpellList[row[0]].desc                            = str(row[2])
+
+    print "Loaded %d room spells." % (len(minionsRooms.RoomSpellList),)
+
+#################################################
+# LoadRoomTraps()
+#
+# Load all room traps from the database
+#################################################
+def LoadRoomTraps(Sonzo):
+    global RoomTrapsList
+    global DB
+
+    try:
+        conn     = sqlite3.connect('data\\rooms.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM RoomTraps")
+    except:
+        minionsLog.Logit("Failed to query database for room information!")
+    for row in cur:
+        # Room
+        minionsRooms.RoomTrapList[row[0]] = minionsRooms.RoomSpell()
+        minionsRooms.RoomTrapList[row[0]].RoomNum                         = row[0]
+        minionsRooms.RoomTrapList[row[0]].stat                            = row[1]
+        minionsRooms.RoomTrapList[row[0]].value                           = row[2]
+        minionsRooms.RoomTrapList[row[0]].duration                        = row[3]
+        minionsRooms.RoomTrapList[row[0]].playerdesc                      = str(row[4])
+        minionsRooms.RoomTrapList[row[0]].roomdesc                        = str(row[5])
+
+    print "Loaded %d room traps." % (len(minionsRooms.RoomTrapList),)
