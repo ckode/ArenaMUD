@@ -129,11 +129,11 @@ def RoomTimeBasedSpells(factory, roomid):
 
     spell = 1
     room = minionsRooms.RoomList[roomid]
-    if room.RoomNum == 2:
+    if room.RoomSpell != 0:
         for _playerid in room.Players.keys():
             _player = factory.players[_playerid]
 
-            ApplySpellEffects(_player, spell)
+            ApplySpellEffects(_player, room.RoomSpell)
 
 ###################################################
 # ApplySpellEffects()
@@ -142,10 +142,63 @@ def RoomTimeBasedSpells(factory, roomid):
 ###################################################
 def ApplySpellEffects(player, spell):
 
-    player.sendToPlayer("You feel sick.")
-    player.hp = player.hp - 4
-    if player.hp < 1:
+    spell = minionsRooms.RoomSpellList[spell]
+
+    if spell.hp_adjust > 0:
+        _textcolor = minionDefines.BLUE
+    else:
+        _textcolor = minionDefines.RED
+    hpValue = player.hp + spell.hp_adjust
+    if hpValue > player.maxhp:
+        player.hp = player.maxhp
+        player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, minionDefines.WHITE) )
+    elif hpValue < 1:
+        player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, minionDefines.WHITE) )
+
         KillPlayer(player)
+        return
+    else:
+        player.hp = hpValue
+    player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, minionDefines.WHITE) )
+
+###################################################
+# SpringTrap()
+#
+# Springs any traps in the room
+###################################################
+def SpringRoomTrap(player, trap):
+    # Sub Function to do specific stuff for room description
+    def SendRoomDesc(player, desc):
+        # Is players name used by embeding a %s? if so send it this one
+        if "%s" in desc:
+            player.sendToRoom(desc % (player.name))
+        # else, send just the string
+        else:
+            player.sendToRoom(desc)
+
+
+    trap = minionsRooms.RoomTrapList[trap]
+    if trap.value > 0:
+        _textcolor = minionDefines.BLUE
+    else:
+        _textcolor = minionDefines.RED
+
+    # If this is an HP stat change, do HP death/maxhp checks
+    if trap.stat == 1: # 1 = HP
+        hpValue = player.hp + trap.value
+        if hpValue > player.maxhp:
+            player.hp = player.maxhp
+            player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, minionDefines.WHITE) )
+        elif hpValue < 1:
+            player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, minionDefines.WHITE) )
+            SendRoomDesc(player, trap.roomdesc)
+            KillPlayer(player)
+            return
+        else:
+            player.hp = hpValue
+            player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, minionDefines.WHITE) )
+            SendRoomDesc(player, trap.roomdesc)
+
 
 ###################################################
 # KillPlayer()
@@ -153,6 +206,7 @@ def ApplySpellEffects(player, spell):
 # Kill the fool, and tell him to stay off my lines!
 ###################################################
 def KillPlayer(player):
+    player.deaths += 1
     player.hp = player.maxhp
     player.sendToPlayer("You are dead.")
     player.sendToRoom("%s collapses in a heap and dies." % (player.name))

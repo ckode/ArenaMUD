@@ -39,6 +39,8 @@ class Users(StatefulTelnetProtocol):
     weight             = 0
     room               = 1
     resting            = False
+    kills              = 0
+    deaths             = 0
     vision             = 1
     spellcasting       = 0
     blind              = False
@@ -172,7 +174,10 @@ class SonzoFactory(ServerFactory):
         self.players = {}
         minionsDB.LoadDoors(self)
         minionsDB.LoadRooms(self)
+        minionsDB.LoadRoomTraps(self)
+        minionsDB.LoadRoomSpells(self)
         minionsDB.LoadMessages(self)
+
 
 
     def sendMessageToAllClients(self, mesg):
