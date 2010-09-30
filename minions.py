@@ -14,7 +14,6 @@ import minionsRooms, minionsDB, minionsUtils
 import sys
 from time import strftime, localtime
 
-
 class Users(StatefulTelnetProtocol):
     # User stats
     playerid           = None
@@ -179,7 +178,7 @@ class SonzoFactory(ServerFactory):
         minionsDB.LoadRoomTraps(self)
         minionsDB.LoadRoomSpells(self)
         minionsDB.LoadMessages(self)
-
+        minionsDB.LoadAnsiScreens()
 
 
     def sendMessageToAllClients(self, mesg):
