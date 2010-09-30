@@ -395,7 +395,10 @@ def SetPassword(player, line):
 # Ask for username or new
 ###############################################
 def LoginPlayer(player, line):
+
+    global AnsiScreen
     if line == "":
+       player.transport.write(minionsRooms.AnsiScreen)
        player.transport.write('Enter your username or type "' + minionDefines.LYELLOW + 'new' + minionDefines.WHITE + '": ')
        return
     else:

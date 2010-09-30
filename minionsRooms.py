@@ -4,6 +4,7 @@ RoomList          = {}
 RoomSpellList     = {}
 RoomTrapList      = {}
 DoorList          = {}
+AnsiScreen        = ''
 
 RoomActionID = { 1: "%s pushs the wall.|The wall slides out of the way!"
                }

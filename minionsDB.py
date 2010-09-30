@@ -323,3 +323,13 @@ def LoadRoomTraps(Sonzo):
         minionsRooms.RoomTrapList[row[0]].roomdesc                        = str(row[5])
 
     print "Loaded %d room traps." % (len(minionsRooms.RoomTrapList),)
+
+######################################################
+#    LoadAnsiScreens()
+#    Load up any ansi screens here
+######################################################
+def LoadAnsiScreens():
+    global AnsiScreen
+    f = open('data\\splash.ans','rb')
+    minionsRooms.AnsiScreen = f.read()
+    f.close()
