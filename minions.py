@@ -40,6 +40,8 @@ class Users(StatefulTelnetProtocol):
     resting            = False
     kills              = 0
     deaths             = 0
+    attacking          = 0
+    victim             = 0
     vision             = 1
     spellcasting       = 0
     blind              = False
@@ -152,6 +154,7 @@ class Users(StatefulTelnetProtocol):
                     minionsUtils.StatLine(self)
 
 
+
     ################################################
     # Shout to everyone                            #
     ################################################
@@ -196,6 +199,12 @@ class SonzoFactory(ServerFactory):
        for roomid in minionsRooms.RoomList:
            minionsUtils.RoomTimeBasedSpells(self, roomid)
 
+    def CombatRound(self):
+        for player in self.players.values():
+            if player.attacking:
+                minionsUtils.PlayerAttack(player)
+
+
     def Shutdown(self):
         reactor.stop()
         #sys.exit()
@@ -205,6 +214,10 @@ factory = SonzoFactory()
 # Start listener on port 23 (telnet)
 factory.protocol = lambda: TelnetTransport(Users)
 reactor.listenTCP(23, factory)
+
+# Run Combat Round
+CombatRound = LoopingCall(factory.CombatRound)
+CombatRound.start(4)
 
 # Time Based Spell effects.
 TimeBasedSpells = LoopingCall(factory.TimeBasedSpell)

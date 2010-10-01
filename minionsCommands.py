@@ -589,3 +589,32 @@ def LookPlayer(player, otherplayerID):
     victim = player.factory.players[otherplayerID]
 
     player.sendToPlayer(minionDefines.BLUE + victim.name + " looks like a complete idiot!")
+
+#################################################
+# Coomand -> Attack()
+#################################################
+def Attack(player, attacked):
+
+     victimList = minionsUtils.FindPlayerInRoom(player, attacked)
+
+     # Anybody to attack?
+     if len(victimList) == 0:
+         player.sendToPlayer("You don't see %s here!" % (attacked,))
+     # Was more than one players name matching?
+     elif len(victimList) > 1:
+         player.sendToPlayer("Fix this, list all possible victims.")
+     # Just one, attack!!!
+     else:
+         victimID = victimList.keys()[0]
+         # Don't attack yourself idiot!
+         if victimID == player.playerid:
+             player.sendToPlayer(minionDefines.RED + "Why would you attack yourself idiot!" + minionDefines.WHITE)
+             return
+         victim = player.factory.players[victimID]
+         player.attacking = 1
+         player.victim = victim.playerid
+         player.sendToPlayer("%s*Combat Engaged*%s" %(minionDefines.RED, minionDefines.WHITE))
+         victim.sendToPlayer("%s%s moves to attack you!%s" %(minionDefines.RED, player.name, minionDefines.WHITE))
+         player.sendToRoomNotVictim(victim.playerid, "%s%s moves to attack %s!%s" % (minionDefines.RED, player.name, victim.name,  minionDefines.WHITE))
+
+

@@ -43,7 +43,8 @@ def commandParser(player, line):
                  'remote':           "",
                  'look':             minionsCommands.LookAt,
                  'bash':             minionsCommands.Bash,
-                 'superuser':        ""
+                 'superuser':        "",
+                 "attack":           minionsCommands.Attack
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -70,6 +71,12 @@ def commandParser(player, line):
                 return
              else:
                 minionsUtils.StatLine(player)
+
+          # Attack someone!
+          elif each == "attack":
+             if len(cmd) == 2:
+                minionsCommands.Attack(player, line[(len(cmd[0]) + 1):])
+                return
           # Look
           elif each == "look":
              # if nothing to look at supplied, just look around the room
@@ -394,7 +401,7 @@ def SetPassword(player, line):
 #
 # Ask for username or new
 ###############################################
-def LoginPlayer(player, line):
+def  LoginPlayer(player, line):
 
     global AnsiScreen
     if line == "":

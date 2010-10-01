@@ -2,7 +2,7 @@ from twisted.internet import reactor
 
 import minionsRooms, minionDefines, minionsCommands
 
-import re
+import re, random
 
 MessageList = {}
 
@@ -206,17 +206,57 @@ def SpringRoomTrap(player, trap):
 # Kill the fool, and tell him to stay off my lines!
 ###################################################
 def KillPlayer(player):
-    player.deaths += 1
-    player.hp = player.maxhp
+    player.attacking             = 0
+    player.victim                = 0
+    player.deaths               += 1
+    player.hp                    = player.maxhp
+    curRoom                      = player.room
+
     player.sendToPlayer("You are dead.")
+    if player.attacking:
+        player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
     player.sendToRoom("%s collapses in a heap and dies." % (player.name))
+
     del minionsRooms.RoomList[player.room].Players[player.playerid]
+
+    for _player in minionsRooms.RoomList[curRoom].Players.keys():
+        if player.factory.players[_player].victim == player.playerid:
+           player.factory.players[_player].attacking    = 0
+           player.factory.players[_player].victim       = 0
+           player.factory.players[_player].sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+
     minionsRooms.RoomList[1].Players[player.playerid] = player.name
     player.room = 1
     minionsCommands.Look(player, player.room)
     player.sendToRoom("%s%s appears in a flash!%s" % (minionDefines.YELLOW, player.name, minionDefines.WHITE) )
 
 
+###################################################
+# PlayerAttack()
+#
+# Attack the player if he is in the room
+###################################################
+def PlayerAttack(player):
 
+    if player.victim in minionsRooms.RoomList[player.room].Players.keys():
+        curVictim = player.factory.players[player.victim]
+
+        damage = random.randint(5, 15)
+        player.sendToPlayer("%sYou hit %s for %i damage!%s" % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
+        curVictim.sendToPlayer("%s%s hit you for %i damage!%s" % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
+        player.sendToRoomNotVictim(curVictim.playerid, "%s%s hits %s for %i damage!%s" % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
+        curVictim.hp -= damage
+        StatLine(curVictim)
+        if curVictim.hp < 1:
+            player.attacking = 0
+            player.victim = 0
+            KillPlayer(curVictim)
+            player.kills += 1
+            player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+    else:
+        player.attacking = 0
+        player.victim = ""
+        player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+        return
 
 
