@@ -1,7 +1,7 @@
 from twisted.internet import reactor
 
 import minionDefines, minionsCommands, minionsDB
-import minionsRooms, minionsUtils
+import minionsRooms, minionsUtils, minionsRace
 
 import re, string
 from time import strftime, localtime
@@ -334,6 +334,12 @@ def NotPlayingDialog(player, line):
     elif player.STATUS == minionDefines.GETPASSWORD:
         SetPassword(player, line)
         return
+    elif player.STATUS == minionDefines.GETCLASS:
+        PickClass(player, line)
+        return
+    elif player.STATUS == minionDefines.GETRACE:
+        PickRace(player, line)
+        return
 
 ###############################################
 # GetPlayerName()
@@ -425,7 +431,13 @@ def  LoginPlayer(player, line):
        player.playerid     = USERPID
        USERPID += 1
        player.name         = name
-       player.STATUS       = minionDefines.PLAYING
+       player.STATUS       = minionDefines.GETCLASS
+       player.transport.write("Choose a class:\r\n")
+       for cid, cname in minionsRace.ClassList.items():
+          player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
+       player.transport.write("Select: ")
+       return
+   ##########################
        player.Shout(minionDefines.BLUE + player.name + " has joined.")
        player.STATUS = minionDefines.PLAYING
        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
@@ -437,8 +449,86 @@ def  LoginPlayer(player, line):
        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
        return
 
+################################################
+# PickClass
+################################################
+def PickClass(player, classnum):
+    def DisplayChoices():
+       player.transport.write("Choose a class:\r\n")
+       for cid, cname in minionsRace.ClassList.items():
+          player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
+       player.transport.write("Select: ")
+    if classnum == "":
+        DisplayChoices()
+        return
+    classnum = int(classnum)
+    if classnum in minionsRace.ClassList.keys():
+        playerclass             = minionsRace.ClassList[classnum]
+        player.Class            = classnum
+        player.hp               = playerclass.hpBonus
+        player.maxhp            = player.hp
+        player.mindamage       += playerclass.mindamage
+        player.maxdamage       += playerclass.maxdamage
+        player.ac              += playerclass.BaseArmor
+        player.magery           = playerclass.MageryType
+        player.stealth         += playerclass.stealth
+        player.weapontext       = playerclass.weapontext
+        player.STATUS           = minionDefines.GETRACE
 
+        # Now display race choices
+        player.transport.write("Choose a race:\r\n")
+        for rid, rname in minionsRace.RaceList.items():
+           player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
+        player.transport.write("Select: ")
+    else:
+        player.transport.write("Invalid choice, please try again.\r\n")
+        DisplayChoices()
+    return
 
+################################################
+# PickRace
+################################################
+def PickRace(player, racenum):
+    def DisplayChoices():
+       player.transport.write("Choose a race:\r\n")
+       for rid, rname in minionsRace.RaceList.items():
+          player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
+       player.transport.write("Select: ")
+    if racenum == "":
+        DisplayChoices()
+        return
+    racenum = int(racenum)
+    if racenum in minionsRace.RaceList.keys():
+        race                    = minionsRace.RaceList[racenum]
+        player.race             = racenum
+        player.hp              += race.basehp
+        player.maxhp            = player.hp
+        player.mindamage       += race.damagebonus
+        player.maxdamage       += race.damagebonus
+        player.ac              += race.defensebonus
+        player.attackroll      += race.attackbonus
+        player.spellcasting    += race.castingbonus
+        player.vision           = race.vision
+        player.stealth         += race.stealth
+        player.STATUS           = minionDefines.PLAYING
+
+        player.Shout(minionDefines.BLUE + player.name + " has joined.")
+        player.STATUS = minionDefines.PLAYING
+        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+        player.factory.players[player.playerid] = player
+        # Put player in current room
+        player.room = 1
+        minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
+        minionsCommands.Look(player, player.room)
+        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
+    else:
+       player.transport.write("Invalid choice, please try again.\r\n")
+       DisplayChoices()
+    return
+
+#############################################
+# Superuser command (move this to commands?)
+#############################################
 def Superuser(player, password):
     if password == "digital":
         player.isAdmin = True
