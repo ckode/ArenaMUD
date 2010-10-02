@@ -89,7 +89,6 @@ def MovePlayer(player, Direction):
 # Command Up
 ################################################
 def Up(player):
-   global MessageList
    MovePlayer(player, UP)
    return
 
@@ -506,8 +505,8 @@ def Look(player, RoomNum):
 
       player.sendLine(names)
 
-   player.sendLine(Room.DisplayExits() + minionDefines.WHITE)
-   minionsUtils.StatLine(player)
+   player.sendToPlayer(Room.DisplayExits() + minionDefines.WHITE)
+   #minionsUtils.StatLine(player)
 ################################################
 # Command -> Set <property>
 ################################################

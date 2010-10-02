@@ -6,6 +6,8 @@ import minionsRooms, minionsUtils
 import re, string
 from time import strftime, localtime
 
+USERPID = 1
+
 def commandParser(player, line):
 
     # Clean players input
@@ -69,9 +71,9 @@ def commandParser(player, line):
              if len(cmd) == 2:
                 Superuser(player, line[(len(cmd[0]) + 1):])
                 return
-             else:
+             elif len(cmd[0]) != 1:
                 minionsUtils.StatLine(player)
-
+                return
           # Attack someone!
           elif each == "attack":
              if len(cmd) == 2:
@@ -229,15 +231,6 @@ def commandParser(player, line):
                 reactor.callLater(.5, minionsCommands.East, player)
                 return
              continue
-          elif each == "se" and len(cmd[0]) == 2:
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                player.moving = 1
-                reactor.callLater(.5, minionsCommands.SouthEast, player)
-                return
-             continue
           elif each == "south":
              if len(cmd) == 1 and len(cmd[0]) != 2:
                 if player.moving == 1:
@@ -245,6 +238,15 @@ def commandParser(player, line):
                    return
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.South, player)
+                return
+             continue
+          elif each == "se" and len(cmd[0]) == 2:
+             if len(cmd) == 1:
+                if player.moving == 1:
+                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   return
+                player.moving = 1
+                reactor.callLater(.5, minionsCommands.SouthEast, player)
                 return
              continue
           elif each == "sw" and len(cmd[0]) == 2:
@@ -402,33 +404,40 @@ def SetPassword(player, line):
 # Ask for username or new
 ###############################################
 def  LoginPlayer(player, line):
-
+    global USERPID
     global AnsiScreen
+
     if line == "":
        player.transport.write(minionsRooms.AnsiScreen)
-       player.transport.write('Enter your username or type "' + minionDefines.LYELLOW + 'new' + minionDefines.WHITE + '": ')
+       player.transport.write('Enter your warriors name: ')
        return
     else:
-       if line != "new":
-          line = line.split()
-          name = line[0]
-          name = name.capitalize()
-          pid = minionsDB.GetUserID(name)
-          if pid > 0:
-              if pid in player.factory.players.keys():
-                 player.transport.write("Username is already connected!\r\n")
-                 player.playerid = 0
-                 player.disconnectClient()
-                 return
-              player.playerid     = pid
-              player.name         = name
-              player.STATUS       = minionDefines.COMPAREPASSWORD
-              player.transport.write("Enter your password: ")
-          else:
-              player.transport.write("Player not found, hit Enter and try again.")
-       else:
-          player.STATUS           = minionDefines.GETNAME
-          player.transport.write("Enter the name you would like to go by: ")
+       line = line.split()
+       name = line[0]
+       name = name.capitalize()
+       for each in player.factory.players.keys():
+          if player.factory.players[each].name == name:
+              player.transport.write("That warrior is already in the arena!\r\n")
+              player.STATUS           = minionDefines.LOGIN
+              player.transport.write("Enter a different warrior name: ")
+              return
+
+       player.playerid     = USERPID
+       USERPID += 1
+       player.name         = name
+       player.STATUS       = minionDefines.PLAYING
+       player.Shout(minionDefines.BLUE + player.name + " has joined.")
+       player.STATUS = minionDefines.PLAYING
+       player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+       player.factory.players[player.playerid] = player
+       # Put player in current room
+       player.room = 1
+       minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
+       minionsCommands.Look(player, player.room)
+       print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
+       return
+
+
 
 def Superuser(player, password):
     if password == "digital":
