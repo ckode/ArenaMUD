@@ -1,7 +1,7 @@
 from twisted.internet import reactor
 
 import sqlite3, string
-import minionsLog, minionsRooms, minionsUtils
+import minionsLog, minionsRooms, minionsUtils, minionsRace
 
 ################################################
 # LoadPlayer()
@@ -323,6 +323,74 @@ def LoadRoomTraps(Sonzo):
         minionsRooms.RoomTrapList[row[0]].roomdesc                        = str(row[5])
 
     print "Loaded %d room traps." % (len(minionsRooms.RoomTrapList),)
+
+###########################################
+# Load Classes
+###########################################
+def LoadClasses(Sonzo):
+    global ClassList
+    global DB
+
+    try:
+        conn     = sqlite3.connect('data\\rcdata.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM class")
+    except:
+        minionsLog.Logit("Failed to query database for room information!")
+    for row in cur:
+        # Room
+        minionsRace.ClassList[row[0]] = minionsRace.Class()
+        minionsRace.ClassList[row[0]].id                              = row[0]
+        minionsRace.ClassList[row[0]].name                            = str(row[1])
+        minionsRace.ClassList[row[0]].desc                            = str(row[2])
+        minionsRace.ClassList[row[0]].hpbonus                         = row[3]
+        minionsRace.ClassList[row[0]].mindamage                       = row[4]
+        minionsRace.ClassList[row[0]].maxdamage                       = row[5]
+        minionsRace.ClassList[row[0]].BaseArmor                       = row[6]
+        minionsRace.ClassList[row[0]].MageryType                      = row[7]
+        minionsRace.ClassList[row[0]].stealth                         = row[8]
+        minionsRace.ClassList[row[0]].weapontext                      = row[9]
+
+    print "Loaded %d classes." % (len(minionsRace.ClassList),)
+
+
+########################################
+# Load Races
+########################################
+def LoadRaces(Sonzo):
+    global ClassList
+    global DB
+
+    try:
+        conn     = sqlite3.connect('data\\rcdata.db')
+        cur      = conn.cursor()
+    except:
+        minionsLog.Logit("Failed to open database!")
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM race")
+    except:
+        minionsLog.Logit("Failed to query database for room information!")
+    for row in cur:
+        # Room
+        minionsRace.RaceList[row[0]] = minionsRace.Race()
+        minionsRace.RaceList[row[0]].id                              = row[0]
+        minionsRace.RaceList[row[0]].name                            = str(row[1])
+        minionsRace.RaceList[row[0]].desc                            = str(row[2])
+        minionsRace.RaceList[row[0]].basehp                          = row[3]
+        minionsRace.RaceList[row[0]].damagebonus                     = row[4]
+        minionsRace.RaceList[row[0]].castingbonus                    = row[5]
+        minionsRace.RaceList[row[0]].vision                          = row[6]
+        minionsRace.RaceList[row[0]].defensebonus                    = row[7]
+        minionsRace.RaceList[row[0]].attackbonus                     = row[8]
+        minionsRace.RaceList[row[0]].stealth                         = row[9]
+
+    print "Loaded %d races." % (len(minionsRace.RaceList),)
+
 
 ######################################################
 #    LoadAnsiScreens()

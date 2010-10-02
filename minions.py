@@ -20,49 +20,30 @@ class Users(StatefulTelnetProtocol):
     name               = ""
     lastname           = ""
     password           = ""
-    level              = 0
-    energy             = 0
-    strength           = 0
-    agility            = 0
-    intelligence       = 0
-    wisdom             = 0
-    charm              = 0
+    race               = 0
+    Class              = 0
     health             = 0
     isAdmin            = 0
     hp                 = 50
     maxhp              = 100
-    mana               = 25
-    maxmana            = 50
-    mr                 = 0
+    ac                 = 0
     stealth            = 0
-    weight             = 0
     room               = 1
     resting            = False
     kills              = 0
     deaths             = 0
+    attackroll         = 0
     attacking          = 0
     victim             = 0
     vision             = 1
     spellcasting       = 0
+    weapontext         = 0
+    mindamage          = 0
+    maxdamage          = 0
     blind              = False
+    magery             = 0
     briefDesc          = 1
     moving             = 0
-    holding            = {}
-    wearing            = { 'arms':         None,
-                           'head':         None,
-                           'torso':        None,
-                           'l_finger':     None,
-                           'r_finger':     None,
-                           'legs':         None,
-                           'neck':         None,
-                           'feet':         None,
-                           'face':         None,
-                           'waist':        None,
-                           'wielded':      None,
-                           'off-hand':     None,
-                           'l_wrist':      None,
-                           'r_wrist':      None
-                         }
 
     def connectionMade(self):
         # Limit how many can connect at one time
@@ -181,6 +162,8 @@ class SonzoFactory(ServerFactory):
         minionsDB.LoadRoomTraps(self)
         minionsDB.LoadRoomSpells(self)
         minionsDB.LoadMessages(self)
+        minionsDB.LoadClasses(self)
+        minionsDB.LoadRaces(self)
         minionsDB.LoadAnsiScreens()
 
 

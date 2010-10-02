@@ -64,10 +64,11 @@ def StatLine(player):
    STATSIZE = len(STATLINE)
    player.transport.write(minionDefines.SAVECUR)
    player.transport.write(minionDefines.FIRSTCOL)
-   player.transport.write(chr(27) + "[" + str(STATSIZE) + ";C")
-   player.transport.write(minionDefines.DELETELEFT)
-   player.transport.write(minionDefines.FIRSTCOL)
-   player.transport.write(STATLINE + minionDefines.RESTORECUR)
+#   player.transport.write(chr(27) + "[" + str(STATSIZE) + ";C")
+#   player.transport.write(minionDefines.DELETELEFT)
+#   player.transport.write(minionDefines.FIRSTCOL)
+   player.transport.write(STATLINE)
+   player.transport.write(minionDefines.RESTORECUR)
 
 
 #################################################
@@ -78,18 +79,12 @@ def StatLine(player):
 #################################################
 def NaturalHealing(player):
    healRate = 4
-   manaRate = 2
    if player.resting:
       healRate = healRate * 2
-      manaRate = manaRate * 2
    if (player.hp + healRate) > player.maxhp:
       player.hp = player.maxhp
    else:
       player.hp += healRate
-   if (player.mana + manaRate) > player.maxmana:
-      player.mana = player.maxmana
-   else:
-      player.mana += manaRate
    StatLine(player)
 
 ##################################################

@@ -1,5 +1,5 @@
 import string
-# Game player status defines      
+# Game player status defines
 LOGOUT           = 0
 LOGIN            = 1
 GETNAME          = 2
@@ -7,6 +7,8 @@ PLAYING          = 3
 GETPASSWORD      = 4
 COMPAREPASSWORD  = 5
 NEW              = 6
+GETCLASS         = 7
+GETRACE          = 8
 EDIT             = 50
 
 # All allowable printable characters (and BACKSPACE!)
@@ -55,8 +57,9 @@ B_DEFAULT          = chr(27) + "[49m"
 #          Cursor and delete line
 DELETELINE         = chr(27) + "[2K"
 FIRSTCOL           = chr(27) + "[80D"
+CURPOS             = chr(27) + "6n"
 SAVECUR            = chr(27) + "s"
-RESTORECUR         = chr(27) + "u"
+RESTORECUR         = chr(27) + "r"
 DELETELEFT         = chr(27) + "[1K"
 
 #          Light Levels
@@ -78,7 +81,7 @@ DOWN               = 10
 
 DIRECTIONS         = ['north', 'ne', 'northeast', 'east', 'se', 'southeast', 'south',
                       'sw', 'southwest', 'west', 'nw', 'northwest', 'up', 'down' ]
-                      
+
 ########### Command Numbers #############
 COMMANDS =       { '/quit':        0,
                    'who':          1,
