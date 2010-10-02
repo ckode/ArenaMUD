@@ -241,7 +241,7 @@ def PlayerAttack(player):
 
         Message = minionsUtils.MessageList[player.weapontext].split("|")
 
-        damage = random.randint(5, 15)
+        damage = random.randint(player.mindamage, player.maxdamage)
         player.sendToPlayer(Message[1] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
         curVictim.sendToPlayer(Message[3] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
         player.sendToRoomNotVictim(curVictim.playerid, Message[5] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
