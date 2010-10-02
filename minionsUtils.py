@@ -155,7 +155,7 @@ def ApplySpellEffects(player, spell):
     elif hpValue < 1:
         player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, minionDefines.WHITE) )
 
-        KillPlayer(player)
+        KillPlayer(player, 0)
         return
     else:
         player.hp = hpValue
@@ -192,7 +192,7 @@ def SpringRoomTrap(player, trap):
         elif hpValue < 1:
             player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, minionDefines.WHITE) )
             SendRoomDesc(player, trap.roomdesc)
-            KillPlayer(player)
+            KillPlayer(player, 0)
             return
         else:
             player.hp = hpValue
@@ -205,7 +205,7 @@ def SpringRoomTrap(player, trap):
 #
 # Kill the fool, and tell him to stay off my lines!
 ###################################################
-def KillPlayer(player):
+def KillPlayer(player, killer):
     player.attacking             = 0
     player.victim                = 0
     player.deaths               += 1
@@ -213,6 +213,9 @@ def KillPlayer(player):
     curRoom                      = player.room
 
     player.sendToPlayer("You are dead.")
+    if killer > 0:
+        killer = player.factory.players[killer]
+        player.factory.sendMessageToAllClients("\r\n%s%s has killed %s!" % (minionDefines.BLUE, killer.name, player.name))
     if player.attacking:
         player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
     player.sendToRoom("%s collapses in a heap and dies." % (player.name))
@@ -250,7 +253,7 @@ def PlayerAttack(player):
         if curVictim.hp < 1:
             player.attacking = 0
             player.victim = 0
-            KillPlayer(curVictim)
+            KillPlayer(curVictim, player.playerid)
             player.kills += 1
             player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
     else:
