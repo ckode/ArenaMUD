@@ -1,6 +1,6 @@
 from twisted.internet import reactor
 
-import minionsRooms, minionDefines, minionsCommands
+import minionsRooms, minionDefines, minionsCommands, minionsUtils
 
 import re, random
 
@@ -239,10 +239,12 @@ def PlayerAttack(player):
     if player.victim in minionsRooms.RoomList[player.room].Players.keys():
         curVictim = player.factory.players[player.victim]
 
+        Message = minionsUtils.MessageList[player.weapontext].split("|")
+        print Message[2]
         damage = random.randint(5, 15)
-        player.sendToPlayer("%sYou hit %s for %i damage!%s" % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
-        curVictim.sendToPlayer("%s%s hit you for %i damage!%s" % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
-        player.sendToRoomNotVictim(curVictim.playerid, "%s%s hits %s for %i damage!%s" % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
+        player.sendToPlayer(Message[1] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
+        curVictim.sendToPlayer(Message[3] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
+        player.sendToRoomNotVictim(curVictim.playerid, Message[5] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
         curVictim.hp -= damage
         StatLine(curVictim)
         if curVictim.hp < 1:
