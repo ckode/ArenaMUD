@@ -240,7 +240,7 @@ def PlayerAttack(player):
         curVictim = player.factory.players[player.victim]
 
         Message = minionsUtils.MessageList[player.weapontext].split("|")
-        print Message[2]
+
         damage = random.randint(5, 15)
         player.sendToPlayer(Message[1] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
         curVictim.sendToPlayer(Message[3] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
