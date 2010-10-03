@@ -4,7 +4,44 @@ import minionsRooms, minionDefines, minionsCommands, minionsUtils
 
 import re, random
 
-MessageList = {}
+MessageList   = {}
+
+class CombatQueue():
+    def __init__(self):
+        self.QueueIndex = {}
+        self.combatQueue = []
+
+    # Add new combat attack to CombatList
+    def AddAttack(self, playerid):
+        # Is the player already attacking? If so, delete old attack and add new one
+        if playerid in self.QueueIndex.keys():
+            del self.combatQueue[self.QueueIndex[playerid]]
+            self.combatQueue.append(playerid)
+            self.UpdateIndex()
+        # Not already attacking, so just add combat to queue
+        else:
+            self.combatQueue.append(playerid)
+            self.QueueIndex[playerid] = (len(self.combatQueue) - 1)
+
+
+    # Remove players combat from CombatQueue
+    def RemoveAttack(self, playerid):
+        if playerid in self.QueueIndex.keys():
+            del self.combatQueue[self.QueueIndex[playerid]]
+            self.UpdateIndex()
+
+    # Reindex QueueIndex after combatQueue Deletion
+    def UpdateIndex(self):
+
+        self.QueueIndex.clear()
+        for playerid in self.combatQueue:
+            x = 0
+            self.QueueIndex[playerid] = x
+            x += 1
+
+    # Get combat queue for processing
+    def GetCombatQueue(self):
+        return self.combatQueue[:]
 
 #################################################
 # WhoIsInThheRoom()
@@ -201,27 +238,38 @@ def SpringRoomTrap(player, trap):
 # Kill the fool, and tell him to stay off my lines!
 ###################################################
 def KillPlayer(player, killer):
-    player.attacking             = 0
-    player.victim                = 0
+    global CombatQueue
+
     player.deaths               += 1
     player.hp                    = player.maxhp
     curRoom                      = player.room
 
+
+    player.attacking             = 0
+    player.victim                = 0
+
+    # Remove any combat in combat queue
+    player.factory.CombatQueue.RemoveAttack(player.playerid)
+    del minionsRooms.RoomList[player.room].Players[player.playerid]
     player.sendToPlayer("You are dead.")
+    player.sendToRoom("%s collapses in a heap and dies." % (player.name))
+    player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+
+    # Was he killed by someone? Tell everyone.
     if killer > 0:
         killer = player.factory.players[killer]
         player.factory.sendMessageToAllClients("\r\n%s%s has killed %s!" % (minionDefines.BLUE, killer.name, player.name))
-    if player.attacking:
-        player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
-    player.sendToRoom("%s collapses in a heap and dies." % (player.name))
+    else:
+        player.factory.sendMessageToAllClients("\r\n%s%s was killed!%s" % (minionDefines.BLUE, player.name, minionDefines.WHITE))
 
-    del minionsRooms.RoomList[player.room].Players[player.playerid]
 
     for _player in minionsRooms.RoomList[curRoom].Players.keys():
-        if player.factory.players[_player].victim == player.playerid:
-           player.factory.players[_player].attacking    = 0
-           player.factory.players[_player].victim       = 0
-           player.factory.players[_player].sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+        otherplayer = player.factory.players[_player]
+        if otherplayer.victim == player.playerid:
+           otherplayer.attacking    = 0
+           otherplayer.victim       = 0
+           otherplayer.factory.CombatQueue.RemoveAttack(otherplayer.playerid)
+           otherplayer.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
 
     minionsRooms.RoomList[1].Players[player.playerid] = player.name
     player.room = 1
@@ -235,28 +283,40 @@ def KillPlayer(player, killer):
 # Attack the player if he is in the room
 ###################################################
 def PlayerAttack(player):
+    global CombatQueue
 
+    if player.attacking == 0:
+        return
+
+    # Is the victim in the room?  If so, do attack
     if player.victim in minionsRooms.RoomList[player.room].Players.keys():
+        # Shorten var path to curVictim
         curVictim = player.factory.players[player.victim]
 
         # Get the class/weapon attack messages for swings and misses
         Message = minionsUtils.MessageList[player.weapontext].split("|")
 
+        # Roll damage and tell the room
         damage = random.randint(player.mindamage, player.maxdamage)
         player.sendToPlayer(Message[1] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
         curVictim.sendToPlayer(Message[3] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
         player.sendToRoomNotVictim(curVictim.playerid, Message[5] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
+
+        # Apply the damage roll, the check to see if player is dead.
         curVictim.hp -= damage
         StatLine(curVictim)
         if curVictim.hp < 1:
             player.attacking = 0
             player.victim = 0
+            player.factory.CombatQueue.RemoveAttack(player.playerid)
             KillPlayer(curVictim, player.playerid)
             player.kills += 1
             player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
     else:
         player.attacking = 0
         player.victim = ""
+        # Remove any combat in combat queue
+        player.factory.CombatQueue.RemoveAttack(player.playerid)
         player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
         return
 

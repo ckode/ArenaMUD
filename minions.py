@@ -155,6 +155,7 @@ class SonzoFactory(ServerFactory):
     def __init__(self):
 
         self.players = {}
+        self.CombatQueue = minionsUtils.CombatQueue()
 
         # Load map details for the database
         minionsDB.LoadDoors(self)
@@ -183,9 +184,10 @@ class SonzoFactory(ServerFactory):
            minionsUtils.RoomTimeBasedSpells(self, roomid)
 
     def CombatRound(self):
-        for player in self.players.values():
-            if player.attacking:
-                minionsUtils.PlayerAttack(player)
+        # Loop through combat queue and execute player attacks
+        for playerid in self.CombatQueue.GetCombatQueue():
+           if playerid in self.players.keys():
+               minionsUtils.PlayerAttack(self.players[playerid])
 
 
     def Shutdown(self):
