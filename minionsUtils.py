@@ -239,6 +239,7 @@ def PlayerAttack(player):
     if player.victim in minionsRooms.RoomList[player.room].Players.keys():
         curVictim = player.factory.players[player.victim]
 
+        # Get the class/weapon attack messages for swings and misses
         Message = minionsUtils.MessageList[player.weapontext].split("|")
 
         damage = random.randint(player.mindamage, player.maxdamage)
