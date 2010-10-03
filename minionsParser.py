@@ -46,7 +46,8 @@ def commandParser(player, line):
                  'look':             minionsCommands.LookAt,
                  'bash':             minionsCommands.Bash,
                  'superuser':        "",
-                 "attack":           minionsCommands.Attack
+                 'attack':           minionsCommands.Attack,
+                 'rest':             "",
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -66,6 +67,11 @@ def commandParser(player, line):
                    player.sendToPlayer("%sVision changed." % (minionDefines.WHITE,) )
                    return
                 continue
+          elif each == "rest":
+             if len(cmd[0]) > 2:
+                player.resting = True
+                player.sendToPlayer("%sYou are now resting." % (minionDefines.WHITE,))
+                return
           # Become an admin (access admin commands)
           elif each == "superuser":
              if len(cmd) == 2:
