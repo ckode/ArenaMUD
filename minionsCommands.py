@@ -381,9 +381,17 @@ def Gossip(player, line):
 ################################################
 def Who(player):
     player.sendToPlayer(minionDefines.LCYAN + "<<=-=-=-=-=-=-=-=-=-=-=-=-=-= Whos Online =-=-=-=-=-=-=-=-=-=-=-=-=--=>>")
-    player.sendToPlayer(minionDefines.LCYAN + "    Player                             Kills              Deaths")
+    player.sendToPlayer(minionDefines.LCYAN + "    Player                         Kills        Deaths       K/D Ratio")
     for user in player.factory.players.values():
-        player.sendToPlayer("%s => %s%s%s%s %s" % (minionDefines.LCYAN, minionDefines.LMAGENTA, user.name.ljust(34, ' '), minionDefines.LCYAN, str(user.kills).rjust(5, ' '), str(user.deaths).rjust(19, ' ')) )
+        try:
+           ratio = "%.2f" % ( float(user.kills) / float(user.deaths) )
+        except:
+            if user.kills == 0:
+               ratio = "%.2f" % float(0.00)
+            else:
+               ratio = "%.2f" % (user.kills)
+
+        player.sendToPlayer("%s => %s%s%s%s %s%s" % (minionDefines.LCYAN, minionDefines.LMAGENTA, user.name.ljust(31, ' '), minionDefines.LCYAN, str(user.kills).rjust(5, ' '), str(user.deaths).rjust(13, ' '), str(ratio).rjust(16, ' ') ) )
     player.sendToPlayer(minionDefines.LCYAN + "<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->>")
     minionsUtils.StatLine(player)
 
@@ -593,6 +601,7 @@ def LookPlayer(player, otherplayerID):
 # Coomand -> Attack()
 #################################################
 def Attack(player, attacked):
+     global CombatQueue
 
      victimList = minionsUtils.FindPlayerInRoom(player, attacked)
 
@@ -609,6 +618,7 @@ def Attack(player, attacked):
          if victimID == player.playerid:
              player.sendToPlayer(minionDefines.RED + "Why would you attack yourself idiot!" + minionDefines.WHITE)
              return
+         player.factory.CombatQueue.AddAttack(player.playerid)
          victim = player.factory.players[victimID]
          player.attacking = 1
          player.victim = victim.playerid
