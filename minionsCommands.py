@@ -197,8 +197,6 @@ def Quit(player):
 def Open(player, something):
     global DIRECTIONS
 
-    player.resting = False
-    minionsUtils.StatLine(player)
     objList = something.split()[0]
     obj = re.compile(re.escape(objList[0].lower()))
     # Only doors exist now
@@ -281,8 +279,6 @@ def Close(player, something):
 def Bash(player, something):
     global DIRECTIONS
 
-    player.resting = False
-    minionsUtils.StatLine(player)
     objList = something.split()[0]
     obj = re.compile(re.escape(objList[0].lower()))
     # Only doors exist now
@@ -327,11 +323,22 @@ def BashDoor(player, DIRECTION):
     OtherRoomID = minionsRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
     CurDoor = minionsRooms.DoorList[CurDoorID]
 
+
     if CurDoor.Passable:
        player.sendToPlayer("%s%s is already open." % (minionDefines.WHITE, minionsRooms.DIRTEXT[DIRECTION].capitalize()) )
     else:
        # Is this a door and is it visable?
        if CurDoor.DoorType == 2 or CurDoor.DoorType == 4:
+
+         # You can't attack/rest and bash at the same time.
+          player.resting = False
+          if player.attacking == True:
+              player.factory.CombatQueue.RemoveAttack(player.playerid)
+              player.attacking = False
+              player.victim = ""
+              player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE))
+              player.sendToRoom("%s%s breaks off combat.%s" % (minionDefines.LRED, player.name, minionDefines.WHITE))
+
           # Open the door on both sides of the door.
           minionsRooms.DoorList[CurDoorID].Passable = True
           minionsRooms.DoorList[CurDoorID].DoorStatus = minionsRooms.OPEN
@@ -349,6 +356,7 @@ def BashDoor(player, DIRECTION):
 def OpenDoor(player, DIRECTION):
     global RoomList, DIRTEXT
     CurDoorID = minionsRooms.RoomList[player.room].GetDoorID(DIRECTION)
+
     if CurDoorID == 0:
        # Door doesn't exist.
        player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, "You do not see anything to close to the ", minionsRooms.DIRTEXT[DIRECTION]) )
@@ -362,6 +370,15 @@ def OpenDoor(player, DIRECTION):
     else:
        # Is this a door and is it visable?
        if CurDoor.DoorType == 2 or CurDoor.DoorType == 4:
+
+          # You can't attack/rest and open a door at the same time.
+          player.resting = False
+          if player.attacking == True:
+              player.factory.CombatQueue.RemoveAttack(player.playerid)
+              player.attacking = False
+              player.victim = ""
+              player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE))
+              player.sendToRoom("%s%s breaks off combat.%s" % (minionDefines.LRED, player.name, minionDefines.WHITE))
           # If locked, say so
           if CurDoor.Locked == 1:
              player.sendToPlayer("%s%s%s" % (minionDefines.WHITE, minionsRooms.DIRTEXT[DIRECTION].capitalize(), " is locked.") )
@@ -395,6 +412,16 @@ def CloseDoor(player, DIRECTION):
        if CurDoor.Passable == False:
           player.sendToPlayer("%s%s is already closed." % (minionDefines.WHITE, minionsRooms.DIRTEXT[DIRECTION].capitalize()) )
        else:
+          # You can't attack/rest and close a door at the same time.
+          player.resting = False
+          if player.attacking == True:
+              player.factory.CombatQueue.RemoveAttack(player.playerid)
+              player.attacking = False
+              player.victim = ""
+              player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE))
+              player.sendToRoom("%s%s breaks off combat.%s" % (minionDefines.LRED, player.name, minionDefines.WHITE))
+
+          # Close the door
           minionsRooms.DoorList[CurDoorID].Passable = False
           minionsRooms.DoorList[CurDoorID].DoorStatus = minionsRooms.CLOSED
           player.BroadcastToRoom("%sThe %s to the %s closes." % (minionDefines.WHITE, minionsRooms.DOORTYPE[CurDoor.DoorType], minionsRooms.DIRTEXT[minionsRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoomID)
