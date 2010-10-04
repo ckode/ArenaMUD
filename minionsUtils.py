@@ -97,7 +97,10 @@ def FindPlayerInRoom(player, Name):
 #################################################
 def StatLine(player):
    # Send a players stat line
-   STATLINE = "[HP=%d/%d]: " % (player.hp, player.maxhp)
+   if player.resting:
+       STATLINE = "[HP=%d/%d]: (resting) " % (player.hp, player.maxhp)
+   else:
+       STATLINE = "[HP=%d/%d]: " % (player.hp, player.maxhp)
    STATSIZE = len(STATLINE)
    player.transport.write(minionDefines.SAVECUR)
    player.transport.write(minionDefines.FIRSTCOL)
@@ -253,7 +256,8 @@ def KillPlayer(player, killer):
     del minionsRooms.RoomList[player.room].Players[player.playerid]
     player.sendToPlayer("You are dead.")
     player.sendToRoom("%s collapses in a heap and dies." % (player.name))
-    player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+    if player.attacking:
+        player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
 
     # Was he killed by someone? Tell everyone.
     if killer > 0:
@@ -288,10 +292,13 @@ def PlayerAttack(player):
     if player.attacking == 0:
         return
 
+    player.resting = False
     # Is the victim in the room?  If so, do attack
     if player.victim in minionsRooms.RoomList[player.room].Players.keys():
         # Shorten var path to curVictim
         curVictim = player.factory.players[player.victim]
+        curVictim.resting = False
+        curVictim.sneaking = False
 
         # Get the class/weapon attack messages for swings and misses
         Message = minionsUtils.MessageList[player.weapontext].split("|")
@@ -312,7 +319,7 @@ def PlayerAttack(player):
             # Not backstabbing, do normak damage and no surprise message
             player.sendToPlayer(Message[1] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
             curVictim.sendToPlayer(Message[4] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
-            player.sendToRoomNotVictim(curVictim.playerid, Message[8] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
+            player.sendToRoomNotVictim(curVictim.playerid, Message[7] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
 
         # No more sneaking after you've attacked.
         player.sneaking = False
