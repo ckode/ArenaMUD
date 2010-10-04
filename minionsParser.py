@@ -48,6 +48,7 @@ def commandParser(player, line):
                  'superuser':        "",
                  'attack':           minionsCommands.Attack,
                  'rest':             "",
+                 'sneak':            minionsCommands.Sneak
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -192,11 +193,18 @@ def commandParser(player, line):
                 commands[each](player)
                 return
              continue
+          elif each == "sneak":
+             if len(cmd) == 1 and len(cmd[0]) > 1:
+                commands[each](player)
+                return
+             continue
           elif each == "up":
              if len(cmd) == 1:
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.Up, player)
                 return
@@ -206,6 +214,8 @@ def commandParser(player, line):
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.Down, player)
                 return
@@ -215,6 +225,8 @@ def commandParser(player, line):
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.North, player)
                 return
@@ -224,6 +236,8 @@ def commandParser(player, line):
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.NorthEast, player)
                 return
@@ -233,6 +247,8 @@ def commandParser(player, line):
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.East, player)
                 return
@@ -242,6 +258,8 @@ def commandParser(player, line):
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.South, player)
                 return
@@ -251,6 +269,8 @@ def commandParser(player, line):
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.SouthEast, player)
                 return
@@ -260,6 +280,8 @@ def commandParser(player, line):
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.SouthWest, player)
                 return
@@ -269,6 +291,8 @@ def commandParser(player, line):
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.West, player)
                 return
@@ -278,6 +302,8 @@ def commandParser(player, line):
                 if player.moving == 1:
                    player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
+                if player.sneaking:
+                    player.sendToPlayer("Sneaking...")
                 player.moving = 1
                 reactor.callLater(.5, minionsCommands.NorthWest, player)
                 return
@@ -296,6 +322,7 @@ def commandParser(player, line):
 
      # No command found so say it to the room
     minionsCommands.Say(player, line)
+    player.sneaking = False
     return
 
 
@@ -471,12 +498,15 @@ def PickClass(player, classnum):
     if classnum in minionsRace.ClassList.keys():
         playerclass             = minionsRace.ClassList[classnum]
         player.Class            = classnum
-        player.hp               = playerclass.hpBonus
+        player.hp               = playerclass.hpbonus
         player.maxhp            = player.hp
         player.mindamage       += playerclass.mindamage
         player.maxdamage       += playerclass.maxdamage
         player.ac              += playerclass.BaseArmor
         player.magery           = playerclass.MageryType
+        # If class has stealth, then player can sneak
+        if playerclass.stealth > 0:
+            player.ClassStealth = True
         player.stealth         += playerclass.stealth
         player.weapontext       = playerclass.weapontext
         player.STATUS           = minionDefines.GETRACE
