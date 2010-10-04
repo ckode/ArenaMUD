@@ -97,16 +97,25 @@ def FindPlayerInRoom(player, Name):
 #################################################
 def StatLine(player):
    # Send a players stat line
-   if player.resting:
-       STATLINE = "[HP=%d/%d]: (resting) " % (player.hp, player.maxhp)
+
+   # If player.hp is higher than maxhp, make it blue (only a buff can do this)
+   if player.hp > player.maxhp:
+       hpcolor = minionDefines.BLUE
+   # Is the players HP less than 25% of total hps?
+   elif player.hp < ( ( float(player.maxhp) / 100) * 25 ):
+       hpcolor = minionDefines.LRED
    else:
-       STATLINE = "[HP=%d/%d]: " % (player.hp, player.maxhp)
+       hpcolor = minionDefines.WHITE
+
+
+
+   if player.resting:
+       STATLINE = "[HP=%s%d%s/%d]: (resting) " % (hpcolor, player.hp, minionDefines.WHITE, player.maxhp)
+   else:
+       STATLINE = "[HP=%s%d%s/%d]: " % ( hpcolor, player.hp, minionDefines.WHITE, player.maxhp)
    STATSIZE = len(STATLINE)
    player.transport.write(minionDefines.SAVECUR)
    player.transport.write(minionDefines.FIRSTCOL)
-#   player.transport.write(chr(27) + "[" + str(STATSIZE) + ";C")
-#   player.transport.write(minionDefines.DELETELEFT)
-#   player.transport.write(minionDefines.FIRSTCOL)
    player.transport.write(STATLINE)
    player.transport.write(minionDefines.RESTORECUR)
 
