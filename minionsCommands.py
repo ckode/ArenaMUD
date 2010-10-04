@@ -690,6 +690,22 @@ def Attack(player, attacked):
 
 def Rest(player):
     player.resting = True
-    minionsUtils.StatLine(player)
+    if player.attacking == True:
+        player.factory.CombatQueue.RemoveAttack(player.playerid)
+        player.attacking = False
+        player.victim = ""
+        player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE))
+        player.sendToRoom("%s%s breaks off combat.%s" % (minionDefines.LRED, player.name, minionDefines.WHITE))
     player.sendToPlayer("%sYou stop to rest." % (minionDefines.WHITE))
     player.sendToRoom("%s%s stops to rest." % (minionDefines.WHITE, player.name))
+
+def Break(player):
+    player.resting = False
+
+    if player.attacking == True:
+        player.factory.CombatQueue.RemoveAttack(player.playerid)
+        player.attacking = False
+        player.victim = ""
+        player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE))
+        player.sendToRoom("%s%s breaks off combat.%s" % (minionDefines.LRED, player.name, minionDefines.WHITE))
+    minionsUtils.StatLine(player)
