@@ -47,7 +47,7 @@ def commandParser(player, line):
                  'bash':             minionsCommands.Bash,
                  'superuser':        "",
                  'attack':           minionsCommands.Attack,
-                 'rest':             "",
+                 'rest':             minionsCommands.Rest,
                  'sneak':            minionsCommands.Sneak
                }
     cmd = line.split()
@@ -69,9 +69,8 @@ def commandParser(player, line):
                    return
                 continue
           elif each == "rest":
-             if len(cmd[0]) > 2:
-                player.resting = True
-                player.sendToPlayer("%sYou are now resting." % (minionDefines.WHITE,))
+             if len(cmd[0]) == 4 and len(cmd) == 1:
+                commands[each](player)
                 return
           # Become an admin (access admin commands)
           elif each == "superuser":

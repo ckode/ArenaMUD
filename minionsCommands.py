@@ -48,6 +48,8 @@ SNEAKINGTEXT = {  1: " sneaking out to the north.| sneaking in from the south.",
 def MovePlayer(player, Direction):
    global RoomList
    FailedSneak = False
+   player.resting = False
+   minionsUtils.StatLine(player)
 
    # Sub function that can be called when a player's path is blocked.
    def RunIntoWall(PassageType, playerName):
@@ -195,6 +197,8 @@ def Quit(player):
 def Open(player, something):
     global DIRECTIONS
 
+    player.resting = False
+    minionsUtils.StatLine(player)
     objList = something.split()[0]
     obj = re.compile(re.escape(objList[0].lower()))
     # Only doors exist now
@@ -235,6 +239,8 @@ def Open(player, something):
 def Close(player, something):
     global DIRECTIONS
 
+    player.resting = False
+    minionsUtils.StatLine(player)
     objList = something.split()[0]
     obj = re.compile(re.escape(objList[0].lower()))
     # Only doors exist now
@@ -275,6 +281,8 @@ def Close(player, something):
 def Bash(player, something):
     global DIRECTIONS
 
+    player.resting = False
+    minionsUtils.StatLine(player)
     objList = something.split()[0]
     obj = re.compile(re.escape(objList[0].lower()))
     # Only doors exist now
@@ -498,6 +506,7 @@ def Wtf(player):
 # Command -> Sneak
 ################################################
 def Sneak(player):
+    player.resting = False
     # If you aren't a stealthy class, or you are attacking, or someone is in the room.  You can't sneak!
     if player.ClassStealth == False or player.attacking == 1 or len(minionsRooms.RoomList[player.room].Players) > 1:
         player.sendToPlayer("%sYou don't think you're sneaking.%s" % (minionDefines.CYAN, minionDefines.WHITE))
@@ -647,6 +656,8 @@ def LookPlayer(player, otherplayerID):
 #################################################
 def Attack(player, attacked):
      global CombatQueue
+     player.resting = False
+     minionsUtils.StatLine(player)
 
      victimList = minionsUtils.FindPlayerInRoom(player, attacked)
 
@@ -668,9 +679,17 @@ def Attack(player, attacked):
          victim = player.factory.players[victimID]
          player.attacking = 1
          player.victim = victim.playerid
+         victim.sneaking = False
+         victim.resting = False
+         minionsUtils.StatLine(player)
          player.sendToPlayer("%s*Combat Engaged*%s" %(minionDefines.RED, minionDefines.WHITE))
          if player.sneaking == False:
              victim.sendToPlayer("%s%s moves to attack you!%s" %(minionDefines.RED, player.name, minionDefines.WHITE))
              player.sendToRoomNotVictim(victim.playerid, "%s%s moves to attack %s!%s" % (minionDefines.RED, player.name, victim.name,  minionDefines.WHITE))
 
 
+def Rest(player):
+    player.resting = True
+    minionsUtils.StatLine(player)
+    player.sendToPlayer("%sYou stop to rest." % (minionDefines.WHITE))
+    player.sendToRoom("%s%s stops to rest." % (minionDefines.WHITE, player.name))
