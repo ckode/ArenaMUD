@@ -48,7 +48,8 @@ def commandParser(player, line):
                  'superuser':        "",
                  'attack':           minionsCommands.Attack,
                  'rest':             minionsCommands.Rest,
-                 'sneak':            minionsCommands.Sneak
+                 'sneak':            minionsCommands.Sneak,
+                 'break':            minionsCommands.Break
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -70,6 +71,10 @@ def commandParser(player, line):
                 continue
           elif each == "rest":
              if len(cmd[0]) == 4 and len(cmd) == 1:
+                commands[each](player)
+                return
+          elif each == "break":
+             if len(cmd[0]) > 1 and len(cmd) == 1:
                 commands[each](player)
                 return
           # Become an admin (access admin commands)
