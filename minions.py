@@ -28,6 +28,8 @@ class Users(StatefulTelnetProtocol):
     maxhp              = 100
     ac                 = 0
     stealth            = 0
+    ClassStealth       = False
+    sneaking           = False
     room               = 1
     resting            = False
     kills              = 0

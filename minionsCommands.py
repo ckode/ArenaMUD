@@ -3,7 +3,7 @@ from twisted.internet import reactor
 import minionDefines, minionsDB, minionsLog, minionsCommands
 import minionsRooms, minionsUtils, minionsParser
 
-import time, re
+import time, re, random
 
 
 NONE         =  0
@@ -30,12 +30,24 @@ MOVINGTEXT = {  1: " leaves to the north.| arrives from the south.",
                10: " leaves down.| arrives from above.",
              }
 
+SNEAKINGTEXT = {  1: " sneaking out to the north.| sneaking in from the south.",
+                  2: " sneaking out to the northeast.| sneaking in from the southwest.",
+                  3: " sneaking out to the east.| sneaking in from the west.",
+                  4: " sneaking out to the southeast.| sneaking in from the northwest.",
+                  5: " sneaking out to the south.| sneaking in from the north.",
+                  6: " sneaking out to the southwest.| sneaking in from the northeast.",
+                  7: " sneaking out to the west.| sneaking in from the east.",
+                  8: " sneaking out to the northwest.| sneaking in from the southeast.",
+                  9: " sneaking out up .| sneaking in from below.",
+                 10: " sneaking out down.| sneaking in from above.",
+             }
 
 ################################################
 # NewMovePlayer() function
 ################################################
 def MovePlayer(player, Direction):
    global RoomList
+   FailedSneak = False
 
    # Sub function that can be called when a player's path is blocked.
    def RunIntoWall(PassageType, playerName):
@@ -53,6 +65,13 @@ def MovePlayer(player, Direction):
    if minionsRooms.RoomList[player.room].Doors.has_key(Direction):
       CurDoorNum = minionsRooms.RoomList[player.room].Doors[Direction]
       if minionsRooms.DoorList[CurDoorNum].Passable == True:
+         if player.sneaking == True:
+             if random.randint(1, 100) > player.stealth:
+                 SNEAKING = SNEAKINGTEXT[Direction].split('|')
+                 FailedSneak = True
+                 player.sendToRoom("%sYou noticed %s%s" % (minionDefines.LRED, player.name,  SNEAKING[0]))
+                 player.sendToPlayer("%sYou make a sound enter the room!%s" % (minionDefines.LRED, minionDefines.WHITE))
+
          # Get new room's room number, remove player from old room.
          NewRoom = minionsRooms.DoorList[CurDoorNum].ExitRoom[player.room]
 
@@ -61,26 +80,36 @@ def MovePlayer(player, Direction):
 
          # Set players room num in his profile and tell room he left
          MOVING = MOVINGTEXT[Direction].split('|')
-         player.sendToRoom(minionDefines.WHITE + player.name + MOVING[0])
+         if player.sneaking == False:
+             player.sendToRoom(minionDefines.WHITE + player.name + MOVING[0])
          player.room = NewRoom
 
          # Add player to that room and tell everyone
          minionsRooms.RoomList[NewRoom].Players[player.playerid] = player.name
-         player.sendToRoom(minionDefines.WHITE + player.name + MOVING[1])
+         # Sneaking in message
+         if player.sneaking:
+             if FailedSneak == True:
+                player.sneaking = False
+                player.sendToRoom( "%sYou noticed %s%s" % (minionDefines.LRED, player.name, SNEAKING[1]) )
+         else:
+            player.sendToRoom(minionDefines.WHITE + player.name + MOVING[1])
 
          # Is there a trap room trap in the room? Spring it!
          if minionsRooms.RoomList[NewRoom].RoomTrap > 0:
              minionsUtils.SpringRoomTrap(player, minionsRooms.RoomList[NewRoom].RoomTrap)
+             player.sneaking = False
 
          # Show the player the room he/she just entered
          minionsCommands.Look(player, player.room)
       else:
          # There is a doorway, but it's not passable
          PassageType = minionsUtils.MessageList[minionsRooms.DoorList[CurDoorNum].DoorDesc].split('|')[0]
+         player.sneaking = False
          RunIntoWall(PassageType, player.name)
    else:
        # There is no door, just a wall.
        RunIntoWall("wall", player.name)
+       player.sneaking = False
 
    player.moving = 0
 
@@ -466,6 +495,20 @@ def Wtf(player):
     player.sendToPlayer(minionDefines.GREEN + "You yell, What the fuck!" + minionDefines.WHITE)
 
 ################################################
+# Command -> Sneak
+################################################
+def Sneak(player):
+    # If you aren't a stealthy class, or you are attacking, or someone is in the room.  You can't sneak!
+    if player.ClassStealth == False or player.attacking == 1 or len(minionsRooms.RoomList[player.room].Players) > 1:
+        player.sendToPlayer("%sYou don't think you're sneaking.%s" % (minionDefines.CYAN, minionDefines.WHITE))
+        player.sneaking = False
+        return
+    else:
+        player.sendToPlayer("%sAttempting to sneak.%s" % (minionDefines.WHITE, minionDefines.WHITE))
+        player.sneaking = True
+
+
+################################################
 # Command -> Look
 ################################################
 def Look(player, RoomNum):
@@ -487,6 +530,7 @@ def Look(player, RoomNum):
          player.sendLine(minionDefines.WHITE + "The room is too dark, you can't see anything!")
          minionsUtils.StatLine(player)
          return
+
    player.sendLine(minionDefines.LCYAN + Room.Name)
    if player.briefDesc != 1:
       player.sendLine(minionDefines.WHITE + Room.Desc1)
@@ -595,6 +639,7 @@ def LookPlayer(player, otherplayerID):
     victim = {}
     victim = player.factory.players[otherplayerID]
 
+    # No sneaking doing this! (make it noticed when someone looks at someone in the room
     player.sendToPlayer(minionDefines.BLUE + victim.name + " looks like a complete idiot!")
 
 #################################################
@@ -618,12 +663,14 @@ def Attack(player, attacked):
          if victimID == player.playerid:
              player.sendToPlayer(minionDefines.RED + "Why would you attack yourself idiot!" + minionDefines.WHITE)
              return
+         # No sneaking after
          player.factory.CombatQueue.AddAttack(player.playerid)
          victim = player.factory.players[victimID]
          player.attacking = 1
          player.victim = victim.playerid
          player.sendToPlayer("%s*Combat Engaged*%s" %(minionDefines.RED, minionDefines.WHITE))
-         victim.sendToPlayer("%s%s moves to attack you!%s" %(minionDefines.RED, player.name, minionDefines.WHITE))
-         player.sendToRoomNotVictim(victim.playerid, "%s%s moves to attack %s!%s" % (minionDefines.RED, player.name, victim.name,  minionDefines.WHITE))
+         if player.sneaking == False:
+             victim.sendToPlayer("%s%s moves to attack you!%s" %(minionDefines.RED, player.name, minionDefines.WHITE))
+             player.sendToRoomNotVictim(victim.playerid, "%s%s moves to attack %s!%s" % (minionDefines.RED, player.name, victim.name,  minionDefines.WHITE))
 
 

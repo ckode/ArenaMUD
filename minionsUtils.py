@@ -298,10 +298,24 @@ def PlayerAttack(player):
 
         # Roll damage and tell the room
         damage = random.randint(player.mindamage, player.maxdamage)
-        player.sendToPlayer(Message[1] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
-        curVictim.sendToPlayer(Message[3] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
-        player.sendToRoomNotVictim(curVictim.playerid, Message[5] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
 
+        # Is attacker backstabbing?
+        if player.ClassStealth and player.sneaking:
+
+            # Backstab modifier
+            modifier = ( player.maxdamage + (player.maxdamage * ( float(player.stealth) / 100 ) ) )
+            damage += modifier
+            player.sendToPlayer(Message[2] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
+            curVictim.sendToPlayer(Message[5] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
+            player.sendToRoomNotVictim(curVictim.playerid, Message[8] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
+        else:
+            # Not backstabbing, do normak damage and no surprise message
+            player.sendToPlayer(Message[1] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
+            curVictim.sendToPlayer(Message[4] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
+            player.sendToRoomNotVictim(curVictim.playerid, Message[8] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
+
+        # No more sneaking after you've attacked.
+        player.sneaking = False
         # Apply the damage roll, the check to see if player is dead.
         curVictim.hp -= damage
         StatLine(curVictim)
