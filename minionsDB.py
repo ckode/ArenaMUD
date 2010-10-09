@@ -261,6 +261,7 @@ def LoadRooms(Sonzo):
         minionsRooms.RoomList[row[0]].LightLevel                      = row[8]
         minionsRooms.RoomList[row[0]].RoomSpell                       = row[9]
         minionsRooms.RoomList[row[0]].RoomTrap                        = row[10]
+        minionsRooms.RoomList[row[0]].NoSpawn                         = row[11]
 
 
     print "Loaded %d rooms." % (len(minionsRooms.RoomList),)

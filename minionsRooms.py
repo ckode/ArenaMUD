@@ -90,11 +90,12 @@ class RoomObj():
     def __init__(self):
         self.RoomNum           = 0   # Room ID
         self.Name              = ""  # Title of the room
-        self.Desc1              = 0   # Full room discription
-        self.Desc2              = 0   # Full room discription
-        self.Desc3              = 0   # Full room discription
-        self.Desc4              = 0   # Full room discription
-        self.Desc5              = 0   # Full room discription
+        self.Desc1              = 0  # Full room discription
+        self.Desc2              = 0  # Full room discription
+        self.Desc3              = 0  # Full room discription
+        self.Desc4              = 0  # Full room discription
+        self.Desc5              = 0  # Full room discription
+        self.NoSpawn            = 0  # Zero you can spawn here, 1 you cannot
 
         self.Doors             = {}  # Doors{direction: DoorID}
         self.LightLevel        = 0   # Light level in room
