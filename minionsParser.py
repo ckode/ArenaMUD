@@ -480,9 +480,10 @@ def  LoginPlayer(player, line):
        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
        player.factory.players[player.playerid] = player
        # Put player in current room
-       player.room = 1
-       minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
-       minionsCommands.Look(player, player.room)
+       #player.room = 1
+       #minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
+       #minionsCommands.Look(player, player.room)
+       minionsUtils.SpawnPlayer(player)
        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
        return
 
@@ -557,9 +558,10 @@ def PickRace(player, racenum):
         player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
         player.factory.players[player.playerid] = player
         # Put player in current room
-        player.room = 1
-        minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
-        minionsCommands.Look(player, player.room)
+        #player.room = 1
+        #minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
+        #minionsCommands.Look(player, player.room)
+        minionsUtils.SpawnPlayer(player)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
     else:
        player.transport.write("Invalid choice, please try again.\r\n")

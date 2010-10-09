@@ -9,7 +9,8 @@ CREATE TABLE rooms (
     doors             VARCHAR(75) NOT NULL,      -- List of door numbers split with |
     light             INTEGER NOT NULL,          -- Light Level (1 normal, 2 nightvision, 3 dark vision)
     roomspell         INTEGER NOT NULL,          -- spell that always casts in room
-    trap              INTEGER NOT NULL           -- trap that hits when someone enters the room
+    trap              INTEGER NOT NULL,          -- trap that hits when someone enters the room
+    nospawn           INTEGER NOT NULL           -- Zero you can spawn in this room, 1 you cannot
 );
 
 CREATE TABLE Doors (

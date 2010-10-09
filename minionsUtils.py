@@ -284,10 +284,9 @@ def KillPlayer(player, killer):
            otherplayer.factory.CombatQueue.RemoveAttack(otherplayer.playerid)
            otherplayer.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
 
-    minionsRooms.RoomList[1].Players[player.playerid] = player.name
-    player.room = 1
-    minionsCommands.Look(player, player.room)
-    player.sendToRoom("%s%s appears in a flash!%s" % (minionDefines.YELLOW, player.name, minionDefines.WHITE) )
+    # Spawn the player
+    SpawnPlayer(player)
+
 
 
 ###################################################
@@ -350,4 +349,32 @@ def PlayerAttack(player):
         player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
         return
 
+
+###################################################
+# SpawnPlayer()
+#
+# Spawns a player in an empty room (no other players)
+# Of someone is in every room, just spawn the player
+###################################################
+def SpawnPlayer(player):
+    global RoomList
+    SpawnRooms = []
+
+    # Look for empty rooms that allow spawning
+    for room in minionsRooms.RoomList.values():
+        if len(room.Players) == 0 and room.NoSpawn == 0:
+            SpawnRooms.append(room)
+
+    # If no empty spawn rooms where found, just get rooms that allow spawning
+    if len(SpawnRooms) == 0:
+        for room in minionsRooms.RoomList.values():
+            if room.NoSpawn == 0:
+                SpawnRooms.append(room)
+
+
+    newRoom = SpawnRooms[( random.randint( 1, len(SpawnRooms) ) ) - 1 ]
+    player.room = newRoom.RoomNum
+    minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
+    minionsCommands.Look(player, player.room)
+    player.sendToRoom("%s%s appears in a flash!%s" % (minionDefines.YELLOW, player.name, minionDefines.WHITE) )
 
