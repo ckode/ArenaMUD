@@ -62,7 +62,8 @@ class Users(StatefulTelnetProtocol):
         global RoomList
         self.sendLine("Goodbye")
         if self.factory.players.has_key(self.playerid):
-           del minionsRooms.RoomList[self.room].Players[self.playerid]
+           if self.STATUS == minionDefines.PLAYING:
+               del minionsRooms.RoomList[self.room].Players[self.playerid]
            del self.factory.players[self.playerid]
            self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just logged off.")
            print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just logged off."
@@ -72,7 +73,8 @@ class Users(StatefulTelnetProtocol):
         global RoomList
         # If player hungup, disconnectClient() didn't remove the user, remove them now
         if self.factory.players.has_key(self.playerid):
-            del minionsRooms.RoomList[self.room].Players[self.playerid]
+            if self.STATUS == minionDefines.PLAYING:
+                del minionsRooms.RoomList[self.room].Players[self.playerid]
             del self.factory.players[self.playerid]
             self.factory.sendMessageToAllClients(minionDefines.BLUE + self.name + " just hung up!")
             print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just hung up!"
@@ -89,8 +91,8 @@ class Users(StatefulTelnetProtocol):
         self.transport.write(minionDefines.DELETELEFT)
         self.transport.write(minionDefines.FIRSTCOL)
         self.sendLine(line + minionDefines.WHITE)
-        minionsUtils.StatLine(self)
-
+        if self.STATUS == minionDefines.PLAYING or self.STATUS == minionDefines.PURGATORY:
+            minionsUtils.StatLine(self)
 
     ################################################
     # Send to everyone in current room but player
@@ -143,7 +145,7 @@ class Users(StatefulTelnetProtocol):
     ################################################
     def Shout(self, line):
         for player in self.factory.players.values():
-           if player.STATUS == minionDefines.PLAYING:
+           if player.STATUS == minionDefines.PLAYING or player.STATUS == minionDefines.PURGATORY:
                player.sendToPlayer(line + minionDefines.WHITE)
 
 

@@ -113,6 +113,9 @@ def StatLine(player):
        STATLINE = "[HP=%s%d%s/%d]: (resting) " % (hpcolor, player.hp, minionDefines.WHITE, player.maxhp)
    else:
        STATLINE = "[HP=%s%d%s/%d]: " % ( hpcolor, player.hp, minionDefines.WHITE, player.maxhp)
+   if player.STATUS == minionDefines.PURGATORY:
+       STATLINE = "%s>" % (minionDefines.WHITE)
+
    STATSIZE = len(STATLINE)
    player.transport.write(minionDefines.SAVECUR)
    player.transport.write(minionDefines.FIRSTCOL)
@@ -285,7 +288,7 @@ def KillPlayer(player, killer):
            otherplayer.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
 
     # Spawn the player
-    SpawnPlayer(player)
+    EnterPurgatory(player)
 
 
 
@@ -360,6 +363,8 @@ def SpawnPlayer(player):
     global RoomList
     SpawnRooms = []
 
+    player.STATUS = minionDefines.PLAYING
+
     # Look for empty rooms that allow spawning
     for room in minionsRooms.RoomList.values():
         if len(room.Players) == 0 and room.NoSpawn == 0:
@@ -377,4 +382,15 @@ def SpawnPlayer(player):
     minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
     minionsCommands.Look(player, player.room)
     player.sendToRoom("%s%s appears in a flash!%s" % (minionDefines.YELLOW, player.name, minionDefines.WHITE) )
+    player.Shout(minionDefines.BLUE + player.name + " has spawn!")
 
+#####################################################
+# EnterPurgatory()\
+#
+# Where a players starts after login and where he goes
+# when he dies.  You have to type spawn to enter the game
+#####################################################
+def EnterPurgatory(player):
+    player.STATUS = minionDefines.PURGATORY
+    minionsCommands.Who(player)
+    player.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")

@@ -436,8 +436,6 @@ def CloseDoor(player, DIRECTION):
 # Command -> Gossip
 ################################################
 def Gossip(player, line):
-    #cmdLen = len(cmd[0]) + 1
-    #player.Shout(minionDefines.MAGENTA + player.name + " gossips: " + line[cmdLen:] + minionDefines.WHITE )
     player.Shout(minionDefines.MAGENTA + player.name + " gossips: " + line)
 
 ################################################
@@ -455,7 +453,12 @@ def Who(player):
             else:
                ratio = "%.2f" % (user.kills)
 
-        player.sendToPlayer("%s => %s%s%s%s %s%s" % (minionDefines.LCYAN, minionDefines.LMAGENTA, user.name.ljust(31, ' '), minionDefines.LCYAN, str(user.kills).rjust(5, ' '), str(user.deaths).rjust(13, ' '), str(ratio).rjust(16, ' ') ) )
+        if user.STATUS == minionDefines.PURGATORY:
+           usersname = user.name + " (Purgatory)"
+           player.sendToPlayer("%s => %s%s% s%s %s%s" % (minionDefines.LCYAN, minionDefines.LMAGENTA, usersname.ljust(31, ' '), minionDefines.LCYAN, str(user.kills).rjust(5, ' '), str(user.deaths).rjust(13, ' '), str(ratio).rjust(16, ' ') ) )
+        else:
+           player.sendToPlayer("%s => %s%s%s%s %s%s" % (minionDefines.LCYAN, minionDefines.LMAGENTA, user.name.ljust(31, ' '), minionDefines.LCYAN, str(user.kills).rjust(5, ' '), str(user.deaths).rjust(13, ' '), str(ratio).rjust(16, ' ') ) )
+
     player.sendToPlayer(minionDefines.LCYAN + "<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->>")
     minionsUtils.StatLine(player)
 
