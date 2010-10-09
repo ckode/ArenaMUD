@@ -436,7 +436,10 @@ def CloseDoor(player, DIRECTION):
 # Command -> Gossip
 ################################################
 def Gossip(player, line):
-    player.Shout(minionDefines.MAGENTA + player.name + " gossips: " + line)
+    if player.STATUS == minionDefines.PLAYING:
+        player.Shout(minionDefines.MAGENTA + player.name + " gossips: " + line)
+    else:
+        player.Shout(minionDefines.MAGENTA + player.name + " gossips (purgatory): " + line)
 
 ################################################
 # Command -> Who
