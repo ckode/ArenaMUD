@@ -1,7 +1,7 @@
 from twisted.internet import reactor
 
 import minionDefines, minionsDB, minionsLog, minionsCommands
-import minionsRooms, minionsUtils, minionsParser
+import minionsRooms, minionsUtils, minionsParser, minionsRace
 
 import time, re, random
 
@@ -678,12 +678,46 @@ def LookAt(player, lookwhere):
 # Command -> LookPlayer(player, otherplayerID)
 ################################################
 def LookPlayer(player, otherplayerID):
+    global RaceList
+    global ClassList
 
     victim = {}
     victim = player.factory.players[otherplayerID]
 
     # No sneaking doing this! (make it noticed when someone looks at someone in the room
-    player.sendToPlayer(minionDefines.BLUE + victim.name + " looks like a complete idiot!")
+    if victim.sneaking == True:
+        player.SendToPlayer("%sYou do not see %s here!%s" %(minionDefines.B_WHITE, victim.name, minionsDefines.WHITE))
+        return
+
+    player.sneaking = False  #if they were sneaking, they aint no more.
+
+    # If player.hp is higher than maxhp, make it blue (only a buff can do this)
+    if player.hp > player.maxhp:
+        hpcolor = minionDefines.BLUE
+    # Is the players HP less than 25% of total hps?
+    elif player.hp < ( ( float(player.maxhp) / 100) * 25 ):
+        hpcolor = minionDefines.LRED
+    else:
+        hpcolor = minionDefines.WHITE
+
+    #figure out health string
+    if victim.hp < ( ( float(victim.maxhp) / 100) * 25 ):
+        HealthStr = "horribly"
+    elif victim.hp < ( ( float(victim.maxhp) / 100) * 50 ):
+        HealthStr = "badly"
+    elif victim.hp < ( ( float(victim.maxhp) / 100) * 75 ):
+        HealthStr = "somewhat"
+    elif victim.hp < ( ( float(victim.maxhp) / 100) * 85 ):
+        HealthStr = "lightly"
+    elif victim.hp < ( ( float(victim.maxhp) / 100) * 95 ):
+        HealthStr = "barely"
+    else:
+        HealthStr = "not"
+
+    player.sendToPlayer("%s<<=-=-=-=-=-=-=-= %s =-=-=-=-=-=-=-=>>" %(minionDefines.LCYAN, victim.name))
+    player.sendToPlayer("%s%s is a %s %s" %(minionDefines.YELLOW, victim.name, minionsRace.RaceList[victim.race].name, minionsRace.ClassList[victim.Class].name))
+    player.sendToPlayer("%s has %s kills and %s deaths" %(victim.name, str(victim.kills), str(victim.deaths)))
+    player.sendToPlayer("%s%s is %s wounded.%s" %(hpcolor, victim.name, HealthStr, minionDefines.WHITE))
 
 #################################################
 # Coomand -> Attack()
