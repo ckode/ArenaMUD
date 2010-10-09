@@ -594,7 +594,7 @@ def PurgatoryParser(player, line):
     cmd = line.split()
     # Player just hit enter, look around the room.
     if len(cmd) == 0:
-       player.sendToPlayer("%s%s%s" % (minionDefines.DELETELEFT, minionDefines.FIRSTCOL, minionDefines.WHITE))
+       minionsUtils.StatLine(player)
        return
 
     cmdstr = re.compile(re.escape(cmd[0].lower()))
