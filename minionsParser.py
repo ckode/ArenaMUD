@@ -377,6 +377,10 @@ def NotPlayingDialog(player, line):
     elif player.STATUS == minionDefines.GETRACE:
         PickRace(player, line)
         return
+    elif player.STATUS == minionDefines.PURGATORY:
+        PurgatoryParser(player, line)
+        return
+
 
 ###############################################
 # GetPlayerName()
@@ -554,14 +558,10 @@ def PickRace(player, racenum):
         player.STATUS           = minionDefines.PLAYING
 
         player.Shout(minionDefines.BLUE + player.name + " has joined.")
-        player.STATUS = minionDefines.PLAYING
         player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
         player.factory.players[player.playerid] = player
-        # Put player in current room
-        #player.room = 1
-        #minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
-        #minionsCommands.Look(player, player.room)
-        minionsUtils.SpawnPlayer(player)
+
+        minionsUtils.EnterPurgatory(player)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
     else:
        player.transport.write("Invalid choice, please try again.\r\n")
@@ -575,3 +575,56 @@ def Superuser(player, password):
     if password == "digital":
         player.isAdmin = True
         minionsUtils.StatLine(player)
+
+
+##############################################
+# PurgatoryParser()
+#
+# Command parser for when the player is in purgatory (ie, logged in, but not playing)
+##############################################
+def PurgatoryParser(player, line):
+    commands = { '/quit':            minionsCommands.Quit,
+                 'gossip':           minionsCommands.Gossip,
+                 'spawn':            minionsUtils.SpawnPlayer,
+                 'who':              minionsCommands.Who,
+                 'help':             minionsCommands.Help,
+                 'superuser':        ""
+               }
+
+    cmd = line.split()
+    # Player just hit enter, look around the room.
+    if len(cmd) == 0:
+       player.sendToPlayer("%s%s%s" % (minionDefines.DELETELEFT, minionDefines.FIRSTCOL, minionDefines.WHITE))
+       return
+
+    cmdstr = re.compile(re.escape(cmd[0].lower()))
+    for each in commands.keys():
+       if cmdstr.match(each):
+          if each == "gossip":
+             if len(cmd[0]) > 2 and len(cmd) > 1:
+                commands[each](player, line[(len(cmd[0]) + 1):])
+                return
+             continue
+          elif each == "/quit":
+             if len(cmd[0]) > 1:
+                commands[each](player)
+                return
+             continue
+          elif each == "spawn":
+             if len(cmd[0]) > 2 and len(cmd) == 1:
+                minionsUtils.SpawnPlayer(player)
+                return
+             continue
+           # Who command (who typed by itself)
+          elif each == "who":
+             if len(cmd[0]) == 3 and len(cmd) == 1:
+                commands[each](player)
+                return
+             continue
+          # Help command (help typed by itself)
+          elif each == "help":
+             if len(cmd) == 1 and len(cmd[0]) == 4:
+                commands[each](player)
+                return
+             continue
+    player.sendToPlayer("Command had no effect. Type 'spawn' to spawn or type 'help' for help.")

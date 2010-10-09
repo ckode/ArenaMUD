@@ -9,6 +9,7 @@ COMPAREPASSWORD  = 5
 NEW              = 6
 GETCLASS         = 7
 GETRACE          = 8
+PURGATORY        = 9
 EDIT             = 50
 
 # All allowable printable characters (and BACKSPACE!)
