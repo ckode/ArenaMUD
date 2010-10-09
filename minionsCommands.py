@@ -567,7 +567,8 @@ def Look(player, RoomNum):
          minionsUtils.StatLine(player)
          return
 
-   player.sendLine(minionDefines.LCYAN + Room.Name)
+
+   player.sendLine( "%s%s%s%s" % ( minionDefines.DELETELEFT, minionDefines.FIRSTCOL, minionDefines.LCYAN, Room.Name ) )
    if player.briefDesc != 1:
       player.sendLine(minionDefines.WHITE + Room.Desc1)
       if Room.Desc2 != "*":

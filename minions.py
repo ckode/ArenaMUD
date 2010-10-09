@@ -175,17 +175,36 @@ class SonzoFactory(ServerFactory):
            if client.STATUS == minionDefines.PLAYING:
                client.sendLine(mesg + minionDefines.WHITE)
 
-    def DoNaturalHealing(self):
+    # Event loop that happens every 15 seconds
+    def FifteenSecondLoop(self):
+       # Actions within the Fifteen seconds loop
+       # 1. Natural healing
+
+       # Do natural healing
        for player in self.players.values():
           minionsUtils.NaturalHealing(player)
 
-    def TimeBasedSpell(self):
+
+    def TwoSecondLoop(self):
+        # Actions within the Two second loop
+        # 1.  TimeBasedSpells (like DoT spells)
+        # 2. Time based spells in the room
+
+       # Do spell effect cased on player
        for player in self.players.values():
           minionsUtils.PlayerTimeBasedSpells(player)
+
+       # Do Room spell effect on all players in that room
        for roomid in minionsRooms.RoomList:
            minionsUtils.RoomTimeBasedSpells(self, roomid)
 
-    def CombatRound(self):
+
+    # Event loops for anything that is done ever four seconds
+    def FourSecondLoop(self):
+        # Actions within the four second loop
+        # 1.  Combat
+        # 2. Trap setting
+
         # Loop through combat queue and execute player attacks
         for playerid in self.CombatQueue.GetCombatQueue():
            if playerid in self.players.keys():
@@ -202,15 +221,15 @@ factory = SonzoFactory()
 factory.protocol = lambda: TelnetTransport(Users)
 reactor.listenTCP(23, factory)
 
-# Run Combat Round
-CombatRound = LoopingCall(factory.CombatRound)
-CombatRound.start(4)
+# 4 Second Loop
+FourSecondLoop = LoopingCall(factory.FourSecondLoop)
+FourSecondLoop.start(4)
 
-# Time Based Spell effects.
-TimeBasedSpells = LoopingCall(factory.TimeBasedSpell)
-TimeBasedSpells.start(2)
+# 2 Second Loop
+TwoSecondLoop = LoopingCall(factory.TwoSecondLoop)
+TwoSecondLoop.start(2)
 
 # Natural healing process ever 15 seconds
-Healer = LoopingCall(factory.DoNaturalHealing)
-Healer.start(15)
+FifteenSecondLoop = LoopingCall(factory.FifteenSecondLoop)
+FifteenSecondLoop.start(15)
 reactor.run()
