@@ -325,6 +325,12 @@ def Bash(player, something):
 def BashDoor(player, DIRECTION):
     global RoomList, DIRTEXT
     CurDoorID = amRooms.RoomList[player.room].GetDoorID(DIRECTION)
+
+    if CurDoorID == 0:
+       # Door doesn't exist.
+       player.sendToPlayer("%s%s%s" % (amDefines.WHITE, "You do not see anything to bash ", amRooms.DIRTEXT[DIRECTION]) )
+       return
+
     OtherRoomID = amRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
     CurDoor = amRooms.DoorList[CurDoorID]
 
