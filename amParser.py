@@ -556,6 +556,7 @@ def PickRace(player, racenum):
         player.vision           = race.vision
         player.stealth         += race.stealth
         player.STATUS           = amDefines.PLAYING
+        player.staticmaxhp      = player.maxhp
 
         player.Shout(amDefines.BLUE + player.name + " has joined.")
         player.sendToPlayer(amDefines.YELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )

@@ -257,7 +257,9 @@ def KillPlayer(player, killer):
 
     player.deaths               += 1
     player.hp                    = player.maxhp
+    player.effectingSpell        = 0
     curRoom                      = player.room
+
 
 
     player.attacking             = 0
@@ -364,6 +366,7 @@ def SpawnPlayer(player):
     SpawnRooms = []
 
     player.STATUS = amDefines.PLAYING
+    player.maxhp  = player.staticmaxhp
 
     # Look for empty rooms that allow spawning
     for room in amRooms.RoomList.values():
