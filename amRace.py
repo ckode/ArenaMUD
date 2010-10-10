@@ -4,7 +4,7 @@
 # List of all races
 RaceList = {}
 ###################################
-# Minions Race class
+# am Race class
 ###################################
 class Race():
    def __init__(self):
@@ -26,7 +26,7 @@ class Race():
 # List of all races
 ClassList = {}
 ###################################
-# Minions Race class
+# am Race class
 ###################################
 class Class():
    def __init__(self):
