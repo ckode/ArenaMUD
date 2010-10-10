@@ -681,12 +681,12 @@ def LookPlayer(player, otherplayerID):
     global RaceList
     global ClassList
 
-    victim = {}
+    #victim = {}
     victim = player.factory.players[otherplayerID]
 
     # No sneaking doing this! (make it noticed when someone looks at someone in the room
     if victim.sneaking == True:
-        player.SendToPlayer("%sYou do not see %s here!%s" %(minionDefines.B_WHITE, victim.name, minionsDefines.WHITE))
+        player.sendToPlayer("%sYou do not see %s here!" %(minionDefines.WHITE, victim.name) )
         return
 
     player.sneaking = False  #if they were sneaking, they aint no more.

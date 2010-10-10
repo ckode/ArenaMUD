@@ -205,7 +205,7 @@ class SonzoFactory(ServerFactory):
     def FourSecondLoop(self):
         # Actions within the four second loop
         # 1.  Combat
-        # 2. Trap setting
+        #
 
         # Loop through combat queue and execute player attacks
         for playerid in self.CombatQueue.GetCombatQueue():
