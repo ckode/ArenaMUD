@@ -49,6 +49,11 @@ def MovePlayer(player, Direction):
    global RoomList
    FailedSneak = False
    player.resting = False
+
+   # Did player die before movement happen? Abort if in Purgatory
+   if player.STATUS == amDefines.PURGATORY:
+       return
+
    amUtils.StatLine(player)
 
    # Sub function that can be called when a player's path is blocked.
