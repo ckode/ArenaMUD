@@ -719,6 +719,9 @@ def LookPlayer(player, otherplayerID):
     player.sendToPlayer("%s has %s kills and %s deaths" %(victim.name, str(victim.kills), str(victim.deaths)))
     player.sendToPlayer("%s%s is %s wounded.%s" %(hpcolor, victim.name, HealthStr, minionDefines.WHITE))
 
+    player.sendToRoomNotVictim( victim.playerid, "%s%s looks %s up and down." % (minionDefines.WHITE, player.name, victim.name) )
+    victim.sendToPlayer( "%s%s looks you up and down." % (minionDefines.WHITE, player.name) )
+
 #################################################
 # Coomand -> Attack()
 #################################################
