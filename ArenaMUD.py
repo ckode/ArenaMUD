@@ -26,8 +26,11 @@ class Users(StatefulTelnetProtocol):
     isAdmin            = 0
     hp                 = 50
     maxhp              = 100
+    staticmaxhp        = 100
     ac                 = 0
     stealth            = 0
+    effectingSpell     = 0
+    lastCast           = 0                     # How long since last casted (use loops to count down)
     ClassStealth       = False
     sneaking           = False
     room               = 1
