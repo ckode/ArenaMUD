@@ -1,4 +1,4 @@
-import minionDefines, minionsUtils
+import amDefines, amUtils
 
 RoomList          = {}
 RoomSpellList     = {}
@@ -114,7 +114,7 @@ class RoomObj():
     def DisplayExits(self):
           DoorCount = 0
           # Start string
-          ObviousExits = "%sObvious exits: " % (minionDefines.GREEN,)
+          ObviousExits = "%sObvious exits: " % (amDefines.GREEN,)
           EmptySize = len(ObviousExits)
 
           # Cycle through the doors in the room and build the obvious exits string
@@ -137,7 +137,7 @@ class RoomObj():
                           ObviousExits += DIRTEXT[_door]
                   # Display door type, status, and direction (door open east)
                   else:
-                      DoorText = minionsUtils.MessageList[CurDoor.DoorDesc].split('|')[CurDoor.DoorStatus]
+                      DoorText = amUtils.MessageList[CurDoor.DoorDesc].split('|')[CurDoor.DoorStatus]
 
                       if DoorCount > 1:
                           ObviousExits += ", " + DoorText + " " + DIRTEXT[_door]

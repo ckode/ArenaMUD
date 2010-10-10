@@ -1,7 +1,7 @@
 from twisted.internet import reactor
 
-import minionDefines, minionsCommands, minionsDB
-import minionsRooms, minionsUtils, minionsRace
+import amDefines, amCommands, amDB
+import amRooms, amUtils, amRace
 
 import re, string
 from time import strftime, localtime
@@ -14,47 +14,47 @@ def commandParser(player, line):
     line = CleanPlayerInput(line)
 
     # Player isn't logged in yet, do dialog
-    if player.STATUS != minionDefines.PLAYING:
+    if player.STATUS != amDefines.PLAYING:
         NotPlayingDialog(player, line)
         return
     # Map (dict) for commands to corosponding function
-    commands = { '/quit':            minionsCommands.Quit,
-                 'gossip':           minionsCommands.Gossip,
-                 'emote':            minionsCommands.Emote,
-                 'who':              minionsCommands.Who,
-                 'set':              minionsCommands.Set,
-                 'help':             minionsCommands.Help,
-                 'look':             minionsCommands.Look,
-                 'down':             minionsCommands.Down,
-                 'up':               minionsCommands.Up,
-                 'north':            minionsCommands.North,
-                 'ne':               minionsCommands.NorthEast,
-                 'east':             minionsCommands.East,
-                 'se':               minionsCommands.SouthEast,
-                 'south':            minionsCommands.South,
-                 'sw':               minionsCommands.SouthWest,
-                 'west':             minionsCommands.West,
-                 'nw':               minionsCommands.NorthWest,
-                 'rofl':             minionsCommands.Rofl,
-                 'wtf':              minionsCommands.Wtf,
-                 'slap':             minionsCommands.Slap,
+    commands = { '/quit':            amCommands.Quit,
+                 'gossip':           amCommands.Gossip,
+                 'emote':            amCommands.Emote,
+                 'who':              amCommands.Who,
+                 'set':              amCommands.Set,
+                 'help':             amCommands.Help,
+                 'look':             amCommands.Look,
+                 'down':             amCommands.Down,
+                 'up':               amCommands.Up,
+                 'north':            amCommands.North,
+                 'ne':               amCommands.NorthEast,
+                 'east':             amCommands.East,
+                 'se':               amCommands.SouthEast,
+                 'south':            amCommands.South,
+                 'sw':               amCommands.SouthWest,
+                 'west':             amCommands.West,
+                 'nw':               amCommands.NorthWest,
+                 'rofl':             amCommands.Rofl,
+                 'wtf':              amCommands.Wtf,
+                 'slap':             amCommands.Slap,
                  'vision':           "",
-                 'brief':            minionsCommands.Brief,
-                 'open':             minionsCommands.Open,
-                 'close':            minionsCommands.Close,
+                 'brief':            amCommands.Brief,
+                 'open':             amCommands.Open,
+                 'close':            amCommands.Close,
                  'remote':           "",
-                 'look':             minionsCommands.LookAt,
-                 'bash':             minionsCommands.Bash,
+                 'look':             amCommands.LookAt,
+                 'bash':             amCommands.Bash,
                  'superuser':        "",
-                 'attack':           minionsCommands.Attack,
-                 'rest':             minionsCommands.Rest,
-                 'sneak':            minionsCommands.Sneak,
-                 'break':            minionsCommands.Break
+                 'attack':           amCommands.Attack,
+                 'rest':             amCommands.Rest,
+                 'sneak':            amCommands.Sneak,
+                 'break':            amCommands.Break
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
     if len(cmd) == 0:
-       minionsCommands.Look(player, player.room)
+       amCommands.Look(player, player.room)
        return
 
     cmdstr = re.compile(re.escape(cmd[0].lower()))
@@ -66,7 +66,7 @@ def commandParser(player, line):
                 if len(cmd[0]) > 4:
                    #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
                    player.vision = int(cmd[1])
-                   player.sendToPlayer("%sVision changed." % (minionDefines.WHITE,) )
+                   player.sendToPlayer("%sVision changed." % (amDefines.WHITE,) )
                    return
                 continue
           elif each == "rest":
@@ -83,18 +83,18 @@ def commandParser(player, line):
                 Superuser(player, line[(len(cmd[0]) + 1):])
                 return
              elif len(cmd[0]) != 1:
-                minionsUtils.StatLine(player)
+                amUtils.StatLine(player)
                 return
           # Attack someone!
           elif each == "attack":
              if len(cmd) == 2:
-                minionsCommands.Attack(player, line[(len(cmd[0]) + 1):])
+                amCommands.Attack(player, line[(len(cmd[0]) + 1):])
                 return
           # Look
           elif each == "look":
              # if nothing to look at supplied, just look around the room
              if len(cmd) == 1:
-                minionsCommands.Look(player, player.room)
+                amCommands.Look(player, player.room)
                 return
              # If it's 2, that means it's not a sentence we are looking at something
              elif len(cmd) == 2:
@@ -105,7 +105,7 @@ def commandParser(player, line):
           # Open Command (open doors etc)
           elif each == "open":
              if len(cmd) > 1 and len(cmd) > 1:
-                #player.sendToPlayer("%s%s" % (minionDefines.WHITE, "Command disabled.") )
+                #player.sendToPlayer("%s%s" % (amDefines.WHITE, "Command disabled.") )
                 #return
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
@@ -113,7 +113,7 @@ def commandParser(player, line):
           # Close Command (open doors etc)
           elif each == "close":
              if len(cmd) > 1 and len(cmd) > 1:
-                #player.sendToPlayer("%s%s" % (minionDefines.WHITE, "Command disabled.") )
+                #player.sendToPlayer("%s%s" % (amDefines.WHITE, "Command disabled.") )
                 #return
                 commands[each](player, line[(len(cmd[0]) + 1):])
                 return
@@ -139,9 +139,9 @@ def commandParser(player, line):
           elif each == "slap":
              if len(cmd[0]) == 4:
                 if len(cmd) > 1:
-                   minionsCommands.Slap(player, cmd[1])
+                   amCommands.Slap(player, cmd[1])
                 else:
-                   minionsCommands.Slap(player, "")
+                   amCommands.Slap(player, "")
                 return
              continue
           # Who command (who typed by itself)
@@ -205,127 +205,127 @@ def commandParser(player, line):
           elif each == "up":
              if len(cmd) == 1:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.Up, player)
+                reactor.callLater(.5, amCommands.Up, player)
                 return
              continue
           elif each == "down":
              if len(cmd) == 1:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.Down, player)
+                reactor.callLater(.5, amCommands.Down, player)
                 return
              continue
           elif each == "north":
              if len(cmd) == 1 and len(cmd[0]) != 2:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.North, player)
+                reactor.callLater(.5, amCommands.North, player)
                 return
              continue
           elif each == "ne" and len(cmd[0]) == 2:
              if len(cmd) == 1:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.NorthEast, player)
+                reactor.callLater(.5, amCommands.NorthEast, player)
                 return
              continue
           elif each == "east":
              if len(cmd) == 1:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.East, player)
+                reactor.callLater(.5, amCommands.East, player)
                 return
              continue
           elif each == "south":
              if len(cmd) == 1 and len(cmd[0]) != 2:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.South, player)
+                reactor.callLater(.5, amCommands.South, player)
                 return
              continue
           elif each == "se" and len(cmd[0]) == 2:
              if len(cmd) == 1:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.SouthEast, player)
+                reactor.callLater(.5, amCommands.SouthEast, player)
                 return
              continue
           elif each == "sw" and len(cmd[0]) == 2:
              if len(cmd) == 1:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.SouthWest, player)
+                reactor.callLater(.5, amCommands.SouthWest, player)
                 return
              continue
           elif each == "west":
              if len(cmd) == 1:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.West, player)
+                reactor.callLater(.5, amCommands.West, player)
                 return
              continue
           elif each == "nw" and len(cmd[0]) == 2:
              if len(cmd) == 1:
                 if player.moving == 1:
-                   player.sendToPlayer(minionDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
                    return
                 if player.sneaking:
                     player.sendToPlayer("Sneaking...")
                 player.moving = 1
-                reactor.callLater(.5, minionsCommands.NorthWest, player)
+                reactor.callLater(.5, amCommands.NorthWest, player)
                 return
              continue
-#       elif minionsRooms.RoomList[player.room].SecretDirection > 0:
-#          if line.lower() == minionsRooms.RoomList[player.room].SecretPhrase.lower():
+#       elif amRooms.RoomList[player.room].SecretDirection > 0:
+#          if line.lower() == amRooms.RoomList[player.room].SecretPhrase.lower():
 #             RoomID = player.room
-#             minionsUtils.ToggleSecretExit(RoomID, True)
+#             amUtils.ToggleSecretExit(RoomID, True)
 #
-#             if minionsRooms.RoomList[player.room].ActionID > 0:
-#                minionsUtils.DisplayAction(player, minionsRooms.RoomList[player.room].ActionID)
-#             reactor.callLater( 120, minionsUtils.ToggleSecretExit, RoomID, False)
+#             if amRooms.RoomList[player.room].ActionID > 0:
+#                amUtils.DisplayAction(player, amRooms.RoomList[player.room].ActionID)
+#             reactor.callLater( 120, amUtils.ToggleSecretExit, RoomID, False)
 #             return
 
 
 
      # No command found so say it to the room
-    minionsCommands.Say(player, line)
+    amCommands.Say(player, line)
     player.sneaking = False
     return
 
@@ -357,27 +357,27 @@ def CleanPlayerInput(line):
 # This expedites all dialog when player isn't *playing*
 #############################################################
 def NotPlayingDialog(player, line):
-    if player.STATUS == minionDefines.LOGIN:
+    if player.STATUS == amDefines.LOGIN:
         LoginPlayer(player, line)
         return
     # Get player login name
-    if player.STATUS == minionDefines.GETNAME:
+    if player.STATUS == amDefines.GETNAME:
         GetPlayerName(player, line)
         return
     # Get player password
-    elif player.STATUS == minionDefines.COMPAREPASSWORD:
+    elif player.STATUS == amDefines.COMPAREPASSWORD:
         ComparePassword(player, line)
         return
-    elif player.STATUS == minionDefines.GETPASSWORD:
+    elif player.STATUS == amDefines.GETPASSWORD:
         SetPassword(player, line)
         return
-    elif player.STATUS == minionDefines.GETCLASS:
+    elif player.STATUS == amDefines.GETCLASS:
         PickClass(player, line)
         return
-    elif player.STATUS == minionDefines.GETRACE:
+    elif player.STATUS == amDefines.GETRACE:
         PickRace(player, line)
         return
-    elif player.STATUS == minionDefines.PURGATORY:
+    elif player.STATUS == amDefines.PURGATORY:
         PurgatoryParser(player, line)
         return
 
@@ -391,11 +391,11 @@ def GetPlayerName(player, line):
     line = line.split()
     name = line[0]
     player.name = name.capitalize()
-    pid = minionsDB.GetUserID(player.name)
+    pid = amDB.GetUserID(player.name)
     if pid > 0:
        player.transport.write("Username already exist, try again: ")
     else:
-       player.STATUS = minionDefines.GETPASSWORD
+       player.STATUS = amDefines.GETPASSWORD
        player.transport.write("Enter your password: ")
     return
 
@@ -408,16 +408,16 @@ def GetPlayerName(player, line):
 def ComparePassword(player, line):
     global RoomList
 
-    if line == minionsDB.GetPassword(player.name):
-       minionsDB.LoadPlayer(player)
-       player.Shout(minionDefines.BLUE + player.name + " has joined.")
-       player.STATUS = minionDefines.PLAYING
-       player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+    if line == amDB.GetPassword(player.name):
+       amDB.LoadPlayer(player)
+       player.Shout(amDefines.BLUE + player.name + " has joined.")
+       player.STATUS = amDefines.PLAYING
+       player.sendToPlayer(amDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
        player.factory.players[player.playerid] = player
        # Put player in current room
        player.room = 1
-       minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
-       minionsCommands.Look(player, player.room)
+       amRooms.RoomList[player.room].Players[player.playerid] = player.name
+       amCommands.Look(player, player.room)
        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
        return
     else:
@@ -434,15 +434,15 @@ def SetPassword(player, line):
         player.transport.write("Blank passwords not allowed, enter a password: ")
         return
      else:
-        player.Shout(minionDefines.BLUE + player.name + " has joined.")
+        player.Shout(amDefines.BLUE + player.name + " has joined.")
         player.password = line
-        player.playerid = minionsDB.CreatePlayer(player)
+        player.playerid = amDB.CreatePlayer(player)
         player.factory.players[player.playerid] = player
         # Put player in current room
-        minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
-        player.STATUS = minionDefines.PLAYING
-        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
-        minionsCommands.Look(player, player.room)
+        amRooms.RoomList[player.room].Players[player.playerid] = player.name
+        player.STATUS = amDefines.PLAYING
+        player.sendToPlayer(amDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+        amCommands.Look(player, player.room)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " created an account and logged on."
         return
 ###############################################
@@ -455,7 +455,7 @@ def  LoginPlayer(player, line):
     global AnsiScreen
 
     if line == "":
-       player.transport.write(minionsRooms.AnsiScreen)
+       player.transport.write(amRooms.AnsiScreen)
        player.transport.write('Enter your warriors name: ')
        return
     else:
@@ -465,29 +465,29 @@ def  LoginPlayer(player, line):
        for each in player.factory.players.keys():
           if player.factory.players[each].name == name:
               player.transport.write("That warrior is already in the arena!\r\n")
-              player.STATUS           = minionDefines.LOGIN
+              player.STATUS           = amDefines.LOGIN
               player.transport.write("Enter a different warrior name: ")
               return
 
        player.playerid     = USERPID
        USERPID += 1
        player.name         = name
-       player.STATUS       = minionDefines.GETCLASS
+       player.STATUS       = amDefines.GETCLASS
        player.transport.write("Choose a class:\r\n")
-       for cid, cname in minionsRace.ClassList.items():
+       for cid, cname in amRace.ClassList.items():
           player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
        player.transport.write("Select: ")
        return
    ##########################
-       player.Shout(minionDefines.BLUE + player.name + " has joined.")
-       player.STATUS = minionDefines.PLAYING
-       player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+       player.Shout(amDefines.BLUE + player.name + " has joined.")
+       player.STATUS = amDefines.PLAYING
+       player.sendToPlayer(amDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
        player.factory.players[player.playerid] = player
        # Put player in current room
        #player.room = 1
-       #minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
-       #minionsCommands.Look(player, player.room)
-       minionsUtils.SpawnPlayer(player)
+       #amRooms.RoomList[player.room].Players[player.playerid] = player.name
+       #amCommands.Look(player, player.room)
+       amUtils.SpawnPlayer(player)
        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
        return
 
@@ -497,15 +497,15 @@ def  LoginPlayer(player, line):
 def PickClass(player, classnum):
     def DisplayChoices():
        player.transport.write("Choose a class:\r\n")
-       for cid, cname in minionsRace.ClassList.items():
+       for cid, cname in amRace.ClassList.items():
           player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
        player.transport.write("Select: ")
     if classnum == "":
         DisplayChoices()
         return
     classnum = int(classnum)
-    if classnum in minionsRace.ClassList.keys():
-        playerclass             = minionsRace.ClassList[classnum]
+    if classnum in amRace.ClassList.keys():
+        playerclass             = amRace.ClassList[classnum]
         player.Class            = classnum
         player.hp               = playerclass.hpbonus
         player.maxhp            = player.hp
@@ -518,11 +518,11 @@ def PickClass(player, classnum):
             player.ClassStealth = True
         player.stealth         += playerclass.stealth
         player.weapontext       = playerclass.weapontext
-        player.STATUS           = minionDefines.GETRACE
+        player.STATUS           = amDefines.GETRACE
 
         # Now display race choices
         player.transport.write("Choose a race:\r\n")
-        for rid, rname in minionsRace.RaceList.items():
+        for rid, rname in amRace.RaceList.items():
            player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
         player.transport.write("Select: ")
     else:
@@ -536,15 +536,15 @@ def PickClass(player, classnum):
 def PickRace(player, racenum):
     def DisplayChoices():
        player.transport.write("Choose a race:\r\n")
-       for rid, rname in minionsRace.RaceList.items():
+       for rid, rname in amRace.RaceList.items():
           player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
        player.transport.write("Select: ")
     if racenum == "":
         DisplayChoices()
         return
     racenum = int(racenum)
-    if racenum in minionsRace.RaceList.keys():
-        race                    = minionsRace.RaceList[racenum]
+    if racenum in amRace.RaceList.keys():
+        race                    = amRace.RaceList[racenum]
         player.race             = racenum
         player.hp              += race.basehp
         player.maxhp            = player.hp
@@ -555,13 +555,13 @@ def PickRace(player, racenum):
         player.spellcasting    += race.castingbonus
         player.vision           = race.vision
         player.stealth         += race.stealth
-        player.STATUS           = minionDefines.PLAYING
+        player.STATUS           = amDefines.PLAYING
 
-        player.Shout(minionDefines.BLUE + player.name + " has joined.")
-        player.sendToPlayer(minionDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+        player.Shout(amDefines.BLUE + player.name + " has joined.")
+        player.sendToPlayer(amDefines.YELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
         player.factory.players[player.playerid] = player
 
-        minionsUtils.EnterPurgatory(player)
+        amUtils.EnterPurgatory(player)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
     else:
        player.transport.write("Invalid choice, please try again.\r\n")
@@ -574,7 +574,7 @@ def PickRace(player, racenum):
 def Superuser(player, password):
     if password == "digital":
         player.isAdmin = True
-        minionsUtils.StatLine(player)
+        amUtils.StatLine(player)
 
 
 ##############################################
@@ -583,18 +583,18 @@ def Superuser(player, password):
 # Command parser for when the player is in purgatory (ie, logged in, but not playing)
 ##############################################
 def PurgatoryParser(player, line):
-    commands = { '/quit':            minionsCommands.Quit,
-                 'gossip':           minionsCommands.Gossip,
-                 'spawn':            minionsUtils.SpawnPlayer,
-                 'who':              minionsCommands.Who,
-                 'help':             minionsCommands.Help,
+    commands = { '/quit':            amCommands.Quit,
+                 'gossip':           amCommands.Gossip,
+                 'spawn':            amUtils.SpawnPlayer,
+                 'who':              amCommands.Who,
+                 'help':             amCommands.Help,
                  'superuser':        ""
                }
 
     cmd = line.split()
     # Player just hit enter, look around the room.
     if len(cmd) == 0:
-       minionsUtils.StatLine(player)
+       amUtils.StatLine(player)
        return
 
     cmdstr = re.compile(re.escape(cmd[0].lower()))
@@ -612,7 +612,7 @@ def PurgatoryParser(player, line):
              continue
           elif each == "spawn":
              if len(cmd[0]) > 2 and len(cmd) == 1:
-                minionsUtils.SpawnPlayer(player)
+                amUtils.SpawnPlayer(player)
                 return
              continue
            # Who command (who typed by itself)

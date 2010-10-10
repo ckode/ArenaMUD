@@ -1,6 +1,6 @@
 from twisted.internet import reactor
 
-import minionsRooms, minionDefines, minionsCommands, minionsUtils
+import amRooms, amDefines, amCommands, amUtils
 
 import re, random
 
@@ -55,7 +55,7 @@ def WhoIsInTheRoom(player, RoomID):
 
    PlayerList = {}
 
-   _players = minionsRooms.RoomList[RoomID].Players.keys()
+   _players = amRooms.RoomList[RoomID].Players.keys()
    for each in _players:
        PlayerList[each] = player.factory.players[each].name
 
@@ -72,7 +72,7 @@ def FindPlayerInRoom(player, Name):
    victimList = {}
 
    NameSearch = re.compile( re.escape(Name.lower()) )
-   for pid, pname in minionsRooms.RoomList[player.room].Players.items():
+   for pid, pname in amRooms.RoomList[player.room].Players.items():
       if pname != "":
          if NameSearch.match( pname.lower() ):
             victimList[pid] = pname
@@ -100,27 +100,27 @@ def StatLine(player):
 
    # If player.hp is higher than maxhp, make it blue (only a buff can do this)
    if player.hp > player.maxhp:
-       hpcolor = minionDefines.BLUE
+       hpcolor = amDefines.BLUE
    # Is the players HP less than 25% of total hps?
    elif player.hp < ( ( float(player.maxhp) / 100) * 25 ):
-       hpcolor = minionDefines.LRED
+       hpcolor = amDefines.LRED
    else:
-       hpcolor = minionDefines.WHITE
+       hpcolor = amDefines.WHITE
 
 
 
    if player.resting:
-       STATLINE = "[HP=%s%d%s/%d]: (resting) " % (hpcolor, player.hp, minionDefines.WHITE, player.maxhp)
+       STATLINE = "[HP=%s%d%s/%d]: (resting) " % (hpcolor, player.hp, amDefines.WHITE, player.maxhp)
    else:
-       STATLINE = "[HP=%s%d%s/%d]: " % ( hpcolor, player.hp, minionDefines.WHITE, player.maxhp)
-   if player.STATUS == minionDefines.PURGATORY:
-       STATLINE = "%s>" % (minionDefines.WHITE)
+       STATLINE = "[HP=%s%d%s/%d]: " % ( hpcolor, player.hp, amDefines.WHITE, player.maxhp)
+   if player.STATUS == amDefines.PURGATORY:
+       STATLINE = "%s>" % (amDefines.WHITE)
 
    STATSIZE = len(STATLINE)
-   player.transport.write(minionDefines.SAVECUR)
-   player.transport.write(minionDefines.FIRSTCOL)
+   player.transport.write(amDefines.SAVECUR)
+   player.transport.write(amDefines.FIRSTCOL)
    player.transport.write(STATLINE)
-   player.transport.write(minionDefines.RESTORECUR)
+   player.transport.write(amDefines.RESTORECUR)
 
 
 #################################################
@@ -148,10 +148,10 @@ def DisplayAction(player, ActionID):
     global RoomList
     global RoomActionID
 
-    ActionList = minionsRooms.RoomActionID[ActionID].split("|")
-    player.sendToPlayer(minionDefines.BLUE + ActionList[0] % ("You",) )
-    player.sendToRoom(minionDefines.BLUE + ActionList[0] % (player.name,) )
-    player.BroadcastToRoom(minionDefines.BLUE + ActionList[1])
+    ActionList = amRooms.RoomActionID[ActionID].split("|")
+    player.sendToPlayer(amDefines.BLUE + ActionList[0] % ("You",) )
+    player.sendToRoom(amDefines.BLUE + ActionList[0] % (player.name,) )
+    player.BroadcastToRoom(amDefines.BLUE + ActionList[1])
 
 ###################################################
 # PlayerTimeBasedSpells()
@@ -175,7 +175,7 @@ def RoomTimeBasedSpells(factory, roomid):
     global players
 
     spell = 1
-    room = minionsRooms.RoomList[roomid]
+    room = amRooms.RoomList[roomid]
     if room.RoomSpell != 0:
         for _playerid in room.Players.keys():
             _player = factory.players[_playerid]
@@ -189,24 +189,24 @@ def RoomTimeBasedSpells(factory, roomid):
 ###################################################
 def ApplySpellEffects(player, spell):
 
-    spell = minionsRooms.RoomSpellList[spell]
+    spell = amRooms.RoomSpellList[spell]
 
     if spell.hp_adjust > 0:
-        _textcolor = minionDefines.BLUE
+        _textcolor = amDefines.BLUE
     else:
-        _textcolor = minionDefines.RED
+        _textcolor = amDefines.RED
     hpValue = player.hp + spell.hp_adjust
     if hpValue > player.maxhp:
         player.hp = player.maxhp
-        player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, minionDefines.WHITE) )
+        player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, amDefines.WHITE) )
     elif hpValue < 1:
-        player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, minionDefines.WHITE) )
+        player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, amDefines.WHITE) )
 
         KillPlayer(player, 0)
         return
     else:
         player.hp = hpValue
-    player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, minionDefines.WHITE) )
+    player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, amDefines.WHITE) )
 
 ###################################################
 # SpringTrap()
@@ -224,26 +224,26 @@ def SpringRoomTrap(player, trap):
             player.sendToRoom(desc)
 
 
-    trap = minionsRooms.RoomTrapList[trap]
+    trap = amRooms.RoomTrapList[trap]
     if trap.value > 0:
-        _textcolor = minionDefines.BLUE
+        _textcolor = amDefines.BLUE
     else:
-        _textcolor = minionDefines.RED
+        _textcolor = amDefines.RED
 
     # If this is an HP stat change, do HP death/maxhp checks
     if trap.stat == 1: # 1 = HP
         hpValue = player.hp + trap.value
         if hpValue > player.maxhp:
             player.hp = player.maxhp
-            player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, minionDefines.WHITE) )
+            player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, amDefines.WHITE) )
         elif hpValue < 1:
-            player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, minionDefines.WHITE) )
+            player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, amDefines.WHITE) )
             SendRoomDesc(player, trap.roomdesc)
             KillPlayer(player, 0)
             return
         else:
             player.hp = hpValue
-            player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, minionDefines.WHITE) )
+            player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, amDefines.WHITE) )
             SendRoomDesc(player, trap.roomdesc)
 
 
@@ -265,27 +265,27 @@ def KillPlayer(player, killer):
 
     # Remove any combat in combat queue
     player.factory.CombatQueue.RemoveAttack(player.playerid)
-    del minionsRooms.RoomList[player.room].Players[player.playerid]
+    del amRooms.RoomList[player.room].Players[player.playerid]
     player.sendToPlayer("You are dead.")
     player.sendToRoom("%s collapses in a heap and dies." % (player.name))
     if player.attacking:
-        player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+        player.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
 
     # Was he killed by someone? Tell everyone.
     if killer > 0:
         killer = player.factory.players[killer]
-        player.factory.sendMessageToAllClients("\r\n%s%s has killed %s!" % (minionDefines.BLUE, killer.name, player.name))
+        player.factory.sendMessageToAllClients("\r\n%s%s has killed %s!" % (amDefines.BLUE, killer.name, player.name))
     else:
-        player.factory.sendMessageToAllClients("\r\n%s%s was killed!%s" % (minionDefines.BLUE, player.name, minionDefines.WHITE))
+        player.factory.sendMessageToAllClients("\r\n%s%s was killed!%s" % (amDefines.BLUE, player.name, amDefines.WHITE))
 
 
-    for _player in minionsRooms.RoomList[curRoom].Players.keys():
+    for _player in amRooms.RoomList[curRoom].Players.keys():
         otherplayer = player.factory.players[_player]
         if otherplayer.victim == player.playerid:
            otherplayer.attacking    = 0
            otherplayer.victim       = 0
            otherplayer.factory.CombatQueue.RemoveAttack(otherplayer.playerid)
-           otherplayer.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+           otherplayer.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
 
     # Spawn the player
     EnterPurgatory(player)
@@ -305,14 +305,14 @@ def PlayerAttack(player):
 
     player.resting = False
     # Is the victim in the room?  If so, do attack
-    if player.victim in minionsRooms.RoomList[player.room].Players.keys():
+    if player.victim in amRooms.RoomList[player.room].Players.keys():
         # Shorten var path to curVictim
         curVictim = player.factory.players[player.victim]
         curVictim.resting = False
         curVictim.sneaking = False
 
         # Get the class/weapon attack messages for swings and misses
-        Message = minionsUtils.MessageList[player.weapontext].split("|")
+        Message = amUtils.MessageList[player.weapontext].split("|")
 
         # Roll damage and tell the room
         damage = random.randint(player.mindamage, player.maxdamage)
@@ -323,14 +323,14 @@ def PlayerAttack(player):
             # Backstab modifier
             modifier = ( player.maxdamage + (player.maxdamage * ( float(player.stealth) / 100 ) ) )
             damage += modifier
-            player.sendToPlayer(Message[2] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
-            curVictim.sendToPlayer(Message[5] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
-            player.sendToRoomNotVictim(curVictim.playerid, Message[8] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
+            player.sendToPlayer(Message[2] % (amDefines.RED, curVictim.name, damage, amDefines.WHITE) )
+            curVictim.sendToPlayer(Message[5] % (amDefines.RED, player.name, damage, amDefines.WHITE) )
+            player.sendToRoomNotVictim(curVictim.playerid, Message[8] % (amDefines.RED, player.name, curVictim.name, damage, amDefines.WHITE))
         else:
             # Not backstabbing, do normak damage and no surprise message
-            player.sendToPlayer(Message[1] % (minionDefines.RED, curVictim.name, damage, minionDefines.WHITE) )
-            curVictim.sendToPlayer(Message[4] % (minionDefines.RED, player.name, damage, minionDefines.WHITE) )
-            player.sendToRoomNotVictim(curVictim.playerid, Message[7] % (minionDefines.RED, player.name, curVictim.name, damage, minionDefines.WHITE))
+            player.sendToPlayer(Message[1] % (amDefines.RED, curVictim.name, damage, amDefines.WHITE) )
+            curVictim.sendToPlayer(Message[4] % (amDefines.RED, player.name, damage, amDefines.WHITE) )
+            player.sendToRoomNotVictim(curVictim.playerid, Message[7] % (amDefines.RED, player.name, curVictim.name, damage, amDefines.WHITE))
 
         # No more sneaking after you've attacked.
         player.sneaking = False
@@ -343,13 +343,13 @@ def PlayerAttack(player):
             player.factory.CombatQueue.RemoveAttack(player.playerid)
             KillPlayer(curVictim, player.playerid)
             player.kills += 1
-            player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+            player.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
     else:
         player.attacking = 0
         player.victim = ""
         # Remove any combat in combat queue
         player.factory.CombatQueue.RemoveAttack(player.playerid)
-        player.sendToPlayer("%s*Combat Off*%s" % (minionDefines.RED, minionDefines.WHITE) )
+        player.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
         return
 
 
@@ -363,26 +363,26 @@ def SpawnPlayer(player):
     global RoomList
     SpawnRooms = []
 
-    player.STATUS = minionDefines.PLAYING
+    player.STATUS = amDefines.PLAYING
 
     # Look for empty rooms that allow spawning
-    for room in minionsRooms.RoomList.values():
+    for room in amRooms.RoomList.values():
         if len(room.Players) == 0 and room.NoSpawn == 0:
             SpawnRooms.append(room)
 
     # If no empty spawn rooms where found, just get rooms that allow spawning
     if len(SpawnRooms) == 0:
-        for room in minionsRooms.RoomList.values():
+        for room in amRooms.RoomList.values():
             if room.NoSpawn == 0:
                 SpawnRooms.append(room)
 
 
     newRoom = SpawnRooms[( random.randint( 1, len(SpawnRooms) ) ) - 1 ]
     player.room = newRoom.RoomNum
-    minionsRooms.RoomList[player.room].Players[player.playerid] = player.name
-    minionsCommands.Look(player, player.room)
-    player.sendToRoom("%s%s appears in a flash!%s" % (minionDefines.YELLOW, player.name, minionDefines.WHITE) )
-    player.Shout(minionDefines.BLUE + player.name + " has spawn!")
+    amRooms.RoomList[player.room].Players[player.playerid] = player.name
+    amCommands.Look(player, player.room)
+    player.sendToRoom("%s%s appears in a flash!%s" % (amDefines.YELLOW, player.name, amDefines.WHITE) )
+    player.Shout(amDefines.BLUE + player.name + " has spawn!")
 
 #####################################################
 # EnterPurgatory()\
@@ -391,6 +391,6 @@ def SpawnPlayer(player):
 # when he dies.  You have to type spawn to enter the game
 #####################################################
 def EnterPurgatory(player):
-    player.STATUS = minionDefines.PURGATORY
-    minionsCommands.Who(player)
+    player.STATUS = amDefines.PURGATORY
+    amCommands.Who(player)
     player.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
