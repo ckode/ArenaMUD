@@ -692,10 +692,10 @@ def LookPlayer(player, otherplayerID):
     player.sneaking = False  #if they were sneaking, they aint no more.
 
     # If player.hp is higher than maxhp, make it blue (only a buff can do this)
-    if player.hp > player.maxhp:
+    if victim.hp > victim.maxhp:
         hpcolor = minionDefines.BLUE
     # Is the players HP less than 25% of total hps?
-    elif player.hp < ( ( float(player.maxhp) / 100) * 25 ):
+    elif victim.hp < ( ( float(victim.maxhp) / 100) * 25 ):
         hpcolor = minionDefines.LRED
     else:
         hpcolor = minionDefines.WHITE
