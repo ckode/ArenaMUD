@@ -1,6 +1,6 @@
 from twisted.internet import defer
 from twisted.python import failure, util
-import minionDefines
+import amDefines
 
 
 
@@ -11,7 +11,7 @@ import minionDefines
 #       name = ""
 
 def createPlayer(user):
-    user.STATUS = minionDefines.GETNAME
+    user.STATUS = amDefines.GETNAME
     user.transport.write("Enter your username: ")
-    
-    
+
+
