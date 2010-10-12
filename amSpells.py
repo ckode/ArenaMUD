@@ -89,7 +89,7 @@ class Spells():
     ##############################################################
     def ApplyStats(self, player):
        # Apply Stat changes
-        for (stat, val) in effects.values():
+        for (stat, val) in self.effects.values():
            if stat == HP:
                player.hp += val
            elif stat == MAXHP:
