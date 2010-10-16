@@ -1,3 +1,20 @@
+--  ArenaMUD - A multiplayer combat game - http://arenamud.david-c-brown.com
+--  Copyright (C) 2010 - David C Brown & Mark Richardson
+--
+--  This program is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 -- Rooms
 INSERT INTO "rooms" VALUES(1,'Town Square','This is the Town Square of Dagnoroth!  You see trash piled up everywhere as ','the city has fallen from grace of the last few years! There appears to be ','a large hole here with a horrible smell rising from it.  To the north is the ','notorious Sonzo Ave.', "*", "1:1|5:5|3:7|7:9", 1, 0, 0, 1);
 INSERT INTO "rooms" VALUES(2,'Northern Sonzo Ave','You are on Northern Sonzo Ave.  Sonzo Ave is the main thoroughfare and','it splits the city of Dagnoroth almost down the middle.  There are many','shops and other busineses located here.  There appears to be a green fog','that exist here. Sticking around to long is a bad idea. ','*', "1:2|5:1", 1, 0, 0, 0);
