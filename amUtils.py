@@ -1,5 +1,5 @@
 #  ArenaMUD - A multiplayer combat game - http://arenamud.david-c-brown.com
-#  Copyright (C) 2010 - David C Brown & Mark Richardson
+#  Copyright (C) 2009, 2010 - David C Brown & Mark Richardson
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
