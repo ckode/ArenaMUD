@@ -190,6 +190,12 @@ class SonzoFactory(ServerFactory):
         amDB.LoadRaces(self)
         amDB.LoadAnsiScreens()
 
+        # Disable the following until the new map queue is complete
+        #MapQueue = amUtils.MapQueue()
+        #if MapQueue.ConfFileFail == True:
+        #    self.ShutdownPreReactorStart()
+
+
 
     def sendMessageToAllClients(self, mesg):
         for client in self.players.values():
@@ -232,9 +238,13 @@ class SonzoFactory(ServerFactory):
                amUtils.PlayerAttack(self.players[playerid])
 
 
+    def ShutdownPreReactorStart(self):
+        print "Shutting down due to startup error.  See ArenaMUD.log file for details"
+        sys.exit(1)
+
     def Shutdown(self):
         reactor.stop()
-        #sys.exit()
+
 
 #Create server factory
 factory = SonzoFactory()
