@@ -106,10 +106,10 @@ class Spells():
     def ApplyStats(self, player):
        # Apply Stat changes
         for (stat, val) in self.effects.values():
-           if stat == HP:
-               player.hp += val
-           elif stat == MAXHP:
-               player.maxhp += val
+            if stat == HP:
+                player.hp += val
+            elif stat == MAXHP:
+                player.maxhp += val
 
     ##############################################################
     # RemoveSpell()

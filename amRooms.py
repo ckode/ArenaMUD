@@ -128,46 +128,46 @@ class RoomObj():
     # FIX THIS FOR MessageList reading for door text (open door)
     #########################
     def DisplayExits(self):
-          DoorCount = 0
-          # Start string
-          ObviousExits = "%sObvious exits: " % (amDefines.GREEN,)
-          EmptySize = len(ObviousExits)
+        DoorCount = 0
+        # Start string
+        ObviousExits = "%sObvious exits: " % (amDefines.GREEN,)
+        EmptySize = len(ObviousExits)
 
-          # Cycle through the doors in the room and build the obvious exits string
-          for _door in self.Doors.keys():
-              _door = int(_door)
+        # Cycle through the doors in the room and build the obvious exits string
+        for _door in self.Doors.keys():
+            _door = int(_door)
 
-              # Make current door local var to shorten the var mapping code
-              CurDoor = DoorList[self.Doors[_door]]
+            # Make current door local var to shorten the var mapping code
+            CurDoor = DoorList[self.Doors[_door]]
 
-              # If the door is NOT invisable, this go ahead.
-              if CurDoor.DoorStatus != 0:
+            # If the door is NOT invisable, this go ahead.
+            if CurDoor.DoorStatus != 0:
 
-                  DoorCount = DoorCount + 1
-                  # Is it only a pathway and not a door that requires more of a discription?
-                  if CurDoor.DoorType == PATHWAY:
-                      # Just display direction (east)
-                      if DoorCount > 1:
-                          ObviousExits += ", " + DIRTEXT[_door]
-                      else:
-                          ObviousExits += DIRTEXT[_door]
-                  # Display door type, status, and direction (door open east)
-                  else:
-                      DoorText = amUtils.MessageList[CurDoor.DoorDesc].split('|')[CurDoor.DoorStatus]
+                DoorCount = DoorCount + 1
+                # Is it only a pathway and not a door that requires more of a discription?
+                if CurDoor.DoorType == PATHWAY:
+                    # Just display direction (east)
+                    if DoorCount > 1:
+                        ObviousExits += ", " + DIRTEXT[_door]
+                    else:
+                        ObviousExits += DIRTEXT[_door]
+                # Display door type, status, and direction (door open east)
+                else:
+                    DoorText = amUtils.MessageList[CurDoor.DoorDesc].split('|')[CurDoor.DoorStatus]
 
-                      if DoorCount > 1:
-                          ObviousExits += ", " + DoorText + " " + DIRTEXT[_door]
-                      else:
-                          ObviousExits += DoorText + " " + DIRTEXT[_door]
+                    if DoorCount > 1:
+                        ObviousExits += ", " + DoorText + " " + DIRTEXT[_door]
+                    else:
+                        ObviousExits += DoorText + " " + DIRTEXT[_door]
 
 
-          # Return NONE, or add the finally period to close the sentence
-          if DoorCount == 0:
-              ObviousExits += "NONE!"
-          else:
-              ObviousExits += "."
+        # Return NONE, or add the finally period to close the sentence
+        if DoorCount == 0:
+            ObviousExits += "NONE!"
+        else:
+            ObviousExits += "."
 
-          return ObviousExits
+        return ObviousExits
 
     ###########################################
     # Return the Door ID for said direction
@@ -216,11 +216,11 @@ class DoorObj():
 ##############################################
     def ResetDoor(self):
         if self.DoorType == SECRETDOOR:
-           self.DoorStatus = HIDDEN
-           self.Passable = False
+            self.DoorStatus = HIDDEN
+            self.Passable = False
         else:
-           self.DoorStatus = CLOSED
-           self.Passable = False
+            self.DoorStatus = CLOSED
+            self.Passable = False
 
 
 class RoomSpell():

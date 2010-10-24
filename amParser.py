@@ -70,274 +70,260 @@ def commandParser(player, line):
     cmd = line.split()
     # Player just hit enter, look around the room.
     if len(cmd) == 0:
-       amCommands.Look(player, player.room)
-       return
+        amCommands.Look(player, player.room)
+        return
 
     cmdstr = re.compile(re.escape(cmd[0].lower()))
     for each in commands.keys():
-       if cmdstr.match(each):
-          # TESTING, REMOVE VISION OPTION WHEN DONE!
-          if each == "vision":
-              if player.isAdmin == True:
-                if len(cmd[0]) > 4:
-                   #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
-                   player.vision = int(cmd[1])
-                   player.sendToPlayer("%sVision changed." % (amDefines.WHITE,) )
-                   return
+        if cmdstr.match(each):
+           # TESTING, REMOVE VISION OPTION WHEN DONE!
+            if each == "vision":
+                if player.isAdmin == True:
+                    if len(cmd[0]) > 4:
+                       #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
+                        player.vision = int(cmd[1])
+                        player.sendToPlayer("%sVision changed." % (amDefines.WHITE,) )
+                        return
+                    continue
+            elif each == "rest":
+                if len(cmd[0]) == 4 and len(cmd) == 1:
+                    commands[each](player)
+                    return
+            elif each == "break":
+                if len(cmd[0]) > 1 and len(cmd) == 1:
+                    commands[each](player)
+                    return
+            # Become an admin (access admin commands)
+            elif each == "superuser":
+                if len(cmd) == 2:
+                    Superuser(player, line[(len(cmd[0]) + 1):])
+                    return
+                elif len(cmd[0]) != 1:
+                    amUtils.StatLine(player)
+                    return
+            # Attack someone!
+            elif each == "attack":
+                if len(cmd) == 2:
+                    amCommands.Attack(player, line[(len(cmd[0]) + 1):])
+                    return
+            # Look
+            elif each == "look":
+                # if nothing to look at supplied, just look around the room
+                if len(cmd) == 1:
+                    amCommands.Look(player, player.room)
+                    return
+                # If it's 2, that means it's not a sentence we are looking at something
+                elif len(cmd) == 2:
+                    # Call LookAt() to determine what they are looking at
+                    commands[each](player, line[(len(cmd[0]) + 1):])
+                    return
                 continue
-          elif each == "rest":
-             if len(cmd[0]) == 4 and len(cmd) == 1:
-                commands[each](player)
-                return
-          elif each == "break":
-             if len(cmd[0]) > 1 and len(cmd) == 1:
-                commands[each](player)
-                return
-          # Become an admin (access admin commands)
-          elif each == "superuser":
-             if len(cmd) == 2:
-                Superuser(player, line[(len(cmd[0]) + 1):])
-                return
-             elif len(cmd[0]) != 1:
-                amUtils.StatLine(player)
-                return
-          # Attack someone!
-          elif each == "attack":
-             if len(cmd) == 2:
-                amCommands.Attack(player, line[(len(cmd[0]) + 1):])
-                return
-          # Look
-          elif each == "look":
-             # if nothing to look at supplied, just look around the room
-             if len(cmd) == 1:
-                amCommands.Look(player, player.room)
-                return
-             # If it's 2, that means it's not a sentence we are looking at something
-             elif len(cmd) == 2:
-                # Call LookAt() to determine what they are looking at
-                commands[each](player, line[(len(cmd[0]) + 1):])
-                return
-             continue
-          # Open Command (open doors etc)
-          elif each == "open":
-             if len(cmd) > 1 and len(cmd) > 1:
-                #player.sendToPlayer("%s%s" % (amDefines.WHITE, "Command disabled.") )
-                #return
-                commands[each](player, line[(len(cmd[0]) + 1):])
-                return
-             continue
-          # Close Command (open doors etc)
-          elif each == "close":
-             if len(cmd) > 1 and len(cmd) > 1:
-                #player.sendToPlayer("%s%s" % (amDefines.WHITE, "Command disabled.") )
-                #return
-                commands[each](player, line[(len(cmd[0]) + 1):])
-                return
-             continue
-          # bash Command (open doors etc)
-          elif each == "bash":
-             if len(cmd) > 1 and len(cmd) > 1:
-                commands[each](player, line[(len(cmd[0]) + 1):])
-                return
-             continue
-          # Brief command (for brief room desc)
-          elif each == "brief":
-             if len(cmd[0]) == 5 and len(cmd) == 1:
-                commands[each](player)
-                return
-          # Gossip command
-          elif each == "gossip":
-             if len(cmd[0]) > 2 and len(cmd) > 1:
-                commands[each](player, line[(len(cmd[0]) + 1):])
-                return
-             continue
-          # Slap someone!
-          elif each == "slap":
-             if len(cmd[0]) == 4:
-                if len(cmd) > 1:
-                   amCommands.Slap(player, cmd[1])
-                else:
-                   amCommands.Slap(player, "")
-                return
-             continue
-          # Who command (who typed by itself)
-          elif each == "who":
-             if len(cmd[0]) == 3 and len(cmd) == 1:
-                commands[each](player)
-                return
-             continue
-          # Emote command
-          elif each == "emote":
-             if len(cmd[0]) > 2 and len(cmd) > 1:
-                commands[each](player, line[(len(cmd[0]) + 1):])
-                return
-             continue
-          # Remote command
-          elif each == "remote":
-             if player.isAdmin == True:
-                if len(cmd[0]) > 2 and len(cmd) > 2:
-                   for user in player.factory.players.values():
-                       if user.name == cmd[1].capitalize():
-                          commandParser(user, line[(len(cmd[0]) + len(cmd[1]) + 2):])
-                   return
+            # Open Command (open doors etc)
+            elif each == "open":
+                if len(cmd) > 1 and len(cmd) > 1:
+                    commands[each](player, line[(len(cmd[0]) + 1):])
+                    return
                 continue
-          # Help command (help typed by itself)
-          elif each == "help":
-             if len(cmd) == 1 and len(cmd[0]) == 4:
-                commands[each](player)
-                return
-             continue
-          # Set command
-          elif each == "set":
-             if len(cmd[0]) == 3:
-                commands[each](player, line[(len(cmd[0]) + 1):])
-                return
-             continue
-          elif each == "look":
-             if len(cmd) == 1:
-                commands[each](player, player.room)
-                return
-          # Quit command
-          elif each == "/quit":
-             if len(cmd[0]) > 1:
-                commands[each](player)
-                return
-             continue
-          elif each == "rofl":
-             if len(cmd) == 1 and len(cmd[0]) == 4:
-                commands[each](player)
-                return
-             continue
-          elif each == "wtf":
-             if len(cmd) == 1 and len(cmd[0]) == 3:
-                commands[each](player)
-                return
-             continue
-          elif each == "sneak":
-             if len(cmd) == 1 and len(cmd[0]) > 1:
-                commands[each](player)
-                return
-             continue
-          elif each == "up":
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.Up, player)
-                return
-             continue
-          elif each == "down":
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.Down, player)
-                return
-             continue
-          elif each == "north":
-             if len(cmd) == 1 and len(cmd[0]) != 2:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.North, player)
-                return
-             continue
-          elif each == "ne" and len(cmd[0]) == 2:
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.NorthEast, player)
-                return
-             continue
-          elif each == "east":
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.East, player)
-                return
-             continue
-          elif each == "south":
-             if len(cmd) == 1 and len(cmd[0]) != 2:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.South, player)
-                return
-             continue
-          elif each == "se" and len(cmd[0]) == 2:
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.SouthEast, player)
-                return
-             continue
-          elif each == "sw" and len(cmd[0]) == 2:
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.SouthWest, player)
-                return
-             continue
-          elif each == "west":
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.West, player)
-                return
-             continue
-          elif each == "nw" and len(cmd[0]) == 2:
-             if len(cmd) == 1:
-                if player.moving == 1:
-                   player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
-                   return
-                if player.sneaking:
-                    player.sendToPlayer("Sneaking...")
-                player.moving = 1
-                reactor.callLater(.5, amCommands.NorthWest, player)
-                return
-             continue
-#       elif amRooms.RoomList[player.room].SecretDirection > 0:
-#          if line.lower() == amRooms.RoomList[player.room].SecretPhrase.lower():
-#             RoomID = player.room
-#             amUtils.ToggleSecretExit(RoomID, True)
-#
-#             if amRooms.RoomList[player.room].ActionID > 0:
-#                amUtils.DisplayAction(player, amRooms.RoomList[player.room].ActionID)
-#             reactor.callLater( 120, amUtils.ToggleSecretExit, RoomID, False)
-#             return
-
+            # Close Command (open doors etc)
+            elif each == "close":
+                if len(cmd) > 1 and len(cmd) > 1:
+                    commands[each](player, line[(len(cmd[0]) + 1):])
+                    return
+                continue
+            # bash Command (open doors etc)
+            elif each == "bash":
+                if len(cmd) > 1 and len(cmd) > 1:
+                    commands[each](player, line[(len(cmd[0]) + 1):])
+                    return
+                continue
+            # Brief command (for brief room desc)
+            elif each == "brief":
+                if len(cmd[0]) == 5 and len(cmd) == 1:
+                    commands[each](player)
+                    return
+            # Gossip command
+            elif each == "gossip":
+                if len(cmd[0]) > 2 and len(cmd) > 1:
+                    commands[each](player, line[(len(cmd[0]) + 1):])
+                    return
+                continue
+            # Slap someone!
+            elif each == "slap":
+                if len(cmd[0]) == 4:
+                    if len(cmd) > 1:
+                        amCommands.Slap(player, cmd[1])
+                    else:
+                        amCommands.Slap(player, "")
+                    return
+                continue
+            # Who command (who typed by itself)
+            elif each == "who":
+                if len(cmd[0]) == 3 and len(cmd) == 1:
+                    commands[each](player)
+                    return
+                continue
+            # Emote command
+            elif each == "emote":
+                if len(cmd[0]) > 2 and len(cmd) > 1:
+                    commands[each](player, line[(len(cmd[0]) + 1):])
+                    return
+                continue
+            # Remote command
+            elif each == "remote":
+                if player.isAdmin == True:
+                    if len(cmd[0]) > 2 and len(cmd) > 2:
+                        for user in player.factory.players.values():
+                            if user.name == cmd[1].capitalize():
+                                commandParser(user, line[(len(cmd[0]) + len(cmd[1]) + 2):])
+                        return
+                    continue
+            # Help command (help typed by itself)
+            elif each == "help":
+                if len(cmd) == 1 and len(cmd[0]) == 4:
+                    commands[each](player)
+                    return
+                continue
+            # Set command
+            elif each == "set":
+                if len(cmd[0]) == 3:
+                    commands[each](player, line[(len(cmd[0]) + 1):])
+                    return
+                continue
+            elif each == "look":
+                if len(cmd) == 1:
+                    commands[each](player, player.room)
+                    return
+            # Quit command
+            elif each == "/quit":
+                if len(cmd[0]) > 1:
+                    commands[each](player)
+                    return
+                continue
+            elif each == "rofl":
+                if len(cmd) == 1 and len(cmd[0]) == 4:
+                    commands[each](player)
+                    return
+                continue
+            elif each == "wtf":
+                if len(cmd) == 1 and len(cmd[0]) == 3:
+                    commands[each](player)
+                    return
+                continue
+            elif each == "sneak":
+                if len(cmd) == 1 and len(cmd[0]) > 1:
+                    commands[each](player)
+                    return
+                continue
+            elif each == "up":
+                if len(cmd) == 1:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.Up, player)
+                    return
+                continue
+            elif each == "down":
+                if len(cmd) == 1:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.Down, player)
+                    return
+                continue
+            elif each == "north":
+                if len(cmd) == 1 and len(cmd[0]) != 2:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.North, player)
+                    return
+                continue
+            elif each == "ne" and len(cmd[0]) == 2:
+                if len(cmd) == 1:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.NorthEast, player)
+                    return
+                continue
+            elif each == "east":
+                if len(cmd) == 1:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.East, player)
+                    return
+                continue
+            elif each == "south":
+                if len(cmd) == 1 and len(cmd[0]) != 2:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.South, player)
+                    return
+                continue
+            elif each == "se" and len(cmd[0]) == 2:
+                if len(cmd) == 1:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.SouthEast, player)
+                    return
+                continue
+            elif each == "sw" and len(cmd[0]) == 2:
+                if len(cmd) == 1:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.SouthWest, player)
+                    return
+                continue
+            elif each == "west":
+                if len(cmd) == 1:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.West, player)
+                    return
+                continue
+            elif each == "nw" and len(cmd[0]) == 2:
+                if len(cmd) == 1:
+                    if player.moving == 1:
+                        player.sendToPlayer(amDefines.WHITE + "WAIT! You are already moving, slow down!!")
+                        return
+                    if player.sneaking:
+                        player.sendToPlayer("Sneaking...")
+                    player.moving = 1
+                    reactor.callLater(.5, amCommands.NorthWest, player)
+                    return
+                continue
 
 
      # No command found so say it to the room
@@ -359,10 +345,10 @@ def CleanPlayerInput(line):
     lineSize = len(line)
     newline = ""
     for character in line:
-       if character == chr(0x08):
-          newline = newline[:-1]
-       else:
-          newline += character
+        if character == chr(0x08):
+            newline = newline[:-1]
+        else:
+            newline += character
     # Remove all unprintable characters
     line = filter(lambda x: x in string.printable, newline)
     return line
@@ -409,10 +395,10 @@ def GetPlayerName(player, line):
     player.name = name.capitalize()
     pid = amDB.GetUserID(player.name)
     if pid > 0:
-       player.transport.write("Username already exist, try again: ")
+        player.transport.write("Username already exist, try again: ")
     else:
-       player.STATUS = amDefines.GETPASSWORD
-       player.transport.write("Enter your password: ")
+        player.STATUS = amDefines.GETPASSWORD
+        player.transport.write("Enter your password: ")
     return
 
 
@@ -425,19 +411,19 @@ def ComparePassword(player, line):
     global RoomList
 
     if line == amDB.GetPassword(player.name):
-       amDB.LoadPlayer(player)
-       player.Shout(amDefines.BLUE + player.name + " has joined.")
-       player.STATUS = amDefines.PLAYING
-       player.sendToPlayer(amDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
-       player.factory.players[player.playerid] = player
-       # Put player in current room
-       player.room = 1
-       amRooms.RoomList[player.room].Players[player.playerid] = player.name
-       amCommands.Look(player, player.room)
-       print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
-       return
+        amDB.LoadPlayer(player)
+        player.Shout(amDefines.BLUE + player.name + " has joined.")
+        player.STATUS = amDefines.PLAYING
+        player.sendToPlayer(amDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+        player.factory.players[player.playerid] = player
+        # Put player in current room
+        player.room = 1
+        amRooms.RoomList[player.room].Players[player.playerid] = player.name
+        amCommands.Look(player, player.room)
+        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
+        return
     else:
-       player.transport.write("Incorrect password, enter a password: ")
+        player.transport.write("Incorrect password, enter a password: ")
 
 ###############################################
 # SetPassword()
@@ -445,11 +431,12 @@ def ComparePassword(player, line):
 # Sets new player's password
 ###############################################
 def SetPassword(player, line):
-     global RoomList
-     if line == "":
+    global RoomList
+    
+    if line == "":
         player.transport.write("Blank passwords not allowed, enter a password: ")
         return
-     else:
+    else:
         player.Shout(amDefines.BLUE + player.name + " has joined.")
         player.password = line
         player.playerid = amDB.CreatePlayer(player)
@@ -471,51 +458,42 @@ def  LoginPlayer(player, line):
     global AnsiScreen
 
     if line == "":
-       player.transport.write(amRooms.AnsiScreen)
-       player.transport.write('Enter your warriors name: ')
-       return
+        player.transport.write(amRooms.AnsiScreen)
+        player.transport.write('Enter your warriors name: ')
+        return
     else:
-       line = line.split()
-       name = line[0]
-       name = name.capitalize()
-       for each in player.factory.players.keys():
-          if player.factory.players[each].name == name:
-              player.transport.write("That warrior is already in the arena!\r\n")
-              player.STATUS           = amDefines.LOGIN
-              player.transport.write("Enter a different warrior name: ")
-              return
+        line = line.split()
+        name = line[0]
+        name = name.capitalize()
+        for each in player.factory.players.keys():
+            if player.factory.players[each].name == name:
+                player.transport.write("That warrior is already in the arena!\r\n")
+                player.STATUS           = amDefines.LOGIN
+                player.transport.write("Enter a different warrior name: ")
+                return
 
-       player.playerid     = USERPID
-       USERPID += 1
-       player.name         = name
-       player.STATUS       = amDefines.GETCLASS
-       player.transport.write("Choose a class:\r\n")
-       for cid, cname in amRace.ClassList.items():
-          player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
-       player.transport.write("Select: ")
-       return
-   ##########################
-       player.Shout(amDefines.BLUE + player.name + " has joined.")
-       player.STATUS = amDefines.PLAYING
-       player.sendToPlayer(amDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
-       player.factory.players[player.playerid] = player
-       # Put player in current room
-       #player.room = 1
-       #amRooms.RoomList[player.room].Players[player.playerid] = player.name
-       #amCommands.Look(player, player.room)
-       amUtils.SpawnPlayer(player)
-       print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
-       return
-
+        player.playerid     = USERPID
+        USERPID += 1
+        player.name         = name
+        player.STATUS       = amDefines.GETCLASS
+        player.transport.write("Choose a class:\r\n")
+        for cid, cname in amRace.ClassList.items():
+            player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
+        player.transport.write("Select: ")
+        return
+   
 ################################################
 # PickClass
 ################################################
 def PickClass(player, classnum):
+    # Sub fuction to display the Class menu 
     def DisplayChoices():
-       player.transport.write("Choose a class:\r\n")
-       for cid, cname in amRace.ClassList.items():
-          player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
-       player.transport.write("Select: ")
+        player.transport.write("Choose a class:\r\n")
+        for cid, cname in amRace.ClassList.items():
+            player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
+        player.transport.write("Select: ")
+
+    # Redisplay classes if no option was selected
     if classnum == "":
         DisplayChoices()
         return
@@ -539,7 +517,7 @@ def PickClass(player, classnum):
         # Now display race choices
         player.transport.write("Choose a race:\r\n")
         for rid, rname in amRace.RaceList.items():
-           player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
+            player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
         player.transport.write("Select: ")
     else:
         player.transport.write("Invalid choice, please try again.\r\n")
@@ -550,11 +528,14 @@ def PickClass(player, classnum):
 # PickRace
 ################################################
 def PickRace(player, racenum):
+    # Sub fuction to display the Race menu 
     def DisplayChoices():
-       player.transport.write("Choose a race:\r\n")
-       for rid, rname in amRace.RaceList.items():
-          player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
-       player.transport.write("Select: ")
+        player.transport.write("Choose a race:\r\n")
+        for rid, rname in amRace.RaceList.items():
+            player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
+        player.transport.write("Select: ")
+       
+    # Redisplay races if no option was selected   
     if racenum == "":
         DisplayChoices()
         return
@@ -581,8 +562,8 @@ def PickRace(player, racenum):
         amUtils.EnterPurgatory(player)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
     else:
-       player.transport.write("Invalid choice, please try again.\r\n")
-       DisplayChoices()
+        player.transport.write("Invalid choice, please try again.\r\n")
+        DisplayChoices()
     return
 
 #############################################
@@ -611,37 +592,37 @@ def PurgatoryParser(player, line):
     cmd = line.split()
     # Player just hit enter, look around the room.
     if len(cmd) == 0:
-       amUtils.StatLine(player)
-       return
+        amUtils.StatLine(player)
+        return
 
     cmdstr = re.compile(re.escape(cmd[0].lower()))
     for each in commands.keys():
-       if cmdstr.match(each):
-          if each == "gossip":
-             if len(cmd[0]) > 2 and len(cmd) > 1:
-                commands[each](player, line[(len(cmd[0]) + 1):])
-                return
-             continue
-          elif each == "/quit":
-             if len(cmd[0]) > 1:
-                commands[each](player)
-                return
-             continue
-          elif each == "spawn":
-             if len(cmd[0]) > 2 and len(cmd) == 1:
-                amUtils.SpawnPlayer(player)
-                return
-             continue
-           # Who command (who typed by itself)
-          elif each == "who":
-             if len(cmd[0]) == 3 and len(cmd) == 1:
-                commands[each](player)
-                return
-             continue
-          # Help command (help typed by itself)
-          elif each == "help":
-             if len(cmd) == 1 and len(cmd[0]) == 4:
-                commands[each](player)
-                return
-             continue
+        if cmdstr.match(each):
+            if each == "gossip":
+                if len(cmd[0]) > 2 and len(cmd) > 1:
+                    commands[each](player, line[(len(cmd[0]) + 1):])
+                    return
+                continue
+            elif each == "/quit":
+                if len(cmd[0]) > 1:
+                    commands[each](player)
+                    return
+                continue
+            elif each == "spawn":
+                if len(cmd[0]) > 2 and len(cmd) == 1:
+                    amUtils.SpawnPlayer(player)
+                    return
+                continue
+            # Who command (who typed by itself)
+            elif each == "who":
+                if len(cmd[0]) == 3 and len(cmd) == 1:
+                    commands[each](player)
+                    return
+                continue
+           # Help command (help typed by itself)
+            elif each == "help":
+                if len(cmd) == 1 and len(cmd[0]) == 4:
+                    commands[each](player)
+                    return
+                continue
     player.sendToPlayer("Command had no effect. Type 'spawn' to spawn or type 'help' for help.")
