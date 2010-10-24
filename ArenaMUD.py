@@ -81,11 +81,11 @@ class Users(StatefulTelnetProtocol):
         global RoomList
         self.sendLine("Goodbye")
         if self.factory.players.has_key(self.playerid):
-           if self.STATUS == amDefines.PLAYING:
-               del amRooms.RoomList[self.room].Players[self.playerid]
-           del self.factory.players[self.playerid]
-           self.factory.sendMessageToAllClients(amDefines.BLUE + self.name + " just logged off.")
-           print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just logged off."
+            if self.STATUS == amDefines.PLAYING:
+                del amRooms.RoomList[self.room].Players[self.playerid]
+            del self.factory.players[self.playerid]
+            self.factory.sendMessageToAllClients(amDefines.BLUE + self.name + " just logged off.")
+            print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just logged off."
         self.transport.loseConnection()
 
     def connectionLost(self, reason):
@@ -102,7 +102,6 @@ class Users(StatefulTelnetProtocol):
         amParser.commandParser(self, line)
         #self.say(line)
 
-    #def keystrokeReceived(
     def say(self, line):
         self.sendToPlayer("You say, " + line + amDefines.WHITE)
 
@@ -135,11 +134,11 @@ class Users(StatefulTelnetProtocol):
     def BroadcastToRoom(self, line, RoomNumber):
         global RoomList
         for pid in amRooms.RoomList[RoomNumber].Players.keys():
-           if self.factory.players[pid].STATUS == amDefines.PLAYING:
-               self.transport.write(amDefines.DELETELEFT)
-               self.transport.write(amDefines.FIRSTCOL)
-               self.factory.players[pid].sendToPlayer(line + amDefines.WHITE)
-               amUtils.StatLine(self)
+            if self.factory.players[pid].STATUS == amDefines.PLAYING:
+                self.transport.write(amDefines.DELETELEFT)
+                self.transport.write(amDefines.FIRSTCOL)
+                self.factory.players[pid].sendToPlayer(line + amDefines.WHITE)
+                amUtils.StatLine(self)
 
     ################################################
     # Send to everyone in current room but victim and player
@@ -164,8 +163,8 @@ class Users(StatefulTelnetProtocol):
     ################################################
     def Shout(self, line):
         for player in self.factory.players.values():
-           if player.STATUS == amDefines.PLAYING or player.STATUS == amDefines.PURGATORY:
-               player.sendToPlayer(line + amDefines.WHITE)
+            if player.STATUS == amDefines.PLAYING or player.STATUS == amDefines.PURGATORY:
+                player.sendToPlayer(line + amDefines.WHITE)
 
 
 
@@ -199,8 +198,8 @@ class SonzoFactory(ServerFactory):
 
     def sendMessageToAllClients(self, mesg):
         for client in self.players.values():
-           if client.STATUS == amDefines.PLAYING:
-               client.sendLine(mesg + amDefines.WHITE)
+            if client.STATUS == amDefines.PLAYING:
+                client.sendLine(mesg + amDefines.WHITE)
 
     # Event loop that happens every 15 seconds
     def FifteenSecondLoop(self):
@@ -208,22 +207,22 @@ class SonzoFactory(ServerFactory):
        # 1. Natural healing
 
        # Do natural healing
-       for player in self.players.values():
-          amUtils.NaturalHealing(player)
+        for player in self.players.values():
+            amUtils.NaturalHealing(player)
 
 
     def TwoSecondLoop(self):
-        # Actions within the Two second loop
-        # 1.  TimeBasedSpells (like DoT spells)
-        # 2. Time based spells in the room
+         # Actions within the Two second loop
+         # 1.  TimeBasedSpells (like DoT spells)
+         # 2. Time based spells in the room
 
-       # Do spell effect cased on player
-       for player in self.players.values():
-          amUtils.PlayerTimeBasedSpells(player)
+        # Do spell effect cased on player
+        for player in self.players.values():
+            amUtils.PlayerTimeBasedSpells(player)
 
-       # Do Room spell effect on all players in that room
-       for roomid in amRooms.RoomList:
-           amUtils.RoomTimeBasedSpells(self, roomid)
+        # Do Room spell effect on all players in that room
+        for roomid in amRooms.RoomList:
+            amUtils.RoomTimeBasedSpells(self, roomid)
 
 
     # Event loops for anything that is done ever four seconds
@@ -234,8 +233,8 @@ class SonzoFactory(ServerFactory):
 
         # Loop through combat queue and execute player attacks
         for playerid in self.CombatQueue.GetCombatQueue():
-           if playerid in self.players.keys():
-               amUtils.PlayerAttack(self.players[playerid])
+            if playerid in self.players.keys():
+                amUtils.PlayerAttack(self.players[playerid])
 
 
     def ShutdownPreReactorStart(self):

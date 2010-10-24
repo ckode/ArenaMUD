@@ -111,15 +111,15 @@ class CombatQueue():
 # of what players are in that room
 #################################################
 def WhoIsInTheRoom(player, RoomID):
-   global RoomList
+    global RoomList
 
-   PlayerList = {}
+    PlayerList = {}
 
-   _players = amRooms.RoomList[RoomID].Players.keys()
-   for each in _players:
-       PlayerList[each] = player.factory.players[each].name
+    _players = amRooms.RoomList[RoomID].Players.keys()
+    for each in _players:
+        PlayerList[each] = player.factory.players[each].name
 
-   return PlayerList
+    return PlayerList
 
 #################################################
 # FindPlayerInRoom()
@@ -128,16 +128,16 @@ def WhoIsInTheRoom(player, RoomID):
 # or attack on.
 #################################################
 def FindPlayerInRoom(player, Name):
-   global RoomList
-   victimList = {}
+    global RoomList
+    victimList = {}
 
-   NameSearch = re.compile( re.escape(Name.lower()) )
-   for pid, pname in amRooms.RoomList[player.room].Players.items():
-      if pname != "":
-         if NameSearch.match( pname.lower() ):
-            victimList[pid] = pname
+    NameSearch = re.compile( re.escape(Name.lower()) )
+    for pid, pname in amRooms.RoomList[player.room].Players.items():
+        if pname != "":
+            if NameSearch.match( pname.lower() ):
+                victimList[pid] = pname
 
-   return victimList
+    return victimList
 
  #  if len(victimList) == 0:
  #     player.sendToPlayer("You do not see " + Name + " here!")
@@ -156,31 +156,29 @@ def FindPlayerInRoom(player, Name):
 # Sends the players statline (health and mana)
 #################################################
 def StatLine(player):
-   # Send a players stat line
+    # Send a players stat line
 
-   # If player.hp is higher than maxhp, make it blue (only a buff can do this)
-   if player.hp > player.maxhp:
-       hpcolor = amDefines.BLUE
-   # Is the players HP less than 25% of total hps?
-   elif player.hp < ( ( float(player.maxhp) / 100) * 25 ):
-       hpcolor = amDefines.LRED
-   else:
-       hpcolor = amDefines.WHITE
+    # If player.hp is higher than maxhp, make it blue (only a buff can do this)
+    if player.hp > player.maxhp:
+        hpcolor = amDefines.BLUE
+    # Is the players HP less than 25% of total hps?
+    elif player.hp < ( ( float(player.maxhp) / 100) * 25 ):
+        hpcolor = amDefines.LRED
+    else:
+        hpcolor = amDefines.WHITE
 
+    if player.resting:
+        STATLINE = "[HP=%s%d%s/%d]: (resting) " % (hpcolor, player.hp, amDefines.WHITE, player.maxhp)
+    else:
+        STATLINE = "[HP=%s%d%s/%d]: " % ( hpcolor, player.hp, amDefines.WHITE, player.maxhp)
+    if player.STATUS == amDefines.PURGATORY:
+        STATLINE = "%s>" % (amDefines.WHITE)
 
-
-   if player.resting:
-       STATLINE = "[HP=%s%d%s/%d]: (resting) " % (hpcolor, player.hp, amDefines.WHITE, player.maxhp)
-   else:
-       STATLINE = "[HP=%s%d%s/%d]: " % ( hpcolor, player.hp, amDefines.WHITE, player.maxhp)
-   if player.STATUS == amDefines.PURGATORY:
-       STATLINE = "%s>" % (amDefines.WHITE)
-
-   STATSIZE = len(STATLINE)
-   player.transport.write(amDefines.SAVECUR)
-   player.transport.write(amDefines.FIRSTCOL)
-   player.transport.write(STATLINE)
-   player.transport.write(amDefines.RESTORECUR)
+    STATSIZE = len(STATLINE)
+    player.transport.write(amDefines.SAVECUR)
+    player.transport.write(amDefines.FIRSTCOL)
+    player.transport.write(STATLINE)
+    player.transport.write(amDefines.RESTORECUR)
 
 
 #################################################
@@ -190,14 +188,14 @@ def StatLine(player):
 # player.  Healing rate is doubled if resting
 #################################################
 def NaturalHealing(player):
-   healRate = 4
-   if player.resting:
-      healRate = healRate * 2
-   if (player.hp + healRate) > player.maxhp:
-      player.hp = player.maxhp
-   else:
-      player.hp += healRate
-   StatLine(player)
+    healRate = 4
+    if player.resting:
+        healRate = healRate * 2
+    if (player.hp + healRate) > player.maxhp:
+        player.hp = player.maxhp
+    else:
+        player.hp += healRate
+    StatLine(player)
 
 ##################################################
 # DisplayAction()
@@ -344,10 +342,10 @@ def KillPlayer(player, killer):
     for _player in amRooms.RoomList[curRoom].Players.keys():
         otherplayer = player.factory.players[_player]
         if otherplayer.victim == player.playerid:
-           otherplayer.attacking    = 0
-           otherplayer.victim       = 0
-           otherplayer.factory.CombatQueue.RemoveAttack(otherplayer.playerid)
-           otherplayer.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
+            otherplayer.attacking    = 0
+            otherplayer.victim       = 0
+            otherplayer.factory.CombatQueue.RemoveAttack(otherplayer.playerid)
+            otherplayer.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
 
     # Spawn the player
     EnterPurgatory(player)
