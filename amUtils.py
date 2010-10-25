@@ -35,8 +35,16 @@ class MapQueue:
         self.mapQueue      = []    # Queue to keep maps in correct order since Dicts are unordered
         self.ConfFileFail  = False
 
-        self.GetMapsConfig()
+        self.ConfFileFail = self.GetMapsConfig()
 
+        
+    ####################################################        
+    # GetMapsConfig()
+    #
+    # 1. Load the map config
+    # 2. Load each map and verify they are good (not yet implemented)
+    # 3. Load map into index / queue and dump all maps and reload the first one
+    ####################################################
     def GetMapsConfig(self):
         try:
             if os.path.exists(self.configFile):
@@ -44,17 +52,27 @@ class MapQueue:
             else:
                 self.ConfFileFail = True
                 amLog.Logit("Error: maps.cfg does not exist")
-                return False
+                return
         except:
             amLog.Logit("Error: Could not open maps.cfg")
             self.ConfFileFail = True
-            return False
+            return
+        
         x = 0
-        for each in readlines(fp):
+        for each in fp.readlines():
+            # Remove carrage returns from map file names
+            if each[len(each) - 1 :] == "\n":
+                each = each[:-1]
+                
+            # Append maps to Index and Queue
             self.MapIndex[x] = each
             self.mapQueue.append(x)
+            x += 1
 
-        return True
+
+        fp.close()
+        return False
+    
 
 
 
@@ -65,7 +83,11 @@ class MapQueue:
         pass
 
 
-
+###################################################
+# class CombatQueue
+#
+# The queue that keeps combat order in sync
+###################################################
 class CombatQueue():
     def __init__(self):
         self.QueueIndex = {}
@@ -139,16 +161,10 @@ def FindPlayerInRoom(player, Name):
 
     return victimList
 
- #  if len(victimList) == 0:
- #     player.sendToPlayer("You do not see " + Name + " here!")
- #     return victimList
- #  elif len(victimList) == 1:
- #     return victimList
- #  else:
- #     player.sendToPlayer("Who did you mean: ")
- #     for victim in victimList.values():
- #        player.sendToPlayer(" - " + victim)
- #     return {}
+ #  if len(victimList) == 0: player.sendToPlayer("You do not see " + Name + "
+ #  here!") return victimList elif len(victimList) == 1: return victimList
+ #  else: player.sendToPlayer("Who did you mean: ") for victim in
+ #  victimList.values(): player.sendToPlayer(" - " + victim) return {}
 
 #################################################
 # StatLine()

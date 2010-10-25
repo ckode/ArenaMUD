@@ -190,9 +190,9 @@ class SonzoFactory(ServerFactory):
         amDB.LoadAnsiScreens()
 
         # Disable the following until the new map queue is complete
-        #MapQueue = amUtils.MapQueue()
-        #if MapQueue.ConfFileFail == True:
-        #    self.ShutdownPreReactorStart()
+        MapQueue = amUtils.MapQueue()
+        if MapQueue.ConfFileFail == True:
+            self.ShutdownPreReactorStart()
 
 
 
