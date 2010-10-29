@@ -24,7 +24,7 @@ from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 
 # am specific imports
 import amParser, amPlayer, amDefines, amLog
-import amRooms, amDB, amUtils
+import amRooms, amDB, amUtils, amMaps
 
 # default Python library imports
 import sys
@@ -190,7 +190,7 @@ class SonzoFactory(ServerFactory):
         amDB.LoadAnsiScreens()
 
         # Disable the following until the new map queue is complete
-        MapQueue = amUtils.MapQueue()
+        MapQueue = amMapss.MapQueue()
         if MapQueue.ConfFileFail == True:
             self.ShutdownPreReactorStart()
 
