@@ -22,66 +22,6 @@ import amLog
 import re, random, os
 
 MessageList   = {}
-MapQueue      = {}
-
-
-class MapQueue:
-    def __init__(self):
-        self.configFile    = "maps.cfg"
-        self.CurrentMap    = 0     # Current active map ID
-        self.MaxMaps       = 0     # Total maps in rotation (besure to subtract 1 after checking len() since indexes start at zero)
-        self.MapNames      = {}    # List of maps names (not used yet)
-        self.MapIndex      = {}    # Map ID->MapFileName
-        self.mapQueue      = []    # Queue to keep maps in correct order since Dicts are unordered
-        self.ConfFileFail  = False
-
-        self.ConfFileFail = self.GetMapsConfig()
-
-        
-    ####################################################        
-    # GetMapsConfig()
-    #
-    # 1. Load the map config
-    # 2. Load each map and verify they are good (not yet implemented)
-    # 3. Load map into index / queue and dump all maps and reload the first one
-    ####################################################
-    def GetMapsConfig(self):
-        try:
-            if os.path.exists(self.configFile):
-                fp = open(self.configFile, "r")
-            else:
-                self.ConfFileFail = True
-                amLog.Logit("Error: maps.cfg does not exist")
-                return
-        except:
-            amLog.Logit("Error: Could not open maps.cfg")
-            self.ConfFileFail = True
-            return
-        
-        x = 0
-        for each in fp.readlines():
-            # Remove carrage returns from map file names
-            if each[len(each) - 1 :] == "\n":
-                each = each[:-1]
-                
-            # Append maps to Index and Queue
-            self.MapIndex[x] = each
-            self.mapQueue.append(x)
-            x += 1
-
-
-        fp.close()
-        return False
-    
-
-
-
-    def LoadNextMap(self):
-        pass
-
-    def LoadMap(self, MapFile):
-        pass
-
 
 ###################################################
 # class CombatQueue

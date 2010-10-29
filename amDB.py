@@ -237,6 +237,7 @@ def LoadDoors(Sonzo):
     print "Loaded %d doors." % (len(amRooms.DoorList),)
 
 
+
 #################################################
 # LoadRooms1()
 #
