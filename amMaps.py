@@ -75,10 +75,23 @@ class MapQueue:
 
 
 
-
+    #################################################
+    # LoadNextMap()
+    #
+    # Prepare everything for the next map like
+    # resetting all stats, resetting player rooms,
+    # figure out next map to be loaded, then call 
+    # LoadMap() 
+    #################################################
     def LoadNextMap(self):
         pass
 
+    
+    #################################################
+    # LoadMap()
+    #
+    # Load the map from the DB
+    #################################################
     def LoadMap(self, MapFile):
         pass
 
@@ -98,21 +111,52 @@ class MapQueue:
 
         Map = self.LoadMap(MapFile)
 
-        # Make sure all doors exist that rooms point too.
+        # Make sure all doors exist that rooms are point to.
         if not self.VerifyDoorsExist(Map):
             amLog.Logit("Error: Room points to a door that does not exist in map: %s" % MapFile)
 
-        # Make sure all rooms exist that doors point too
+        # Make sure all rooms exist that doors point to.
         if not self.VerifyRoomsExist(Map):
             amLog.Logit("Error: Door points to a room that does not exist in map: %s" % MapFile)
             return False
-        # Make sure all room spells exist that rooms point too
+        # Make sure all room spells exist that rooms point to.
         if not self.VerifyRoomSpellsExist(Map):
             amLog.Logit("Error: Rooms points to a room spell that does not exist in map: %s" % MapFile)
             return False
-        # Make sure all room traps exist that rooms point too
-        if not self.VerifyRoomTrapExist(Map):
+        # Make sure all room traps exist that rooms point to.
+        if not self.VerifyRoomTrapsExist(Map):
             amLog.Logit("Error: Rooms points to a room trap that does not exist in map: %s" % MapFile)
             return False
 
 
+    ########################################################
+    # VerifyDoorsExist()
+    #
+    # Make sure all doors exist that rooms are pointing to.
+    ########################################################
+    def VerifyDoorsExist(Map):
+        pass
+    
+    ########################################################
+    # VerifyRoomsExist()
+    #
+    # Make sure all rooms exist that doors are pointing to.
+    ########################################################
+    def VerifyRoomsExist(Map):
+        pass
+    
+    ########################################################
+    # VerifyRoomSpellsExist()
+    #
+    # Make sure all room spells exist that rooms are pointing to.
+    ########################################################
+    def VerifyRoomSpellsExist(Map):
+        pass
+    
+    ########################################################
+    # VerifyRoomTrapsExist()
+    #
+    # Make sure all room traps exist that rooms are pointing to.
+    ########################################################
+    def VerifyRoomTrapsExist(Map):
+        pass
