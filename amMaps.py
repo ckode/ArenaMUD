@@ -14,32 +14,38 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import amLog
-
-MapQueue      = {}
+import amLog, amDB
 
 
-class MapQueue:
+class Arena:
     def __init__(self):
-        self.configFile    = "maps.cfg"
-        self.CurrentMap    = 0     # Current active map ID
-        self.MaxMaps       = 0     # Total maps in rotation (besure to subtract 1 after checking len() since indexes start at zero)
-        self.MapNames      = {}    # List of maps names (not used yet)
-        self.MapIndex      = {}    # Map ID->MapFileName
-        self.mapQueue      = []    # Queue to keep maps in correct order since Dicts are unordered
+        self.Rooms        = []
+        self.Doors        = []
+        self.RoomSpells   = []
+        self.RoomTraps    = []
+
+
+class ArenaQueue:
+    def __init__(self):
+        self.configFile      = "maps.cfg"
+        self.CurrentArena    = 0     # Current active map ID
+        self.MaxArena        = 0     # Total maps in rotation (besure to subtract 1 after checking len() since indexes start at zero)
+        self.ArenaNames      = {}    # List of maps names (not used yet)
+        self.ArenaIndex      = {}    # Map ID->MapFileName
+        self.arenaQueue      = []    # Queue to keep maps in correct order since Dicts are unordered
         self.ConfFileFail  = False
 
-        self.ConfFileFail = self.GetMapsConfig()
+        self.ConfFileFail = self.GetArenaConfig()
 
 
     ####################################################
-    # GetMapsConfig()
+    # GetArenaConfig()
     #
     # 1. Load the map config
     # 2. Load each map and verify they are good (not yet implemented)
     # 3. Load map into index / queue and dump all maps and reload the first one
     ####################################################
-    def GetMapsConfig(self):
+    def GetArenaConfig(self):
         try:
             if os.path.exists(self.configFile):
                 fp = open(self.configFile, "r")
@@ -58,15 +64,15 @@ class MapQueue:
 
         x = 0
         for each in fp.readlines():
-            # Remove carrage returns from map file names
+            # Remove carrage returns from arena file names
             if each[len(each) - 1 :] == "\n":
                 each = each[:-1]
 
-            # Verify the map before appending it to the mapqueue
-            if self.VerifyMap(each):
+            # Verify the arena before appending it to the mapqueue
+            if self.VerifyArena(each):
                 # Append maps to Index and Queue
-                self.MapIndex[x] = each
-                self.mapQueue.append(x)
+                self.ArenaIndex[x] = each
+                self.arenaQueue.append(x)
                 x += 1
 
 
@@ -76,65 +82,108 @@ class MapQueue:
 
 
     #################################################
-    # LoadNextMap()
+    # LoadNextArena()
     #
     # Prepare everything for the next map like
     # resetting all stats, resetting player rooms,
     # figure out next map to be loaded, then call 
     # LoadMap() 
     #################################################
-    def LoadNextMap(self):
+    def LoadNextArena(self):
         pass
 
     
     #################################################
-    # LoadMap()
+    # LoadArena()
     #
     # Load the map from the DB
     #################################################
-    def LoadMap(self, MapFile):
-        pass
+    def LoadArena(self, MapFile, Arena):
+        # Load the doors
+        try:
+            Arena.Doors = amDB.NewLoadDoors( MapFile )
+        except:
+            ErrMesg = "Error: Failed to load doors in arena file: %s" % ( MapFile )
+            amLog.Logit( ErrMesg )
+            print ErrMesg
+            return False
+    
+        # Load the rooms
+        try:
+            Arena.Rooms = amDB.NewLoadRooms( MapFile )
+        except:
+            ErrMesg = "Error: Failed to load rooms in arena file: %s" % ( MapFile )
+            amLog.Logit( ErrMesg )
+            print ErrMesg
+            return False
 
-
+        # Load the room spells
+        try:
+            Arena.RoomSpells = amDB.NewLoadRoomsSpells( MapFile )
+        except:
+            ErrMesg = "Error: Failed to load rooms spells in arena file: %s" % ( MapFile )
+            amLog.Logit( ErrMesg )
+            print ErrMesg
+            return False
+        
+        # Load the rooms traps
+        try:
+            Arena.RoomTraps = amDB.NewLoadRoomTraps( MapFile )
+        except:
+            ErrMesg = "Error: Failed to load room traps in arena file: %s" % ( MapFile )
+            amLog.Logit( ErrMesg )
+            print ErrMesg
+            return False
+        
+        # Verify the map is consistent, else return False
+        if self.VerifyArena( Arena ) == False:
+            return False
+        
+        # Arena is loaded and check for consistency, return the Arena (map)
+        return Arena
+        
     #################################################
-    # VerifyMap()
+    # VerifyArena()
     #
     # Load a map and verify it loads and all doors,
     # rooms, traps, spells, and messages  are accounted
     # for that are specified within the map.
     #################################################
-    def VerifyMap(self, MapFile):
+    def VerifyArena(self, Arena):      
         Rooms     = []
         Doors     = []
         Traps     = []
         Spells    = []
-
-        Map = self.LoadMap(MapFile)
+        
+        # Remove this return later
+        if 1:
+            return True
 
         # Make sure all doors exist that rooms are point to.
-        if not self.VerifyDoorsExist(Map):
+        if self.VerifyDoorsExist(Arena) == False:
             amLog.Logit("Error: Room points to a door that does not exist in map: %s" % MapFile)
 
         # Make sure all rooms exist that doors point to.
-        if not self.VerifyRoomsExist(Map):
+        if self.VerifyRoomsExist(Arena) == False:
             amLog.Logit("Error: Door points to a room that does not exist in map: %s" % MapFile)
             return False
         # Make sure all room spells exist that rooms point to.
-        if not self.VerifyRoomSpellsExist(Map):
+        if self.VerifyRoomSpellsExist(Arena) == False:
             amLog.Logit("Error: Rooms points to a room spell that does not exist in map: %s" % MapFile)
             return False
         # Make sure all room traps exist that rooms point to.
-        if not self.VerifyRoomTrapsExist(Map):
+        if self.VerifyRoomTrapsExist(Arena) == False:
             amLog.Logit("Error: Rooms points to a room trap that does not exist in map: %s" % MapFile)
             return False
-
+        
+        return True
 
     ########################################################
     # VerifyDoorsExist()
     #
     # Make sure all doors exist that rooms are pointing to.
     ########################################################
-    def VerifyDoorsExist(Map):
+    def VerifyDoorsExist(self, Arena):
         pass
     
     ########################################################
@@ -142,7 +191,7 @@ class MapQueue:
     #
     # Make sure all rooms exist that doors are pointing to.
     ########################################################
-    def VerifyRoomsExist(Map):
+    def VerifyRoomsExist(self, Arena):
         pass
     
     ########################################################
@@ -150,7 +199,7 @@ class MapQueue:
     #
     # Make sure all room spells exist that rooms are pointing to.
     ########################################################
-    def VerifyRoomSpellsExist(Map):
+    def VerifyRoomSpellsExist(self, Arena):
         pass
     
     ########################################################
@@ -158,5 +207,5 @@ class MapQueue:
     #
     # Make sure all room traps exist that rooms are pointing to.
     ########################################################
-    def VerifyRoomTrapsExist(Map):
+    def VerifyRoomTrapsExist(self, Arena):
         pass

@@ -202,9 +202,45 @@ def LoadMessages(Sonzo):
     conn.close()
     print "Loaded %d messages." % (len(amUtils.MessageList),)
 
+
+################################################
+# NewLoadDoors()
+# *** For new Rooms Class, will replace other LoadDoors() *** 
+# Loads Doors from database
+################################################
+def NewLoadDoors( MapDB ):
+    Doors = []
+    
+    try:
+        conn     = sqlite3.connect( 'data\\%s' % (MapDB) )
+        cur      = conn.cursor()
+    except:
+        amLog.Logit("Failed to open database!")
+        player.Shutdown()
+
+    try:
+        cur.execute( 'SELECT * from doors')
+    except:
+        amLog.Logit("Failed to get door data from the database.")
+    for row in cur:
+        Doors[row[0]] = amRooms.DoorObj()
+        Doors[row[0]].DoorNum                         = row[0]
+        Doors[row[0]].DoorType                        = row[1]
+        Doors[row[0]].Passable                        = row[2]
+        Doors[row[0]].DoorStatus                      = row[3]
+        Doors[row[0]].DoesLock                        = row[4]
+        Doors[row[0]].Locked                          = row[5]
+        Doors[row[0]].DoorDesc                        = row[6]
+        Room1                                         = row[7]
+        Room2                                         = row[8]
+        Doors[row[0]].ExitRoom                        = {Room1: Room2, Room2: Room1}
+
+        conn.close()
+    return Doors
+
 ################################################
 # LoadDoors()
-#  *** NOT CURRENTLY IN USE ***
+#  
 # Loads Doors from database
 ################################################
 def LoadDoors(Sonzo):
@@ -238,8 +274,53 @@ def LoadDoors(Sonzo):
 
 
 
+
 #################################################
-# LoadRooms1()
+# NewLoadRooms()
+# *** New for Rooms Class, will replace other LoadDoors() ***
+# Load all rooms from the database
+#################################################
+def NewLoadRooms( MapDB ):
+    Rooms = []
+
+    try:
+        conn     = sqlite3.connect( 'data\\%s' % (MapDB) )
+        cur      = conn.cursor()
+    except:
+        amLog.Logit("Failed to open database!")
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM rooms")
+    except:
+        amLog.Logit("Failed to query database for room information!")
+    for row in cur:
+        # Room
+        Rooms[row[0]] = amRooms.RoomObj()
+        Rooms[row[0]].RoomNum                         = row[0]
+        Rooms[row[0]].Name                            = str(row[1])
+        Rooms[row[0]].Desc1                           = str(row[2])
+        Rooms[row[0]].Desc2                           = str(row[3])
+        Rooms[row[0]].Desc3                           = str(row[4])
+        Rooms[row[0]].Desc4                           = str(row[5])
+        Rooms[row[0]].Desc5                           = str(row[6])
+
+        # Get door Directions / destinations and fill in Doors dict (hash)
+        DoorString                                                    = str(row[7]).split("|")
+        for each in DoorString:
+            d = each.split(':')
+
+            Rooms[row[0]].Doors[int(d[0])] = int(d[1])
+
+        Rooms[row[0]].LightLevel                      = row[8]
+        Rooms[row[0]].RoomSpell                       = row[9]
+        Rooms[row[0]].RoomTrap                        = row[10]
+        Rooms[row[0]].NoSpawn                         = row[11]
+
+
+    return Rooms
+
+#################################################
+# LoadRooms()
 #
 # Load all rooms from the database
 #################################################
@@ -283,6 +364,34 @@ def LoadRooms(Sonzo):
 
     print "Loaded %d rooms." % (len(amRooms.RoomList),)
 
+
+#################################################
+# NewLoadRoomSpells()
+# *** Will replace LoadRoomSpells() ***
+# Load all rooms spells from the database
+#################################################
+def NewLoadRoomSpells( MapDB ):
+    RoomSpells = []
+
+    try:
+        conn     = sqlite3.connect( 'data\\%s' % (MapDB) )
+        cur      = conn.cursor()
+    except:
+        amLog.Logit("Failed to open database!")
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM RoomSpells")
+    except:
+        amLog.Logit("Failed to query database for room information!")
+    for row in cur:
+        # Room
+        RoomSpells[row[0]] = amRooms.RoomSpell()
+        RoomSpells[row[0]].RoomNum                         = row[0]
+        RoomSpells[row[0]].hp_adjust                       = row[1]
+        RoomSpells[row[0]].desc                            = str(row[2])
+
+    return RoomSpells
+
 #################################################
 # LoadRoomSpells()
 #
@@ -310,6 +419,38 @@ def LoadRoomSpells(Sonzo):
         amRooms.RoomSpellList[row[0]].desc                            = str(row[2])
 
     print "Loaded %d room spells." % (len(amRooms.RoomSpellList),)
+
+
+#################################################
+# NewLoadRoomTraps()
+# *** Will Replace LoadRoomTraps() ***
+# Load all room traps from the database
+#################################################
+def NewLoadRoomTraps( MapDB ):
+    RoomTraps = []
+
+    try:
+        conn     = sqlite3.connect( 'data\\%s' % (MapDB) )
+        cur      = conn.cursor()
+    except:
+        amLog.Logit("Failed to open database!")
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM RoomTraps")
+    except:
+        amLog.Logit("Failed to query database for room information!")
+    for row in cur:
+        # Room
+        RoomTraps[row[0]] = amRooms.RoomSpell()
+        RoomTraps[row[0]].RoomNum                         = row[0]
+        RoomTraps[row[0]].stat                            = row[1]
+        RoomTraps[row[0]].value                           = row[2]
+        RoomTraps[row[0]].duration                        = row[3]
+        RoomTraps[row[0]].playerdesc                      = str(row[4])
+        RoomTraps[row[0]].roomdesc                        = str(row[5])
+
+    return RoomTraps
+
 
 #################################################
 # LoadRoomTraps()
