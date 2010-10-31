@@ -14,27 +14,29 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import amLog, amDB
+import amLog, amDB, os
 
 
 class Arena:
     def __init__(self):
-        self.Rooms        = []
-        self.Doors        = []
-        self.RoomSpells   = []
-        self.RoomTraps    = []
+        self.name         = ""
+        self.Rooms        = {}
+        self.Doors        = {}
+        self.RoomSpells   = {}
+        self.RoomTraps    = {}
 
 
 class ArenaQueue:
     def __init__(self):
-        self.configFile      = "maps.cfg"
+        self.configFile      = "arenas.cfg"
         self.CurrentArena    = 0     # Current active map ID
-        self.MaxArena        = 0     # Total maps in rotation (besure to subtract 1 after checking len() since indexes start at zero)
+        self.MaxArenas       = 0     # Total maps in rotation (besure to subtract 1 after checking len() since indexes start at zero)
         self.ArenaNames      = {}    # List of maps names (not used yet)
         self.ArenaIndex      = {}    # Map ID->MapFileName
         self.arenaQueue      = []    # Queue to keep maps in correct order since Dicts are unordered
         self.ConfFileFail  = False
 
+        # Load the arenas.cfg file
         self.ConfFileFail = self.GetArenaConfig()
 
 
@@ -46,21 +48,22 @@ class ArenaQueue:
     # 3. Load map into index / queue and dump all maps and reload the first one
     ####################################################
     def GetArenaConfig(self):
-        try:
-            if os.path.exists(self.configFile):
+        if os.path.exists(self.configFile):
+            try:
                 fp = open(self.configFile, "r")
-            else:
-                self.ConfFileFail = True
-                ErrMesg = "Error: maps.cfg does not exist"
+            except:
+                ErrMesg = "Error: Could not open arenas.cfg"
                 amLog.Logit(ErrMesg)
                 print ErrMesg
-                return
-        except:
-            ErrMesg = "Error: Could not open maps.cfg"
+                self.ConfFileFail = True
+                return True
+        else:
+            self.ConfFileFail = True
+            ErrMesg = "Error: %s\arenas.cfg does not exist" % ( os.getcwd() )
             amLog.Logit(ErrMesg)
             print ErrMesg
-            self.ConfFileFail = True
-            return
+            return True
+ 
 
         x = 0
         for each in fp.readlines():
@@ -103,7 +106,7 @@ class ArenaQueue:
         try:
             Arena.Doors = amDB.NewLoadDoors( MapFile )
         except:
-            ErrMesg = "Error: Failed to load doors in arena file: %s" % ( MapFile )
+            ErrMesg = "Error: Failed to load doors from arena file: %s" % ( MapFile )
             amLog.Logit( ErrMesg )
             print ErrMesg
             return False
@@ -112,7 +115,7 @@ class ArenaQueue:
         try:
             Arena.Rooms = amDB.NewLoadRooms( MapFile )
         except:
-            ErrMesg = "Error: Failed to load rooms in arena file: %s" % ( MapFile )
+            ErrMesg = "Error: Failed to load rooms from arena file: %s" % ( MapFile )
             amLog.Logit( ErrMesg )
             print ErrMesg
             return False
@@ -121,7 +124,7 @@ class ArenaQueue:
         try:
             Arena.RoomSpells = amDB.NewLoadRoomsSpells( MapFile )
         except:
-            ErrMesg = "Error: Failed to load rooms spells in arena file: %s" % ( MapFile )
+            ErrMesg = "Error: Failed to load rooms spells from arena file: %s" % ( MapFile )
             amLog.Logit( ErrMesg )
             print ErrMesg
             return False
@@ -130,7 +133,7 @@ class ArenaQueue:
         try:
             Arena.RoomTraps = amDB.NewLoadRoomTraps( MapFile )
         except:
-            ErrMesg = "Error: Failed to load room traps in arena file: %s" % ( MapFile )
+            ErrMesg = "Error: Failed to load room traps from arena file: %s" % ( MapFile )
             amLog.Logit( ErrMesg )
             print ErrMesg
             return False
@@ -150,12 +153,8 @@ class ArenaQueue:
     # for that are specified within the map.
     #################################################
     def VerifyArena(self, Arena):      
-        Rooms     = []
-        Doors     = []
-        Traps     = []
-        Spells    = []
         
-        # Remove this return later
+        # Remove this return later, currently skipping verificatin process as it is incomplete.
         if 1:
             return True
 
@@ -167,15 +166,18 @@ class ArenaQueue:
         if self.VerifyRoomsExist(Arena) == False:
             amLog.Logit("Error: Door points to a room that does not exist in map: %s" % MapFile)
             return False
+        
         # Make sure all room spells exist that rooms point to.
         if self.VerifyRoomSpellsExist(Arena) == False:
             amLog.Logit("Error: Rooms points to a room spell that does not exist in map: %s" % MapFile)
             return False
+        
         # Make sure all room traps exist that rooms point to.
         if self.VerifyRoomTrapsExist(Arena) == False:
             amLog.Logit("Error: Rooms points to a room trap that does not exist in map: %s" % MapFile)
             return False
         
+        # If here, arena has been verified.  Return true.
         return True
 
     ########################################################
@@ -184,8 +186,24 @@ class ArenaQueue:
     # Make sure all doors exist that rooms are pointing to.
     ########################################################
     def VerifyDoorsExist(self, Arena):
-        pass
-    
+        # Get list of Room IDs
+        for RoomID in Arena.Rooms.keys():
+            # For each Room ID, get list of Doors IDs listed in the room.
+            for DoorID in RoomID.Doors.values():
+                # Check to see if the door ID exists in the Arena.Doors dict.
+                if Arena.Doors.has_key(DoorID):
+                    continue
+                else:
+                    ErrMesg = "Door ID %i referenced in Arena %s by room ID %i, but door id does not exist." % ( DoorID, Arena.name, RoomID )
+                    amLog.Logit( ErrMesg )
+                    print ErrMesg
+                    ErrMesg = "Skipping arena %s" % ( Arena.name )
+                    amLog.Logit( ErrMesg )
+                    print ErrMesg
+                    return False
+                    
+            
+        return True
     ########################################################
     # VerifyRoomsExist()
     #
