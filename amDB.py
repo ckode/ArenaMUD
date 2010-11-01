@@ -247,7 +247,7 @@ def LoadDoors(Sonzo):
     global DoorList
     global DB
     try:
-        conn     = sqlite3.connect('data\\rooms.db')
+        conn     = sqlite3.connect('data\\crypt.map')
         cur      = conn.cursor()
     except:
         amLog.Logit("Failed to open database!")
@@ -329,7 +329,7 @@ def LoadRooms(Sonzo):
     global DB
 
     try:
-        conn     = sqlite3.connect('data\\rooms.db')
+        conn     = sqlite3.connect('data\\crypt.map')
         cur      = conn.cursor()
     except:
         amLog.Logit("Failed to open database!")
@@ -402,7 +402,7 @@ def LoadRoomSpells(Sonzo):
     global DB
 
     try:
-        conn     = sqlite3.connect('data\\rooms.db')
+        conn     = sqlite3.connect('data\\crypt.map')
         cur      = conn.cursor()
     except:
         amLog.Logit("Failed to open database!")
@@ -462,7 +462,7 @@ def LoadRoomTraps(Sonzo):
     global DB
 
     try:
-        conn     = sqlite3.connect('data\\rooms.db')
+        conn     = sqlite3.connect('data\\crypt.map')
         cur      = conn.cursor()
     except:
         amLog.Logit("Failed to open database!")
