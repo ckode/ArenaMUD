@@ -680,10 +680,11 @@ def LookAt(player, lookwhere):
    # Is the player trying to look in a direction?
    elif amRooms.DIRLOOKUP.has_key(lookwhere):
       Direction = amRooms.DIRLOOKUP[lookwhere]
-      CurDoorID = amRooms.RoomList[player.room].GetDoorID(Direction)
-      OtherRoomID = amRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
+
 
       if amRooms.RoomList[player.room].Doors.has_key(Direction):
+         CurDoorID = amRooms.RoomList[player.room].GetDoorID(Direction)
+         OtherRoomID = amRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
          _door = amRooms.RoomList[player.room].Doors[Direction]
          # Tell the room you are looking said direction
          player.sendToRoom("%s looks %s" % (player.name, amRooms.DIRTEXT[Direction]))
