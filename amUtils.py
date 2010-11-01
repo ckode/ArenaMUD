@@ -397,7 +397,7 @@ def SpawnPlayer(player):
     newRoom = SpawnRooms[( random.randint( 1, len(SpawnRooms) ) ) - 1 ]
     player.room = newRoom.RoomNum
     amRooms.RoomList[player.room].Players[player.playerid] = player.name
-    amCommands.Look(player, player.room)
+    amCommands.Look(player, player.room, player.briefDesc)
     player.sendToRoom("%s%s appears in a flash!%s" % (amDefines.YELLOW, player.name, amDefines.WHITE) )
     player.Shout(amDefines.BLUE + player.name + " has spawn!")
 

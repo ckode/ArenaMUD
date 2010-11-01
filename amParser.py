@@ -23,7 +23,7 @@ import re, string
 from time import strftime, localtime
 
 USERPID = 1
-
+FULLDESC = 0
 def commandParser(player, line):
 
     # Clean players input
@@ -70,7 +70,7 @@ def commandParser(player, line):
     cmd = line.split()
     # Player just hit enter, look around the room.
     if len(cmd) == 0:
-        amCommands.Look(player, player.room)
+        amCommands.Look(player, player.room, player.briefDesc)
         return
 
     cmdstr = re.compile(re.escape(cmd[0].lower()))
@@ -110,7 +110,7 @@ def commandParser(player, line):
             elif each == "look":
                 # if nothing to look at supplied, just look around the room
                 if len(cmd) == 1:
-                    amCommands.Look(player, player.room)
+                    amCommands.Look(player, player.room, FULLDESC )
                     return
                 # If it's 2, that means it's not a sentence we are looking at something
                 elif len(cmd) == 2:
@@ -419,7 +419,7 @@ def ComparePassword(player, line):
         # Put player in current room
         player.room = 1
         amRooms.RoomList[player.room].Players[player.playerid] = player.name
-        amCommands.Look(player, player.room)
+        amCommands.Look(player, player.room, player.briefDesc)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
         return
     else:
@@ -432,7 +432,7 @@ def ComparePassword(player, line):
 ###############################################
 def SetPassword(player, line):
     global RoomList
-    
+
     if line == "":
         player.transport.write("Blank passwords not allowed, enter a password: ")
         return
@@ -445,7 +445,7 @@ def SetPassword(player, line):
         amRooms.RoomList[player.room].Players[player.playerid] = player.name
         player.STATUS = amDefines.PLAYING
         player.sendToPlayer(amDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
-        amCommands.Look(player, player.room)
+        amCommands.Look(player, player.room, briefDesc)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " created an account and logged on."
         return
 ###############################################
@@ -481,12 +481,12 @@ def  LoginPlayer(player, line):
             player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
         player.transport.write("Select: ")
         return
-   
+
 ################################################
 # PickClass
 ################################################
 def PickClass(player, classnum):
-    # Sub fuction to display the Class menu 
+    # Sub fuction to display the Class menu
     def DisplayChoices():
         player.transport.write("Choose a class:\r\n")
         for cid, cname in amRace.ClassList.items():
@@ -528,14 +528,14 @@ def PickClass(player, classnum):
 # PickRace
 ################################################
 def PickRace(player, racenum):
-    # Sub fuction to display the Race menu 
+    # Sub fuction to display the Race menu
     def DisplayChoices():
         player.transport.write("Choose a race:\r\n")
         for rid, rname in amRace.RaceList.items():
             player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
         player.transport.write("Select: ")
-       
-    # Redisplay races if no option was selected   
+
+    # Redisplay races if no option was selected
     if racenum == "":
         DisplayChoices()
         return
