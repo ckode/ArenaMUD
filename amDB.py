@@ -205,12 +205,12 @@ def LoadMessages(Sonzo):
 
 ################################################
 # NewLoadDoors()
-# *** For new Rooms Class, will replace other LoadDoors() *** 
+# *** For new Rooms Class, will replace other LoadDoors() ***
 # Loads Doors from database
 ################################################
 def NewLoadDoors( MapDB ):
     Doors = []
-    
+
     try:
         conn     = sqlite3.connect( 'data\\%s' % (MapDB) )
         cur      = conn.cursor()
@@ -240,7 +240,7 @@ def NewLoadDoors( MapDB ):
 
 ################################################
 # LoadDoors()
-#  
+#
 # Loads Doors from database
 ################################################
 def LoadDoors(Sonzo):
@@ -353,7 +353,6 @@ def LoadRooms(Sonzo):
         DoorString                                                    = str(row[7]).split("|")
         for each in DoorString:
             d = each.split(':')
-
             amRooms.RoomList[row[0]].Doors[int(d[0])] = int(d[1])
 
         amRooms.RoomList[row[0]].LightLevel                      = row[8]

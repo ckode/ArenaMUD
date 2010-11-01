@@ -121,7 +121,7 @@ def MovePlayer(player, Direction):
             player.sneaking = False
 
          # Show the player the room he/she just entered
-         amCommands.Look(player, player.room)
+         amCommands.Look(player, player.room, player.briefDesc)
       else:
          # There is a doorway, but it's not passable
          PassageType = amUtils.MessageList[amRooms.DoorList[CurDoorNum].DoorDesc].split('|')[0]
@@ -217,30 +217,30 @@ def Open(player, something):
    global DIRECTIONS
 
    objList = something.split()[0]
-   obj = re.compile(re.escape(objList[0].lower()))
+   obj = re.compile(re.escape(objList.lower()))
    # Only doors exist now
    if obj.match('north'):
       OpenDoor(player, NORTH)
       return
-   elif obj.match('ne') and len(objList[0]) == 2 or obj.match('northeast') and len(objList[0]) > 5:
+   elif obj.match('ne') and len(objList) == 2 or obj.match('northeast') and len(objList) > 5:
       OpenDoor(player, NE)
       return
    elif obj.match('east'):
       OpenDoor(player, EAST)
       return
-   elif obj.match('se') and len(objList[0]) == 2 or obj.match('southeast') and len(objList[0]) > 5:
-      OpenDoor(player, EAST)
+   elif obj.match('se') and len(objList) == 2 or obj.match('southeast') and len(objList) > 5:
+      OpenDoor(player, SE)
       return
    elif obj.match('south'):
       OpenDoor(player, SOUTH)
       return
-   elif obj.match('sw') and len(objList[0]) == 2 or obj.match('southwest') and len(objList[0]) > 5:
+   elif obj.match('sw') and len(objList) == 2 or obj.match('southwest') and len(objList) > 5:
       OpenDoor(player, SW)
       return
    elif obj.match('west'):
       OpenDoor(player, WEST)
       return
-   elif obj.match('nw') and len(objList[0]) == 2 or obj.match('northwest') and len(objList[0]) > 5:
+   elif obj.match('nw') and len(objList) == 2 or obj.match('northwest') and len(objList) > 5:
       OpenDoor(player, NW)
       return
    elif obj.match('up'):
@@ -259,30 +259,30 @@ def Close(player, something):
    player.resting = False
    amUtils.StatLine(player)
    objList = something.split()[0]
-   obj = re.compile(re.escape(objList[0].lower()))
+   obj = re.compile(re.escape(objList.lower()))
    # Only doors exist now
    if obj.match('north'):
       CloseDoor(player, NORTH)
       return
-   elif obj.match('ne') and len(objList[0]) == 2 or obj.match('northeast') and len(objList[0]) > 5:
+   elif obj.match('ne') and len(objList) == 2 or obj.match('northeast') and len(objList) > 5:
       CloseDoor(player, NE)
       return
    elif obj.match('east'):
       CloseDoor(player, EAST)
       return
-   elif obj.match('se') and len(objList[0]) == 2 or obj.match('southeast') and len(objList[0]) > 5:
-      CloseDoor(player, EAST)
+   elif obj.match('se') and len(objList) == 2 or obj.match('southeast') and len(objList) > 5:
+      CloseDoor(player, SE)
       return
    elif obj.match('south'):
       CloseDoor(player, SOUTH)
       return
-   elif obj.match('sw') and len(objList[0]) == 2 or obj.match('southwest') and len(objList[0]) > 5:
+   elif obj.match('sw') and len(objList) == 2 or obj.match('southwest') and len(objList) > 5:
       CloseDoor(player, SW)
       return
    elif obj.match('west'):
       CloseDoor(player, WEST)
       return
-   elif obj.match('nw') and len(objList[0]) == 2 or obj.match('northwest') and len(objList[0]) > 5:
+   elif obj.match('nw') and len(objList) == 2 or obj.match('northwest') and len(objList) > 5:
       CloseDoor(player, NW)
       return
    elif obj.match('up'):
@@ -299,30 +299,30 @@ def Bash(player, something):
    global DIRECTIONS
 
    objList = something.split()[0]
-   obj = re.compile(re.escape(objList[0].lower()))
+   obj = re.compile(re.escape(objList.lower()))
    # Only doors exist now
    if obj.match('north'):
       BashDoor(player, NORTH)
       return
-   elif obj.match('ne') and len(objList[0]) == 2 or obj.match('northeast') and len(objList[0]) > 5:
+   elif obj.match('ne') and len(objList) == 2 or obj.match('northeast') and len(objList) > 5:
       BashDoor(player, NE)
       return
    elif obj.match('east'):
       BashDoor(player, EAST)
       return
-   elif obj.match('se') and len(objList[0]) == 2 or obj.match('southeast') and len(objList[0]) > 5:
-      BashDoor(player, EAST)
+   elif obj.match('se') and len(objList) == 2 or obj.match('southeast') and len(objList) > 5:
+      BashDoor(player, SE)
       return
    elif obj.match('south'):
       BashDoor(player, SOUTH)
       return
-   elif obj.match('sw') and len(objList[0]) == 2 or obj.match('southwest') and len(objList[0]) > 5:
+   elif obj.match('sw') and len(objList) == 2 or obj.match('southwest') and len(objList) > 5:
       BashDoor(player, SW)
       return
    elif obj.match('west'):
       BashDoor(player, WEST)
       return
-   elif obj.match('nw') and len(objList[0]) == 2 or obj.match('northwest') and len(objList[0]) > 5:
+   elif obj.match('nw') and len(objList) == 2 or obj.match('northwest') and len(objList) > 5:
       BashDoor(player, NW)
       return
    elif obj.match('up'):
@@ -578,7 +578,7 @@ def Sneak(player):
 ################################################
 # Command -> Look
 ################################################
-def Look(player, RoomNum):
+def Look(player, RoomNum, DESC):
    global RoomList
    x = 1
    if RoomNum == "":
@@ -600,7 +600,7 @@ def Look(player, RoomNum):
 
 
    player.sendLine( "%s%s%s%s" % ( amDefines.DELETELEFT, amDefines.FIRSTCOL, amDefines.LCYAN, Room.Name ) )
-   if player.briefDesc != 1:
+   if DESC != 1:
       player.sendLine(amDefines.WHITE + Room.Desc1)
       if Room.Desc2 != "*":
          player.sendLine(amDefines.WHITE + Room.Desc2)
@@ -665,7 +665,7 @@ def Set(player, line):
 # and then calls the proper function to do it
 #################################################
 def LookAt(player, lookwhere):
- 
+
    victimList = amUtils.FindPlayerInRoom(player, lookwhere)
 
    if len(victimList) > 0 and len(lookwhere) > 1:
@@ -688,7 +688,7 @@ def LookAt(player, lookwhere):
          # Tell the room you are looking said direction
          player.sendToRoom("%s looks %s" % (player.name, amRooms.DIRTEXT[Direction]))
          # Look into the other room (display)
-         Look(player, amRooms.DoorList[_door].ExitRoom[player.room])
+         Look(player, amRooms.DoorList[_door].ExitRoom[player.room], player.briefDesc)
          #tell the room that is being looked into that someone is peeking in
          player.BroadcastToRoom("%s%s peeks in from the %s." % (amDefines.CYAN, player.name, amRooms.DIRTEXT[amRooms.OPPOSITEDOOR[Direction]]), OtherRoomID )
          return

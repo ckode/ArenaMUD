@@ -39,6 +39,7 @@ UP           =  9
 DOWN         = 10
 
 
+
 NODOOR         = 0
 PATHWAY        = 1
 DOOR           = 2
