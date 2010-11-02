@@ -65,6 +65,11 @@ class CombatQueue():
     def GetCombatQueue(self):
         return self.combatQueue[:]
 
+    # Delete all combat events in the queue
+    def KillAllCombat(self):
+        self.QueueIndex.clear()
+        del self.combatQueue[:]
+        
 #################################################
 # WhoIsInThheRoom()
 #

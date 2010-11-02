@@ -350,7 +350,7 @@ def LoadRooms(Sonzo):
         amRooms.RoomList[row[0]].Desc5                           = str(row[6])
 
         # Get door Directions / destinations and fill in Doors dict (hash)
-        DoorString                                                    = str(row[7]).split("|")
+        DoorString                                               = str(row[7]).split("|")
         for each in DoorString:
             d = each.split(':')
             amRooms.RoomList[row[0]].Doors[int(d[0])] = int(d[1])
