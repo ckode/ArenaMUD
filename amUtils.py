@@ -416,3 +416,17 @@ def EnterPurgatory(player):
     player.STATUS = amDefines.PURGATORY
     amCommands.Who(player)
     player.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
+    
+#####################################################
+# KickAllToPurgatory()\
+#
+# Kill all combat, empty any queues necessary and then
+# set the status of each player to purgatory
+#####################################################
+def KickAllToPurgatory():
+    global CombatQueue
+    
+    CombatQueue.KillAllCombat()
+    
+    for user in player.factory.players.values():
+        user.STATUS == amDefines.PURGATORY
