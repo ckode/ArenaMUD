@@ -814,15 +814,16 @@ def Break(player):
 def NextMap(player):
    global ArenamQueue
    
-   # Move everyone to purgatory
-   amUtils.KickAllToPurgatory()
    
    # Reset kills, deaths, and room
    for user in player.factory.players.values():
+      if user.STATUS == amDefines.PLAYING or user.STATUS == amDefines.PURGATORY:
+         user.sendToPlayer("Changing map...")
       user.kills   = 0
       user.deaths  = 0
-      user.room    = 0
    
+   # Move everyone to purgatory
+   amUtils.KickAllToPurgatory(player)
    # Switch to the next map
    player.factory.ArenaQueue.LoadNextArena()
     

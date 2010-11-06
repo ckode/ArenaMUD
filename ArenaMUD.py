@@ -178,6 +178,7 @@ class SonzoFactory(ServerFactory):
 
         self.players = {}
         self.CombatQueue = amUtils.CombatQueue()
+        self.ArenaQueue = amMaps.ArenaQueue()
 
         # Load map details for the database
 
@@ -187,8 +188,8 @@ class SonzoFactory(ServerFactory):
         amDB.LoadAnsiScreens()
 
         # Disable the following until the new map queue is complete
-        ArenaQueue = amMaps.ArenaQueue()
-        if ArenaQueue.ConfFileFail == True:
+        
+        if self.ArenaQueue.ConfFileFail == True:
             self.ShutdownPreReactorStart()
 
 

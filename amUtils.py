@@ -192,6 +192,7 @@ def PlayerTimeBasedSpells(player):
 ###################################################
 def RoomTimeBasedSpells(factory, roomid):
     global players
+    
 
     spell = 1
     room = amMaps.Map.Rooms[roomid]
@@ -208,7 +209,7 @@ def RoomTimeBasedSpells(factory, roomid):
 ###################################################
 def ApplySpellEffects(player, spell):
 
-    spell = amRooms.RoomSpellList[spell]
+    spell = amMaps.Map.RoomSpells[spell]
 
     if spell.hp_adjust > 0:
         _textcolor = amDefines.BLUE
@@ -243,7 +244,7 @@ def SpringRoomTrap(player, trap):
             player.sendToRoom(desc)
 
 
-    trap = amRooms.RoomTrapList[trap]
+    trap = amMaps.Map.RoomTraps[trap]
     if trap.value > 0:
         _textcolor = amDefines.BLUE
     else:
@@ -384,8 +385,10 @@ def SpawnPlayer(player):
     global Map
     SpawnRooms = []
     
-    player.STATUS = amDefines.PLAYING
-    player.maxhp  = player.staticmaxhp
+    player.STATUS       = amDefines.PLAYING
+    player.maxhp        = player.staticmaxhp
+    player.hp           = player.maxhp
+    player.moving       = 0
 
     # Look for empty rooms that allow spawning
     for room in amMaps.Map.Rooms.values():
@@ -422,10 +425,15 @@ def EnterPurgatory(player):
 # Kill all combat, empty any queues necessary and then
 # set the status of each player to purgatory
 #####################################################
-def KickAllToPurgatory():
+def KickAllToPurgatory(player):
     global CombatQueue
     
-    CombatQueue.KillAllCombat()
+    player.factory.CombatQueue.KillAllCombat()
     
     for user in player.factory.players.values():
-        user.STATUS == amDefines.PURGATORY
+
+        if user.STATUS == amDefines.PLAYING or user.STATUS == amDefines.PURGATORY:
+            if user.STATUS == amDefines.PLAYING:
+                del amMaps.Map.Rooms[user.room].Players[user.playerid]
+                user.STATUS = amDefines.PURGATORY
+            user.room = 0
