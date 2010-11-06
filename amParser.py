@@ -418,7 +418,7 @@ def ComparePassword(player, line):
         player.factory.players[player.playerid] = player
         # Put player in current room
         player.room = 1
-        amRooms.RoomList[player.room].Players[player.playerid] = player.name
+        amMaps.Map.Rooms[player.room].Players[player.playerid] = player.name
         amCommands.Look(player, player.room, player.briefDesc)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
         return
@@ -442,7 +442,7 @@ def SetPassword(player, line):
         player.playerid = amDB.CreatePlayer(player)
         player.factory.players[player.playerid] = player
         # Put player in current room
-        amRooms.RoomList[player.room].Players[player.playerid] = player.name
+        amMaps.Map.Rooms[player.room].Players[player.playerid] = player.name
         player.STATUS = amDefines.PLAYING
         player.sendToPlayer(amDefines.LYELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
         amCommands.Look(player, player.room, briefDesc)

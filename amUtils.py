@@ -17,7 +17,7 @@
 from twisted.internet import reactor
 
 import amRooms, amDefines, amCommands, amUtils
-import amLog
+import amLog, amMaps
 
 import re, random, os
 
@@ -82,7 +82,7 @@ def WhoIsInTheRoom(player, RoomID):
 
     PlayerList = {}
 
-    _players = amRooms.RoomList[RoomID].Players.keys()
+    _players = amMaps.Map.Rooms[RoomID].Players.keys()
     for each in _players:
         PlayerList[each] = player.factory.players[each].name
 
@@ -99,7 +99,7 @@ def FindPlayerInRoom(player, Name):
     victimList = {}
 
     NameSearch = re.compile( re.escape(Name.lower()) )
-    for pid, pname in amRooms.RoomList[player.room].Players.items():
+    for pid, pname in amMaps.Map.Rooms[player.room].Players.items():
         if pname != "":
             if NameSearch.match( pname.lower() ):
                 victimList[pid] = pname
@@ -194,7 +194,7 @@ def RoomTimeBasedSpells(factory, roomid):
     global players
 
     spell = 1
-    room = amRooms.RoomList[roomid]
+    room = amMaps.Map.Rooms[roomid]
     if room.RoomSpell != 0:
         for _playerid in room.Players.keys():
             _player = factory.players[_playerid]
@@ -286,7 +286,7 @@ def KillPlayer(player, killer):
 
     # Remove any combat in combat queue
     player.factory.CombatQueue.RemoveAttack(player.playerid)
-    del amRooms.RoomList[player.room].Players[player.playerid]
+    del amMaps.Map.Rooms[player.room].Players[player.playerid]
     player.sendToPlayer("You are dead.")
     player.sendToRoom("%s collapses in a heap and dies." % (player.name))
     if player.attacking:
@@ -300,7 +300,7 @@ def KillPlayer(player, killer):
         player.factory.sendMessageToAllClients("\r\n%s%s was killed!%s" % (amDefines.BLUE, player.name, amDefines.WHITE))
 
 
-    for _player in amRooms.RoomList[curRoom].Players.keys():
+    for _player in amMaps.Map.Rooms[curRoom].Players.keys():
         otherplayer = player.factory.players[_player]
         if otherplayer.victim == player.playerid:
             otherplayer.attacking    = 0
@@ -326,7 +326,7 @@ def PlayerAttack(player):
 
     player.resting = False
     # Is the victim in the room?  If so, do attack
-    if player.victim in amRooms.RoomList[player.room].Players.keys():
+    if player.victim in amMaps.Map.Rooms[player.room].Players.keys():
         # Shorten var path to curVictim
         curVictim = player.factory.players[player.victim]
         curVictim.resting = False
@@ -381,27 +381,26 @@ def PlayerAttack(player):
 # Of someone is in every room, just spawn the player
 ###################################################
 def SpawnPlayer(player):
-    global RoomList
+    global Map
     SpawnRooms = []
-
+    
     player.STATUS = amDefines.PLAYING
     player.maxhp  = player.staticmaxhp
 
     # Look for empty rooms that allow spawning
-    for room in amRooms.RoomList.values():
+    for room in amMaps.Map.Rooms.values():
         if len(room.Players) == 0 and room.NoSpawn == 0:
             SpawnRooms.append(room)
 
     # If no empty spawn rooms where found, just get rooms that allow spawning
     if len(SpawnRooms) == 0:
-        for room in amRooms.RoomList.values():
+        for room in amMaps.Map.Rooms.values():
             if room.NoSpawn == 0:
                 SpawnRooms.append(room)
 
-
     newRoom = SpawnRooms[( random.randint( 1, len(SpawnRooms) ) ) - 1 ]
     player.room = newRoom.RoomNum
-    amRooms.RoomList[player.room].Players[player.playerid] = player.name
+    amMaps.Map.Rooms[player.room].Players[player.playerid] = player.name
     amCommands.Look(player, player.room, player.briefDesc)
     player.sendToRoom("%s%s appears in a flash!%s" % (amDefines.YELLOW, player.name, amDefines.WHITE) )
     player.Shout(amDefines.BLUE + player.name + " has spawn!")

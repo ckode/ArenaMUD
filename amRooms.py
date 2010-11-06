@@ -14,7 +14,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import amDefines, amUtils
+import amDefines, amUtils, amMaps
 
 RoomList          = {}
 RoomSpellList     = {}
@@ -129,6 +129,8 @@ class RoomObj():
     # FIX THIS FOR MessageList reading for door text (open door)
     #########################
     def DisplayExits(self):
+        global Map
+        
         DoorCount = 0
         # Start string
         ObviousExits = "%sObvious exits: " % (amDefines.GREEN,)
@@ -139,7 +141,7 @@ class RoomObj():
             _door = int(_door)
 
             # Make current door local var to shorten the var mapping code
-            CurDoor = DoorList[self.Doors[_door]]
+            CurDoor = amMaps.Map.Doors[self.Doors[_door]]
 
             # If the door is NOT invisable, this go ahead.
             if CurDoor.DoorStatus != 0:
