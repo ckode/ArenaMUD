@@ -17,6 +17,8 @@
 import amLog, amDB, os
 
 
+Map = None
+
 class Arena:
     def __init__(self):
         self.name         = ""
@@ -31,7 +33,7 @@ class ArenaQueue:
     def __init__(self):
         self.configFile      = "arenas.cfg"
         self.CurrentArena    = 0     # Current active map ID
-        self.MaxArenas       = 0     # Total maps in rotation (besure to subtract 1 after checking len() since indexes start at zero)
+        self.MaxArenas       = 0     # Total maps in rotation (be sure to subtract 1 after checking len() since indexes start at zero)
         self.ArenaNames      = {}    # List of maps names (not used yet)
         self.ArenaIndex      = {}    # Map ID->MapFileName
         self.arenaQueue      = []    # Queue to keep maps in correct order since Dicts are unordered
@@ -49,20 +51,20 @@ class ArenaQueue:
     # 3. Load map into index / queue and dump all maps and reload the first one
     ####################################################
     def GetArenaConfig(self):
+        global Map
+        
         if os.path.exists(self.configFile):
             try:
                 fp = open(self.configFile, "r")
             except:
                 ErrMesg = "Error: Could not open arenas.cfg"
                 amLog.Logit(ErrMesg)
-                print ErrMesg
                 self.ConfFileFail = True
                 return True
         else:
             self.ConfFileFail = True
             ErrMesg = "Error: %s\arenas.cfg does not exist" % ( os.getcwd() )
             amLog.Logit(ErrMesg)
-            print ErrMesg
             return True
  
 
@@ -72,14 +74,20 @@ class ArenaQueue:
             if MapFile[len(MapFile) - 1 :] == "\n":
                 MapFile = MapFile[:-1]
 
-            Map = self.LoadArena( MapFile, Arena() )
-            if Map != False:
+            # Load and verify the map    
+            CurMap = self.LoadArena( MapFile, Arena() )
+            # If map is not bad, put it in the ArenaQueue      
+            if CurMap != False:
                 # Append maps to Index and Queue
                 self.ArenaIndex[x] = MapFile
                 self.arenaQueue.append(x)
+                # If this is the first map, assign it to the global Map var
+                if x == 0:
+                    Map = CurMap
                 x += 1
            
-
+                
+        self.MaxArenas = len(self.ArenaIndex) - 1
         fp.close()
         return False
 
@@ -88,14 +96,21 @@ class ArenaQueue:
     #################################################
     # LoadNextArena()
     #
-    # Prepare everything for the next map like
-    # resetting all stats, resetting player rooms,
-    # figure out next map to be loaded, then call 
-    # LoadMap() 
+    # Load the next Arena in the ArenaQueue
     #################################################
     def LoadNextArena(self):
-        pass
-
+        global Map
+        
+        # Check to see if this is the last arena in the queue.
+        # If it is, reset CurrentArena to zero.
+        if self.CurrentArena == self.MaxArenas:
+            self.CurrentArena = 0
+        # Else, increment CurrentArena
+        else:
+            self.CurrentArena += 1
+        
+        # Load next Arena.
+        Map = self.LoadArena( self.ArenaIndex[self.CurrentArena], Arena() )
     
     #################################################
     # LoadArena()
