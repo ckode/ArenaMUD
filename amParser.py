@@ -593,7 +593,8 @@ def PurgatoryParser(player, line):
                  'spawn':            amUtils.SpawnPlayer,
                  'who':              amCommands.Who,
                  'help':             amCommands.Help,
-                 'superuser':        ""
+                 'superuser':        "",
+                 'nextmap':          amCommands.NextMap
                }
 
     cmd = line.split()
@@ -613,6 +614,7 @@ def PurgatoryParser(player, line):
             elif each == "/quit":
                 if len(cmd[0]) > 1:
                     commands[each](player)
+                    
                     return
                 continue
             # Call next map
@@ -638,4 +640,11 @@ def PurgatoryParser(player, line):
                     commands[each](player)
                     return
                 continue
+            # Become an admin (access admin commands)
+            elif each == "superuser":
+                if len(cmd) == 2:
+                    Superuser(player, line[(len(cmd[0]) + 1):])
+                    return
+                elif len(cmd[0]) != 1:
+                    return
     player.sendToPlayer("Command had no effect. Type 'spawn' to spawn or type 'help' for help.")
