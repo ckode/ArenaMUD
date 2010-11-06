@@ -187,19 +187,17 @@ class ArenaQueue:
     ########################################################
     def VerifyDoorsExist(self, Arena):
         # Get list of Room IDs
-        for RoomID in Arena.Rooms.keys():
+        for Room in Arena.Rooms.values():
             # For each Room ID, get list of Doors IDs listed in the room.
-            for DoorID in RoomID.Doors.values():
+            for DoorID in Room.Doors.values():
                 # Check to see if the door ID exists in the Arena.Doors dict.
                 if Arena.Doors.has_key(DoorID):
                     continue
                 else:
-                    ErrMesg = "Door ID %i referenced in Arena %s by room ID %i, but door id does not exist." % ( DoorID, Arena.name, RoomID )
+                    ErrMesg = "Door ID %i referenced in Arena %s by room ID %i, but door id does not exist." % ( DoorID, Arena.name, Room.RoonNum )
                     amLog.Logit( ErrMesg )
-                    print ErrMesg
                     ErrMesg = "Skipping arena %s" % ( Arena.name )
                     amLog.Logit( ErrMesg )
-                    print ErrMesg
                     return False
                     
             
@@ -210,8 +208,17 @@ class ArenaQueue:
     # Make sure all rooms exist that doors are pointing to.
     ########################################################
     def VerifyRoomsExist(self, Arena):
-        pass
-    
+        for Door in Arena.Doors.values():
+            for Room in Door.ExitRoom.values():
+                if Arena.Rooms.has_key(Room):
+                    continue
+                else:
+                    ErrMesg = "Room ID %i referenced in Arena %s by door ID %i, but room id does not exist." % ( Room, Arena.name, Door.DoorNum )
+                    amLog.Logit( ErrMesg )
+                    ErrMesg = "Skipping arena %s" % ( Arena.name )
+                    amLog.Logit( ErrMesg )
+                    return False 
+                
     ########################################################
     # VerifyRoomSpellsExist()
     #

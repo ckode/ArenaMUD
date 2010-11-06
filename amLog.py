@@ -22,5 +22,6 @@ def Logit(LogData):
     except:
         print "Failed to open logfile!"
 
+    print LogData    
     f.write(LogData + "\n")
     f.close()
