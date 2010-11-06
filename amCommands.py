@@ -1,4 +1,4 @@
-   #  ArenaMUD - A multiplayer combat game - http://arenamud.david-c-brown.com
+#  ArenaMUD - A multiplayer combat game - http://arenamud.david-c-brown.com
 #  Copyright (C) 2009, 2010 - David C Brown & Mark Richardson
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -59,7 +59,7 @@ SNEAKINGTEXT = {  1: " sneaking out to the north.| sneaking in from the south.",
              }
 
 ################################################
-# NewMovePlayer() function
+# MovePlayer() function
 ################################################
 def MovePlayer(player, Direction):
    global RoomList
