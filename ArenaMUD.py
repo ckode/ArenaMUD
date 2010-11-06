@@ -180,10 +180,7 @@ class SonzoFactory(ServerFactory):
         self.CombatQueue = amUtils.CombatQueue()
 
         # Load map details for the database
-#        amDB.LoadDoors(self)
-#        amDB.LoadRooms(self)
-#        amDB.LoadRoomTraps(self)
-#        amDB.LoadRoomSpells(self)
+
         amDB.LoadMessages(self)
         amDB.LoadClasses(self)
         amDB.LoadRaces(self)

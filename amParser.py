@@ -65,7 +65,8 @@ def commandParser(player, line):
                  'attack':           amCommands.Attack,
                  'rest':             amCommands.Rest,
                  'sneak':            amCommands.Sneak,
-                 'break':            amCommands.Break
+                 'break':            amCommands.Break,
+                 'nextmap':          amCommands.NextMap
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -136,6 +137,12 @@ def commandParser(player, line):
                     commands[each](player, line[(len(cmd[0]) + 1):])
                     return
                 continue
+            # Call next map
+            elif each == "nextmap":
+                if len(cmd[0]) == 7 and len(cmd) == 1:
+                    if player.isAdmin == True:
+                        commands[each](player)
+                        return
             # Brief command (for brief room desc)
             elif each == "brief":
                 if len(cmd[0]) == 5 and len(cmd) == 1:
@@ -608,6 +615,12 @@ def PurgatoryParser(player, line):
                     commands[each](player)
                     return
                 continue
+            # Call next map
+            elif each == "nextmap":
+                if len(cmd[0]) == 7 and len(cmd) == 1:
+                    if player.isAdmin == True:
+                        commands[each](player)
+                        return
             elif each == "spawn":
                 if len(cmd[0]) > 2 and len(cmd) == 1:
                     amUtils.SpawnPlayer(player)
