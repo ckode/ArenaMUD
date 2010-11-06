@@ -209,13 +209,13 @@ def LoadMessages(Sonzo):
 # Loads Doors from database
 ################################################
 def NewLoadDoors( MapDB ):
-    Doors = []
+    Doors = {}
 
     try:
-        conn     = sqlite3.connect( 'data\\%s' % (MapDB) )
+        conn     = sqlite3.connect( MapDB )
         cur      = conn.cursor()
     except:
-        amLog.Logit("Failed to open database!")
+        amLog.Logit("Failed to open database: %s" % ( MapDB ) )
         player.Shutdown()
 
     try:
@@ -223,7 +223,7 @@ def NewLoadDoors( MapDB ):
     except:
         amLog.Logit("Failed to get door data from the database.")
     for row in cur:
-        Doors[row[0]] = amRooms.DoorObj()
+        Doors[row[0]]                                 = amRooms.DoorObj()
         Doors[row[0]].DoorNum                         = row[0]
         Doors[row[0]].DoorType                        = row[1]
         Doors[row[0]].Passable                        = row[2]
@@ -235,7 +235,7 @@ def NewLoadDoors( MapDB ):
         Room2                                         = row[8]
         Doors[row[0]].ExitRoom                        = {Room1: Room2, Room2: Room1}
 
-        conn.close()
+    conn.close()
     return Doors
 
 ################################################
@@ -281,13 +281,13 @@ def LoadDoors(Sonzo):
 # Load all rooms from the database
 #################################################
 def NewLoadRooms( MapDB ):
-    Rooms = []
+    Rooms = {}
 
     try:
-        conn     = sqlite3.connect( 'data\\%s' % (MapDB) )
+        conn     = sqlite3.connect( MapDB )
         cur      = conn.cursor()
     except:
-        amLog.Logit("Failed to open database!")
+        amLog.Logit("Failed to open database: %s" % ( MapDB ) )
         player.Shutdown()
     try:
         cur.execute( "SELECT * FROM rooms")
@@ -295,7 +295,7 @@ def NewLoadRooms( MapDB ):
         amLog.Logit("Failed to query database for room information!")
     for row in cur:
         # Room
-        Rooms[row[0]] = amRooms.RoomObj()
+        Rooms[row[0]]                                 = amRooms.RoomObj()
         Rooms[row[0]].RoomNum                         = row[0]
         Rooms[row[0]].Name                            = str(row[1])
         Rooms[row[0]].Desc1                           = str(row[2])
@@ -370,13 +370,13 @@ def LoadRooms(Sonzo):
 # Load all rooms spells from the database
 #################################################
 def NewLoadRoomSpells( MapDB ):
-    RoomSpells = []
+    RoomSpells = {}
 
     try:
-        conn     = sqlite3.connect( 'data\\%s' % (MapDB) )
+        conn     = sqlite3.connect( MapDB )
         cur      = conn.cursor()
     except:
-        amLog.Logit("Failed to open database!")
+        amLog.Logit("Failed to open database: %s" % ( MapDB ) )
         player.Shutdown()
     try:
         cur.execute( "SELECT * FROM RoomSpells")
@@ -384,7 +384,7 @@ def NewLoadRoomSpells( MapDB ):
         amLog.Logit("Failed to query database for room information!")
     for row in cur:
         # Room
-        RoomSpells[row[0]] = amRooms.RoomSpell()
+        RoomSpells[row[0]]                                 = amRooms.RoomSpell()
         RoomSpells[row[0]].RoomNum                         = row[0]
         RoomSpells[row[0]].hp_adjust                       = row[1]
         RoomSpells[row[0]].desc                            = str(row[2])
@@ -426,13 +426,13 @@ def LoadRoomSpells(Sonzo):
 # Load all room traps from the database
 #################################################
 def NewLoadRoomTraps( MapDB ):
-    RoomTraps = []
+    RoomTraps = {}
 
     try:
-        conn     = sqlite3.connect( 'data\\%s' % (MapDB) )
+        conn     = sqlite3.connect( MapDB )
         cur      = conn.cursor()
     except:
-        amLog.Logit("Failed to open database!")
+        amLog.Logit("Failed to open database: %s" % ( MapDB ) )
         player.Shutdown()
     try:
         cur.execute( "SELECT * FROM RoomTraps")
