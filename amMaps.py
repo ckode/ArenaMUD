@@ -20,6 +20,7 @@ import amLog, amDB, os
 class Arena:
     def __init__(self):
         self.name         = ""
+        self.MapFile      = ""
         self.Rooms        = {}
         self.Doors        = {}
         self.RoomSpells   = {}
@@ -66,18 +67,18 @@ class ArenaQueue:
  
 
         x = 0
-        for each in fp.readlines():
+        for MapFile in fp.readlines():
             # Remove carrage returns from arena file names
-            if each[len(each) - 1 :] == "\n":
-                each = each[:-1]
+            if MapFile[len(MapFile) - 1 :] == "\n":
+                MapFile = MapFile[:-1]
 
-            # Verify the arena before appending it to the mapqueue
-            if self.VerifyArena(each):
+            Map = self.LoadArena( MapFile, Arena() )
+            if Map != False:
                 # Append maps to Index and Queue
-                self.ArenaIndex[x] = each
+                self.ArenaIndex[x] = MapFile
                 self.arenaQueue.append(x)
                 x += 1
-
+           
 
         fp.close()
         return False
@@ -102,45 +103,45 @@ class ArenaQueue:
     # Load the map from the DB
     #################################################
     def LoadArena(self, MapFile, Arena):
-        # Load the doors
-        try:
-            Arena.Doors = amDB.NewLoadDoors( MapFile )
-        except:
-            ErrMesg = "Error: Failed to load doors from arena file: %s" % ( MapFile )
-            amLog.Logit( ErrMesg )
-            print ErrMesg
-            return False
+        # Apply Path to filename
+        Arena.MapFile = "%s\data\%s" % ( os.getcwd(), MapFile )
+        
+        if os.path.exists( MapFile ):
+            # Load the doors
+            try:
+                Arena.Doors = amDB.NewLoadDoors( Arena.MapFile )
+            except:
+                ErrMesg = "Error: Failed to load doors from arena file: %s" % ( Arena.MapFile )
+                amLog.Logit( ErrMesg )
+                return False
     
-        # Load the rooms
-        try:
-            Arena.Rooms = amDB.NewLoadRooms( MapFile )
-        except:
-            ErrMesg = "Error: Failed to load rooms from arena file: %s" % ( MapFile )
-            amLog.Logit( ErrMesg )
-            print ErrMesg
-            return False
+            # Load the rooms
+            try:
+                Arena.Rooms = amDB.NewLoadRooms( Arena.MapFile )
+            except:
+                ErrMesg = "Error: Failed to load rooms from arena file: %s" % ( Arena.MapFile )
+                amLog.Logit( ErrMesg )
+                return False
 
-        # Load the room spells
-        try:
-            Arena.RoomSpells = amDB.NewLoadRoomsSpells( MapFile )
-        except:
-            ErrMesg = "Error: Failed to load rooms spells from arena file: %s" % ( MapFile )
-            amLog.Logit( ErrMesg )
-            print ErrMesg
-            return False
+            # Load the room spells
+            try:
+                Arena.RoomSpells = amDB.NewLoadRoomSpells( Arena.MapFile )
+            except:
+                ErrMesg = "Error: Failed to load rooms spells from arena file: %s" % ( Arena.MapFile )
+                amLog.Logit( ErrMesg )
+                return False
         
-        # Load the rooms traps
-        try:
-            Arena.RoomTraps = amDB.NewLoadRoomTraps( MapFile )
-        except:
-            ErrMesg = "Error: Failed to load room traps from arena file: %s" % ( MapFile )
-            amLog.Logit( ErrMesg )
-            print ErrMesg
-            return False
+            # Load the rooms traps
+            try:
+                Arena.RoomTraps = amDB.NewLoadRoomTraps( Arena.MapFile )
+            except:
+                ErrMesg = "Error: Failed to load room traps from arena file: %s" % ( Arena.MapFile )
+                amLog.Logit( ErrMesg )
+                return False
         
-        # Verify the map is consistent, else return False
-        if self.VerifyArena( Arena ) == False:
-            return False
+            # Verify the map is consistent, else return False
+            if self.VerifyArena( Arena ) == False:
+                return False
         
         # Arena is loaded and check for consistency, return the Arena (map)
         return Arena
@@ -152,29 +153,25 @@ class ArenaQueue:
     # rooms, traps, spells, and messages  are accounted
     # for that are specified within the map.
     #################################################
-    def VerifyArena(self, Arena):      
-        
-        # Remove this return later, currently skipping verificatin process as it is incomplete.
-        if 1:
-            return True
+    def VerifyArena(self, Arena):           
 
         # Make sure all doors exist that rooms are point to.
         if self.VerifyDoorsExist(Arena) == False:
-            amLog.Logit("Error: Room points to a door that does not exist in map: %s" % MapFile)
+            amLog.Logit("Error: Room points to a door that does not exist in map: %s" % Arena.MapFile )
 
         # Make sure all rooms exist that doors point to.
         if self.VerifyRoomsExist(Arena) == False:
-            amLog.Logit("Error: Door points to a room that does not exist in map: %s" % MapFile)
+            amLog.Logit("Error: Door points to a room that does not exist in map: %s" % Arena.MapFile )
             return False
         
         # Make sure all room spells exist that rooms point to.
         if self.VerifyRoomSpellsExist(Arena) == False:
-            amLog.Logit("Error: Rooms points to a room spell that does not exist in map: %s" % MapFile)
+            amLog.Logit("Error: Rooms points to a room spell that does not exist in map: %s" % Arena.MapFile )
             return False
         
         # Make sure all room traps exist that rooms point to.
         if self.VerifyRoomTrapsExist(Arena) == False:
-            amLog.Logit("Error: Rooms points to a room trap that does not exist in map: %s" % MapFile)
+            amLog.Logit("Error: Rooms points to a room trap that does not exist in map: %s" % Arena.MapFile )
             return False
         
         # If here, arena has been verified.  Return true.
@@ -225,7 +222,15 @@ class ArenaQueue:
     # Make sure all room spells exist that rooms are pointing to.
     ########################################################
     def VerifyRoomSpellsExist(self, Arena):
-        pass
+        for Room in Arena.Rooms.values():
+            if Arena.RoomSpells.has_key(Room.RoomSpell):
+                continue
+            else:
+                ErrMesg = "Room spell ID %i referenced in Arena %s by room ID %i, but room spell id does not exist." % ( Room.RoomSpell, Arena.name, Room.RoomNum )
+                amLog.Logit( ErrMesg )
+                ErrMesg = "Skipping arena %s" % ( Arena.name )
+                amLog.Logit( ErrMesg )
+                return False 
     
     ########################################################
     # VerifyRoomTrapsExist()
@@ -233,4 +238,12 @@ class ArenaQueue:
     # Make sure all room traps exist that rooms are pointing to.
     ########################################################
     def VerifyRoomTrapsExist(self, Arena):
-        pass
+        for Room in Arena.Rooms.values():
+            if Arena.RoomTraps.has_key(Room.RoomTrap):
+                continue
+            else:
+                ErrMesg = "Room trap ID %i referenced in Arena %s by room ID %i, but room trap id does not exist." % ( Room.RoomTrap, Arena.name, Room.RoomNum )
+                amLog.Logit( ErrMesg )
+                ErrMesg = "Skipping arena %s" % ( Arena.name )
+                amLog.Logit( ErrMesg )
+                return False 
