@@ -748,7 +748,7 @@ def LookPlayer(player, otherplayerID):
    victim.sendToPlayer( "%s%s looks you up and down." % (amDefines.WHITE, player.name) )
 
 #################################################
-# Coomand -> Attack()
+# Command -> Attack()
 #################################################
 def Attack(player, attacked):
    global CombatQueue
@@ -805,3 +805,24 @@ def Break(player):
       player.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE))
       player.sendToRoom("%s%s breaks off combat.%s" % (amDefines.BROWN, player.name, amDefines.WHITE))
    amUtils.StatLine(player)
+   
+##################################################
+# Command -> NextMap()
+#
+# Calls next map in ArenaQueue
+##################################################
+def NextMap(player):
+   global ArenamQueue
+   
+   # Move everyone to purgatory
+   amUtils.KickAllToPurgatory()
+   
+   # Reset kills, deaths, and room
+   for user in player.factory.players.values():
+      user.kills   = 0
+      user.deaths  = 0
+      user.room    = 0
+   
+   # Switch to the next map
+   player.factory.ArenaQueue.LoadNextArena()
+    
