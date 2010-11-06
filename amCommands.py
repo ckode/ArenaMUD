@@ -18,6 +18,7 @@ from twisted.internet import reactor
 
 import amDefines, amDB, amLog, amCommands
 import amRooms, amUtils, amParser, amRace
+import amMaps
 
 import time, re, random
 
@@ -83,9 +84,9 @@ def MovePlayer(player, Direction):
       amUtils.StatLine(player)
 
    # Is the door in a passable state?
-   if amRooms.RoomList[player.room].Doors.has_key(Direction):
-      CurDoorNum = amRooms.RoomList[player.room].Doors[Direction]
-      if amRooms.DoorList[CurDoorNum].Passable == True:
+   if amMaps.Map.Rooms[player.room].Doors.has_key(Direction):
+      CurDoorNum = amMaps.Map.Rooms[player.room].Doors[Direction]
+      if amMaps.Map.Doors[CurDoorNum].Passable == True:
          if player.sneaking == True:
             if random.randint(1, 100) > player.stealth:
                SNEAKING = SNEAKINGTEXT[Direction].split('|')
@@ -94,9 +95,9 @@ def MovePlayer(player, Direction):
                player.sendToPlayer("%sYou make a sound enter the room!%s" % (amDefines.LRED, amDefines.WHITE))
 
          # Get new room's room number, remove player from old room.
-         NewRoom = amRooms.DoorList[CurDoorNum].ExitRoom[player.room]
+         NewRoom = amMaps.Map.Doors[CurDoorNum].ExitRoom[player.room]
 
-         del amRooms.RoomList[player.room].Players[player.playerid]
+         del amMaps.Map.Rooms[player.room].Players[player.playerid]
 
 
          # Set players room num in his profile and tell room he left
@@ -106,7 +107,7 @@ def MovePlayer(player, Direction):
          player.room = NewRoom
 
          # Add player to that room and tell everyone
-         amRooms.RoomList[NewRoom].Players[player.playerid] = player.name
+         amMaps.Map.Rooms[NewRoom].Players[player.playerid] = player.name
          # Sneaking in message
          if player.sneaking:
             if FailedSneak == True:
@@ -116,15 +117,15 @@ def MovePlayer(player, Direction):
             player.sendToRoom(amDefines.WHITE + player.name + MOVING[1])
 
          # Is there a trap room trap in the room? Spring it!
-         if amRooms.RoomList[NewRoom].RoomTrap > 0:
-            amUtils.SpringRoomTrap(player, amRooms.RoomList[NewRoom].RoomTrap)
+         if amMaps.Map.Rooms[NewRoom].RoomTrap > 0:
+            amUtils.SpringRoomTrap(player, amMaps.Map.Rooms[NewRoom].RoomTrap)
             player.sneaking = False
 
          # Show the player the room he/she just entered
          amCommands.Look(player, player.room, player.briefDesc)
       else:
          # There is a doorway, but it's not passable
-         PassageType = amUtils.MessageList[amRooms.DoorList[CurDoorNum].DoorDesc].split('|')[0]
+         PassageType = amUtils.MessageList[amMaps.Map.Doors[CurDoorNum].DoorDesc].split('|')[0]
          player.sneaking = False
          RunIntoWall(PassageType, player.name)
    else:
@@ -338,15 +339,15 @@ def Bash(player, something):
 ################################################
 def BashDoor(player, DIRECTION):
    global RoomList, DIRTEXT
-   CurDoorID = amRooms.RoomList[player.room].GetDoorID(DIRECTION)
+   CurDoorID = amMaps.Map.Rooms[player.room].GetDoorID(DIRECTION)
 
    if CurDoorID == 0:
       # Door doesn't exist.
       player.sendToPlayer("%s%s%s" % (amDefines.WHITE, "You do not see anything to bash ", amRooms.DIRTEXT[DIRECTION]) )
       return
 
-   OtherRoomID = amRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
-   CurDoor = amRooms.DoorList[CurDoorID]
+   OtherRoomID = amMaps.Map.Doors[CurDoorID].GetOppositeRoomID(player.room)
+   CurDoor = amMaps.Map.Doors[CurDoorID]
 
 
    if CurDoor.Passable:
@@ -365,8 +366,8 @@ def BashDoor(player, DIRECTION):
             player.sendToRoom("%s%s breaks off combat.%s" % (amDefines.BROWN, player.name, amDefines.WHITE))
 
          # Open the door on both sides of the door.
-         amRooms.DoorList[CurDoorID].Passable = True
-         amRooms.DoorList[CurDoorID].DoorStatus = amRooms.OPEN
+         amMaps.Map.Doors[CurDoorID].Passable = True
+         amMaps.Map.Doors[CurDoorID].DoorStatus = amRooms.OPEN
          player.BroadcastToRoom("%sThe %s to the %s flies open." % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[amRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoomID)
          player.sendToPlayer("%sYou bash the %s to the %s open!" % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
          player.sendToRoom("%s%s bashes the %s to the %s open!" % (amDefines.WHITE, player.name, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
@@ -380,15 +381,15 @@ def BashDoor(player, DIRECTION):
 ################################################
 def OpenDoor(player, DIRECTION):
    global RoomList, DIRTEXT
-   CurDoorID = amRooms.RoomList[player.room].GetDoorID(DIRECTION)
+   CurDoorID = amMaps.Map.Rooms[player.room].GetDoorID(DIRECTION)
 
    if CurDoorID == 0:
       # Door doesn't exist.
       player.sendToPlayer("%s%s%s" % (amDefines.WHITE, "You do not see anything to close to the ", amRooms.DIRTEXT[DIRECTION]) )
       return
 
-   OtherRoomID = amRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
-   CurDoor = amRooms.DoorList[CurDoorID]
+   OtherRoomID = amMaps.Map.Doors[CurDoorID].GetOppositeRoomID(player.room)
+   CurDoor = amMaps.Map.Doors[CurDoorID]
 
    if CurDoor.Passable:
       player.sendToPlayer("%s%s is already open." % (amDefines.WHITE, amRooms.DIRTEXT[DIRECTION].capitalize()) )
@@ -410,8 +411,8 @@ def OpenDoor(player, DIRECTION):
          else:
             CurDoor.DoorType == 2 or CurDoor.DoorType == 4
             # Open the door on both sides of the door.
-            amRooms.DoorList[CurDoorID].Passable = True
-            amRooms.DoorList[CurDoorID].DoorStatus = amRooms.OPEN
+            amMaps.Map.Doors[CurDoorID].Passable = True
+            amMaps.Map.Doors[CurDoorID].DoorStatus = amRooms.OPEN
             player.BroadcastToRoom("%sThe %s to the %s opens." % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[amRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoomID)
             player.sendToPlayer("%sYou open the %s to the %s" % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
             player.sendToRoom("%s%s opens the %s to the %s" % (amDefines.WHITE, player.name, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
@@ -424,13 +425,13 @@ def OpenDoor(player, DIRECTION):
 def CloseDoor(player, DIRECTION):
    global RoomList, DIRTEXT
 
-   CurDoorID = amRooms.RoomList[player.room].GetDoorID(DIRECTION)
+   CurDoorID = amMaps.Map.Rooms[player.room].GetDoorID(DIRECTION)
    if CurDoorID == 0:
       # Door doesn't exist.
       player.sendToPlayer("%s%s%s" % (amDefines.WHITE, "You do not see anything to close to the ", amRooms.DIRTEXT[DIRECTION]) )
       return
-   OtherRoomID = amRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
-   CurDoor = amRooms.DoorList[CurDoorID]
+   OtherRoomID = amMaps.Map.Doors[CurDoorID].GetOppositeRoomID(player.room)
+   CurDoor = amMaps.Map.Doors[CurDoorID]
 
    # Is this a door of type door or gate? (need to fix this so I just check 1 thing)
    if CurDoor.DoorType == 2 or CurDoor.DoorType == 4:
@@ -447,8 +448,8 @@ def CloseDoor(player, DIRECTION):
             player.sendToRoom("%s%s breaks off combat.%s" % (amDefines.BROWN, player.name, amDefines.WHITE))
 
              # Close the door
-         amRooms.DoorList[CurDoorID].Passable = False
-         amRooms.DoorList[CurDoorID].DoorStatus = amRooms.CLOSED
+         amMaps.Map.Doors[CurDoorID].Passable = False
+         amMaps.Map.Doors[CurDoorID].DoorStatus = amRooms.CLOSED
          player.BroadcastToRoom("%sThe %s to the %s closes." % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[amRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoomID)
          player.sendToPlayer("%sYou close the %s to the %s" % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
          player.sendToRoom("%s%s closes the %s to the %s" % (amDefines.WHITE, player.name, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
@@ -566,7 +567,7 @@ def Wtf(player):
 def Sneak(player):
    player.resting = False
    # If you aren't a stealthy class, or you are attacking, or someone is in the room.  You can't sneak!
-   if player.ClassStealth == False or player.attacking == 1 or len(amRooms.RoomList[player.room].Players) > 1:
+   if player.ClassStealth == False or player.attacking == 1 or len(amMaps.Map.Rooms[player.room].Players) > 1:
       player.sendToPlayer("%sYou don't think you're sneaking.%s" % (amDefines.CYAN, amDefines.WHITE))
       player.sneaking = False
       return
@@ -583,7 +584,7 @@ def Look(player, RoomNum, DESC):
    x = 1
    if RoomNum == "":
       RoomNum = player.room
-   Room = amRooms.RoomList[RoomNum]
+   Room = amMaps.Map.Rooms[RoomNum]
    if player.blind:
       player.sendLine(amDefeines.WHITE + "You are blind!")
       amUtils.StatLine(player)
@@ -682,14 +683,14 @@ def LookAt(player, lookwhere):
       Direction = amRooms.DIRLOOKUP[lookwhere]
 
 
-      if amRooms.RoomList[player.room].Doors.has_key(Direction):
-         CurDoorID = amRooms.RoomList[player.room].GetDoorID(Direction)
-         OtherRoomID = amRooms.DoorList[CurDoorID].GetOppositeRoomID(player.room)
-         _door = amRooms.RoomList[player.room].Doors[Direction]
+      if amMaps.Map.Rooms[player.room].Doors.has_key(Direction):
+         CurDoorID = amMaps.Map.Rooms[player.room].GetDoorID(Direction)
+         OtherRoomID = amMaps.Map.Doors[CurDoorID].GetOppositeRoomID(player.room)
+         _door = amMaps.Map.Rooms[player.room].Doors[Direction]
          # Tell the room you are looking said direction
          player.sendToRoom("%s looks %s" % (player.name, amRooms.DIRTEXT[Direction]))
          # Look into the other room (display)
-         Look(player, amRooms.DoorList[_door].ExitRoom[player.room], player.briefDesc)
+         Look(player, amMaps.Map.Doors[_door].ExitRoom[player.room], player.briefDesc)
          #tell the room that is being looked into that someone is peeking in
          player.BroadcastToRoom("%s%s peeks in from the %s." % (amDefines.CYAN, player.name, amRooms.DIRTEXT[amRooms.OPPOSITEDOOR[Direction]]), OtherRoomID )
          return

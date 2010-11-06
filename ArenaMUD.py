@@ -82,7 +82,7 @@ class Users(StatefulTelnetProtocol):
         self.sendLine("Goodbye")
         if self.factory.players.has_key(self.playerid):
             if self.STATUS == amDefines.PLAYING:
-                del amRooms.RoomList[self.room].Players[self.playerid]
+                del amMaps.Map.Rooms[self.room].Players[self.playerid]
             del self.factory.players[self.playerid]
             self.factory.sendMessageToAllClients(amDefines.BLUE + self.name + " just logged off.")
             print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just logged off."
@@ -93,7 +93,7 @@ class Users(StatefulTelnetProtocol):
         # If player hungup, disconnectClient() didn't remove the user, remove them now
         if self.factory.players.has_key(self.playerid):
             if self.STATUS == amDefines.PLAYING:
-                del amRooms.RoomList[self.room].Players[self.playerid]
+                del amMaps.Map.Rooms[self.room].Players[self.playerid]
             del self.factory.players[self.playerid]
             self.factory.sendMessageToAllClients(amDefines.BLUE + self.name + " just hung up!")
             print strftime("%b %d %Y %H:%M:%S ", localtime()) + self.name + " just hung up!"
@@ -118,7 +118,7 @@ class Users(StatefulTelnetProtocol):
     def sendToRoom(self, line):
         global RoomList
 
-        for pid in amRooms.RoomList[self.room].Players.keys():
+        for pid in amMaps.Map.Rooms[self.room].Players.keys():
             if self.factory.players[pid] == self:
                 pass
             else:
@@ -133,7 +133,7 @@ class Users(StatefulTelnetProtocol):
     ################################################
     def BroadcastToRoom(self, line, RoomNumber):
         global RoomList
-        for pid in amRooms.RoomList[RoomNumber].Players.keys():
+        for pid in amMaps.Map.Rooms[RoomNumber].Players.keys():
             if self.factory.players[pid].STATUS == amDefines.PLAYING:
                 self.transport.write(amDefines.DELETELEFT)
                 self.transport.write(amDefines.FIRSTCOL)
@@ -145,7 +145,7 @@ class Users(StatefulTelnetProtocol):
     ################################################
     def sendToRoomNotVictim(self, victim, line):
         global RoomList
-        for pid in amRooms.RoomList[self.room].Players.keys():
+        for pid in amMaps.Map.Rooms[self.room].Players.keys():
             if self.factory.players[pid] == self:
                 pass
             elif pid == victim:
@@ -180,10 +180,10 @@ class SonzoFactory(ServerFactory):
         self.CombatQueue = amUtils.CombatQueue()
 
         # Load map details for the database
-        amDB.LoadDoors(self)
-        amDB.LoadRooms(self)
-        amDB.LoadRoomTraps(self)
-        amDB.LoadRoomSpells(self)
+#        amDB.LoadDoors(self)
+#        amDB.LoadRooms(self)
+#        amDB.LoadRoomTraps(self)
+#        amDB.LoadRoomSpells(self)
         amDB.LoadMessages(self)
         amDB.LoadClasses(self)
         amDB.LoadRaces(self)
@@ -221,7 +221,7 @@ class SonzoFactory(ServerFactory):
             amUtils.PlayerTimeBasedSpells(player)
 
         # Do Room spell effect on all players in that room
-        for roomid in amRooms.RoomList:
+        for roomid in amMaps.Map.Rooms:
             amUtils.RoomTimeBasedSpells(self, roomid)
 
 

@@ -120,11 +120,11 @@ class ArenaQueue:
     def LoadArena(self, MapFile, Arena):
         # Apply Path to filename
         Arena.MapFile = "%s\data\%s" % ( os.getcwd(), MapFile )
-        
-        if os.path.exists( MapFile ):
+
+        if os.path.exists( Arena.MapFile ):
             # Load the doors
             try:
-                Arena.Doors = amDB.NewLoadDoors( Arena.MapFile )
+                Arena.Doors = amDB.LoadDoors( Arena.MapFile )
             except:
                 ErrMesg = "Error: Failed to load doors from arena file: %s" % ( Arena.MapFile )
                 amLog.Logit( ErrMesg )
@@ -132,7 +132,7 @@ class ArenaQueue:
     
             # Load the rooms
             try:
-                Arena.Rooms = amDB.NewLoadRooms( Arena.MapFile )
+                Arena.Rooms = amDB.LoadRooms( Arena.MapFile )
             except:
                 ErrMesg = "Error: Failed to load rooms from arena file: %s" % ( Arena.MapFile )
                 amLog.Logit( ErrMesg )
@@ -140,7 +140,7 @@ class ArenaQueue:
 
             # Load the room spells
             try:
-                Arena.RoomSpells = amDB.NewLoadRoomSpells( Arena.MapFile )
+                Arena.RoomSpells = amDB.LoadRoomSpells( Arena.MapFile )
             except:
                 ErrMesg = "Error: Failed to load rooms spells from arena file: %s" % ( Arena.MapFile )
                 amLog.Logit( ErrMesg )
@@ -148,7 +148,7 @@ class ArenaQueue:
         
             # Load the rooms traps
             try:
-                Arena.RoomTraps = amDB.NewLoadRoomTraps( Arena.MapFile )
+                Arena.RoomTraps = amDB.LoadRoomTraps( Arena.MapFile )
             except:
                 ErrMesg = "Error: Failed to load room traps from arena file: %s" % ( Arena.MapFile )
                 amLog.Logit( ErrMesg )
@@ -157,7 +157,8 @@ class ArenaQueue:
             # Verify the map is consistent, else return False
             if self.VerifyArena( Arena ) == False:
                 return False
-        
+        else:
+            print "Map doesn't exist!"
         # Arena is loaded and check for consistency, return the Arena (map)
         return Arena
         
@@ -203,7 +204,7 @@ class ArenaQueue:
             # For each Room ID, get list of Doors IDs listed in the room.
             for DoorID in Room.Doors.values():
                 # Check to see if the door ID exists in the Arena.Doors dict.
-                if Arena.Doors.has_key(DoorID):
+                if DoorID != 0 and Arena.Doors.has_key(DoorID):
                     continue
                 else:
                     ErrMesg = "Door ID %i referenced in Arena %s by room ID %i, but door id does not exist." % ( DoorID, Arena.name, Room.RoonNum )
@@ -222,7 +223,7 @@ class ArenaQueue:
     def VerifyRoomsExist(self, Arena):
         for Door in Arena.Doors.values():
             for Room in Door.ExitRoom.values():
-                if Arena.Rooms.has_key(Room):
+                if Room != 0 and Arena.Rooms.has_key(Room):
                     continue
                 else:
                     ErrMesg = "Room ID %i referenced in Arena %s by door ID %i, but room id does not exist." % ( Room, Arena.name, Door.DoorNum )
@@ -238,14 +239,15 @@ class ArenaQueue:
     ########################################################
     def VerifyRoomSpellsExist(self, Arena):
         for Room in Arena.Rooms.values():
-            if Arena.RoomSpells.has_key(Room.RoomSpell):
-                continue
-            else:
-                ErrMesg = "Room spell ID %i referenced in Arena %s by room ID %i, but room spell id does not exist." % ( Room.RoomSpell, Arena.name, Room.RoomNum )
-                amLog.Logit( ErrMesg )
-                ErrMesg = "Skipping arena %s" % ( Arena.name )
-                amLog.Logit( ErrMesg )
-                return False 
+            if Room.RoomSpell != 0:
+                if Room.RoomSpell != 0 and Arena.RoomSpells.has_key(Room.RoomSpell):
+                    continue
+                else:
+                    ErrMesg = "Room spell ID %i referenced in Arena %s by room ID %i, but room spell id does not exist." % ( Room.RoomSpell, Arena.name, Room.RoomNum )
+                    amLog.Logit( ErrMesg )
+                    ErrMesg = "Skipping arena %s" % ( Arena.name )
+                    amLog.Logit( ErrMesg )
+                    return False 
     
     ########################################################
     # VerifyRoomTrapsExist()
@@ -254,11 +256,12 @@ class ArenaQueue:
     ########################################################
     def VerifyRoomTrapsExist(self, Arena):
         for Room in Arena.Rooms.values():
-            if Arena.RoomTraps.has_key(Room.RoomTrap):
-                continue
-            else:
-                ErrMesg = "Room trap ID %i referenced in Arena %s by room ID %i, but room trap id does not exist." % ( Room.RoomTrap, Arena.name, Room.RoomNum )
-                amLog.Logit( ErrMesg )
-                ErrMesg = "Skipping arena %s" % ( Arena.name )
-                amLog.Logit( ErrMesg )
-                return False 
+            if Room.RoomTrap != 0: 
+                if Arena.RoomTraps.has_key(Room.RoomTrap):
+                    continue
+                else:
+                    ErrMesg = "Room trap ID %i referenced in Arena %s by room ID %i, but room trap id does not exist." % ( Room.RoomTrap, Arena.name, Room.RoomNum )
+                    amLog.Logit( ErrMesg )
+                    ErrMesg = "Skipping arena %s" % ( Arena.name )
+                    amLog.Logit( ErrMesg )
+                    return False 
