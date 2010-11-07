@@ -500,11 +500,23 @@ def PickClass(player, classnum):
             player.transport.write( "   %s. %s\r\n" % (cid, cname.name) )
         player.transport.write("Select: ")
 
+    # If an invalid choice was made, tell them
+    def InvalidChoice():
+        player.transport.write("Invalid choice, please try again.\r\n")
+
     # Redisplay classes if no option was selected
     if classnum == "":
         DisplayChoices()
         return
-    classnum = int(classnum)
+    
+    # Make sure the entered option is numeric
+    try: 
+        classnum = int(classnum)
+    except:
+        InvalidChoice()
+        DisplayChoices()
+        return
+    
     if classnum in amRace.ClassList.keys():
         playerclass             = amRace.ClassList[classnum]
         player.Class            = classnum
@@ -527,7 +539,7 @@ def PickClass(player, classnum):
             player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
         player.transport.write("Select: ")
     else:
-        player.transport.write("Invalid choice, please try again.\r\n")
+        InvalidChoice()
         DisplayChoices()
     return
 
@@ -542,11 +554,23 @@ def PickRace(player, racenum):
             player.transport.write( "   %s. %s\r\n" % (rid, rname.name) )
         player.transport.write("Select: ")
 
+    # If an invalid choice was made, tell them
+    def InvalidChoice():
+        player.transport.write("Invalid choice, please try again.\r\n")
+        
     # Redisplay races if no option was selected
     if racenum == "":
         DisplayChoices()
         return
-    racenum = int(racenum)
+    
+    # Make sure the entered option is numeric
+    try:
+        racenum = int(racenum)
+    except:
+        InvalidChoice()
+        DisplayChoices()
+        return
+    
     if racenum in amRace.RaceList.keys():
         race                    = amRace.RaceList[racenum]
         player.race             = racenum
@@ -569,7 +593,7 @@ def PickRace(player, racenum):
         amUtils.EnterPurgatory(player)
         print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
     else:
-        player.transport.write("Invalid choice, please try again.\r\n")
+        InvalidChoice()
         DisplayChoices()
     return
 
