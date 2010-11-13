@@ -86,7 +86,8 @@ class ArenaQueue:
                     Map = CurMap
                 x += 1
            
-                
+        # Indexes starts at zero instead of 1, so subtract one from 
+        # the size of ArenaIndex for MaxArenas        
         self.MaxArenas = len(self.ArenaIndex) - 1
         fp.close()
         return False

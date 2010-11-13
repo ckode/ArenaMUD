@@ -196,7 +196,7 @@ class SonzoFactory(ServerFactory):
 
     def sendMessageToAllClients(self, mesg):
         for client in self.players.values():
-            if client.STATUS == amDefines.PLAYING:
+            if client.STATUS == amDefines.PLAYING or client.STATUS == amDefines.PURGATORY:
                 client.sendLine(mesg + amDefines.WHITE)
 
     # Event loop that happens every 15 seconds
