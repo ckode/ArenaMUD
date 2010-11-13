@@ -24,7 +24,7 @@ from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 
 # am specific imports
 import amParser, amPlayer, amDefines, amLog
-import amRooms, amDB, amUtils, amMaps
+import amRooms, amDB, amUtils, amMaps, amCombat
 
 # default Python library imports
 import sys
@@ -65,6 +65,8 @@ class Users(StatefulTelnetProtocol):
     magery             = 0
     briefDesc          = 1
     moving             = 0
+    # Test var for adding attacks per round
+    attkcount          = 3
 
     def connectionMade(self):
         # Limit how many can connect at one time
@@ -177,7 +179,7 @@ class SonzoFactory(ServerFactory):
     def __init__(self):
 
         self.players = {}
-        self.CombatQueue = amUtils.CombatQueue()
+        self.CombatQueue = amCombat.CombatQueue()
         self.ArenaQueue = amMaps.ArenaQueue()
 
         # Load map details for the database
@@ -232,7 +234,7 @@ class SonzoFactory(ServerFactory):
         # Loop through combat queue and execute player attacks
         for playerid in self.CombatQueue.GetCombatQueue():
             if playerid in self.players.keys():
-                amUtils.PlayerAttack(self.players[playerid])
+                amCombat.PlayerAttack(self.players[playerid])
 
 
     def ShutdownPreReactorStart(self):
