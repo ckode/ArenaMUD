@@ -51,6 +51,7 @@ def commandParser(player, line):
                  'sw':               amCommands.SouthWest,
                  'west':             amCommands.West,
                  'nw':               amCommands.NorthWest,
+                 'crackpipe':        amCommands.Crackpipe,
                  'rofl':             amCommands.Rofl,
                  'wtf':              amCommands.Wtf,
                  'slap':             amCommands.Slap,
@@ -208,6 +209,11 @@ def commandParser(player, line):
                 continue
             elif each == "rofl":
                 if len(cmd) == 1 and len(cmd[0]) == 4:
+                    commands[each](player)
+                    return
+                continue
+            elif each == "crackpipe":
+                if len(cmd) == 1 and len(cmd[0]) > 4:
                     commands[each](player)
                     return
                 continue

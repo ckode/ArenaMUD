@@ -549,6 +549,12 @@ def Slap(player, victim):
          player.sendToRoomNotVictim(pid, amDefines.BLUE + player.name + " slaps " + name + "!")
 
 ################################################
+# Command -> Crack
+################################################
+def Crackpipe(player):
+   player.sendToRoom(amDefines.GREEN + player.name + " hits the crack pipe hard!" + amDefines.WHITE)
+   player.sendToPlayer(amDefines.GREEN + "You hit the crack pipe hard!" + amDefines.WHITE)
+################################################
 # Command -> Rofl
 ################################################
 def Rofl(player):
