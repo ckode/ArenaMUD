@@ -18,6 +18,11 @@ import random
 import amMaps, amUtils, amDefines
 
 
+ATTACKING               = 0
+CASTING                 = 1
+
+MISS                    = 0
+
 ###################################################
 # class CombatQueue
 #
@@ -115,8 +120,13 @@ def KillPlayer(player, killer):
 #
 # Calulates if a hit ocurrs returns true or false
 #========================================================
-def HitRoll( player, victim ):
-    ToHitValue = victim.defense - player.offense
+def HitRoll( player, victim , ATTACKTYPE ):
+    # If this a melee attack (including melee spells), or a non-melee spell based attack
+    if ATTACKTYPE == ATTACKING:
+        ToHitValue = victim.defense - player.offense
+    elif ATTACKTYPE == CASTING:
+        ToHitValue = victim.magicres - player.spellcasting
+        
     Roll = random.randint(0, 100)
     
     if Roll > ToHitValue:
@@ -131,6 +141,7 @@ def HitRoll( player, victim ):
 ###################################################
 def PlayerAttack(player):
     global CombatQueue
+    
 
     if player.attacking == 0:
         return
@@ -146,40 +157,41 @@ def PlayerAttack(player):
         # Get the class/weapon attack messages for swings and misses
         Message = amUtils.MessageList[player.weapontext].split("|")
 
-        # Roll damage and tell the room
-        damage = random.randint(player.mindamage, player.maxdamage)
+        
+        
 
         # Is attacker backstabbing?
         if player.ClassStealth and player.sneaking:
 
             # Make the hit roll
-            if HitRoll( player, curVictim ):
-                # Backstab modifier         
-                modifier = ( player.maxdamage + (player.maxdamage * ( float(player.stealth) / 100 ) ) )
-                damage += modifier
-                player.sendToPlayer(Message[2] % (amDefines.RED, curVictim.name, damage, amDefines.WHITE) )
-                curVictim.sendToPlayer(Message[5] % (amDefines.RED, player.name, damage, amDefines.WHITE) )
-                player.sendToRoomNotVictim(curVictim.playerid, Message[8] % (amDefines.RED, player.name, curVictim.name, damage, amDefines.WHITE))
+            if HitRoll( player, curVictim, ATTACKING ):
+                # Roll for damage and apply backstab damage modifier        
+                damage = BackstabModifier( player, DamageRoll( player, curVictim ) )
+                
+                SendDamageTextToRoom( player, curVictim, damage, Message[2], Message[5], Message[8] )
+
             else:
-                player.sendToPlayer(Message[0] % (amDefines.WHITE, curVictim.name, amDefines.WHITE) )
-                curVictim.sendToPlayer(Message[3] % (amDefines.WHITE, player.name, amDefines.WHITE) )
-                player.sendToRoomNotVictim(curVictim.playerid, Message[6] % (amDefines.WHITE, player.name, curVictim.name, amDefines.WHITE))
+                SendDamageTextToRoom( player, curVictim, MISS, Message[0], Message[3], Message[6] )
+
         else:
                 # Make each attack that the attacker has per round.
                 totalDamage = 0
                 for attk in range(0, player.speed):  
                     # Make the hitroll
-                    if HitRoll( player, curVictim ):
-                        damage = random.randint(player.mindamage, player.maxdamage)
+                    if HitRoll( player, curVictim, ATTACKING ):
+                        # Roll damage and tell the room
+                        damage = DamageRoll( player, curVictim )
+                        # Total up damage thus far
                         totalDamage += damage
                         # Not backstabbing, do normak damage and no surprise message
-                        player.sendToPlayer(Message[1] % (amDefines.RED, curVictim.name, damage, amDefines.WHITE) )
-                        curVictim.sendToPlayer(Message[4] % (amDefines.RED, player.name, damage, amDefines.WHITE) )
-                        player.sendToRoomNotVictim(curVictim.playerid, Message[7] % (amDefines.RED, player.name, curVictim.name, damage, amDefines.WHITE))
+                        SendDamageTextToRoom( player, curVictim, damage, Message[1], Message[4], Message[7] )
+                        
+                        # Check to see if player id dead already, if so break out of attack loop!
+                        if totalDamage > curVictim.hp:
+                            break
                     else:
-                        player.sendToPlayer(Message[0] % (amDefines.WHITE, curVictim.name, amDefines.WHITE) )
-                        curVictim.sendToPlayer(Message[3] % (amDefines.WHITE, player.name, amDefines.WHITE) )
-                        player.sendToRoomNotVictim(curVictim.playerid, Message[6] % (amDefines.WHITE, player.name, curVictim.name, amDefines.WHITE))
+                        SendDamageTextToRoom( player, curVictim, MISS, Message[0], Message[3], Message[6] )
+                        
                 damage = totalDamage
             
             
@@ -202,3 +214,37 @@ def PlayerAttack(player):
         player.factory.CombatQueue.RemoveAttack(player.playerid)
         player.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
         return
+    
+#==================================================
+# BackstabModifer()
+#
+# Applies damage modifications for Backstabs
+#==================================================
+def BackstabModifier( player, damage ):
+    return ( player.maxdamage + (player.maxdamage * ( float(player.stealth) / 100 ) ) )
+
+#==================================================
+# DamageRoll()
+#
+# Roll damage done during the attack
+#==================================================
+def DamageRoll( player, victim ):
+    # Later, add in victim buffs that lower lower damage
+    
+    damage = random.randint(player.mindamage, player.maxdamage) 
+    return damage
+
+#==================================================
+# SendDamageTextToRoom()
+#
+# Sends the combat messages to the room (damage and misses)
+#==================================================
+def SendDamageTextToRoom( player, victim, damage, PlayerMessage, VictimMessage, RoomMessage ):
+    if damage == MISS: 
+        player.sendToPlayer(PlayerMessage % (amDefines.WHITE, victim.name, amDefines.WHITE) )
+        victim.sendToPlayer(VictimMessage % (amDefines.WHITE, player.name, amDefines.WHITE) )
+        player.sendToRoomNotVictim(victim.playerid, RoomMessage % (amDefines.WHITE, player.name, victim.name, amDefines.WHITE))
+    else:
+        player.sendToPlayer(PlayerMessage % (amDefines.RED, victim.name, damage, amDefines.WHITE) )
+        victim.sendToPlayer(VictimMessage % (amDefines.RED, player.name, damage, amDefines.WHITE) )
+        player.sendToRoomNotVictim(victim.playerid, RoomMessage % (amDefines.RED, player.name, victim.name, damage, amDefines.WHITE))
