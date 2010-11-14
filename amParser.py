@@ -544,6 +544,7 @@ def PickClass(player, classnum):
         player.stealth         += playerclass.stealth
         player.weapontext       = playerclass.weapontext
         player.STATUS           = amDefines.GETRACE
+        player.speed            = playerclass.speed
 
         # Now display race choices
         player.transport.write("Choose a race:\r\n")

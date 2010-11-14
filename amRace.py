@@ -54,5 +54,6 @@ class Class():
         self.MageryType       = 0
         self.stealth          = 0
         self.weapontext       = 0
+        self.speed            = 0
 
 
