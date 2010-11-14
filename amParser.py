@@ -67,7 +67,8 @@ def commandParser(player, line):
                  'rest':             amCommands.Rest,
                  'sneak':            amCommands.Sneak,
                  'break':            amCommands.Break,
-                 'nextmap':          amCommands.NextMap
+                 'nextmap':          amCommands.NextMap,
+                 'status':           amCommands.Status
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -335,6 +336,11 @@ def commandParser(player, line):
                         player.sendToPlayer("Sneaking...")
                     player.moving = 1
                     reactor.callLater(.5, amCommands.NorthWest, player)
+                    return
+                continue
+            elif each == "status":
+                if len(cmd) == 1 and len(cmd[0]) > 3:
+                    commands[each](player)
                     return
                 continue
 

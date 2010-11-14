@@ -836,4 +836,50 @@ def NextMap(player):
    amUtils.KickAllToPurgatory(player)
    # Switch to the next map
    player.factory.ArenaQueue.LoadNextArena()
-    
+   
+################################################
+# Command -> Status(player)
+################################################
+def Status(player):
+   global RaceList
+   global ClassList
+
+   # If player.hp is higher than maxhp, make it blue (only a buff can do this)
+   if player.hp > player.maxhp:
+      hpcolor = amDefines.BLUE
+   # Is the players HP less than 25% of total hps?
+   elif player.hp < ( ( float(player.maxhp) / 100) * 25 ):
+      hpcolor = amDefines.LRED
+   else:
+      hpcolor = amDefines.WHITE
+
+   #figure out health string
+   if player.hp < ( ( float(player.maxhp) / 100) * 25 ):
+      HealthStr = "horribly"
+   elif player.hp < ( ( float(player.maxhp) / 100) * 50 ):
+      HealthStr = "badly"
+   elif player.hp < ( ( float(player.maxhp) / 100) * 75 ):
+      HealthStr = "somewhat"
+   elif player.hp < ( ( float(player.maxhp) / 100) * 85 ):
+      HealthStr = "lightly"
+   elif player.hp < ( ( float(player.maxhp) / 100) * 95 ):
+      HealthStr = "barely"
+   else:
+      HealthStr = "not"
+
+   player.sendToPlayer("%sName:%s %s" % (amDefines.GREEN, amDefines.WHITE, player.name ))
+   player.sendToPlayer("%sRace:%s %s      %sClass:%s %s" % (amDefines.GREEN, amDefines.WHITE, amRace.RaceList[player.race].name, amDefines.GREEN, amDefines.WHITE, amRace.ClassList[player.Class].name))
+   player.sendToPlayer("%sHealth:%s %s of %s%s" % (amDefines.GREEN, hpcolor, str(player.hp), amDefines.WHITE, str(player.maxhp)))
+   player.sendToPlayer("%sOffense:%s %s     %sDefense:%s %s" % (amDefines.GREEN, amDefines.WHITE, str(player.offense), amDefines.GREEN, amDefines.WHITE, str(player.defense)))
+   player.sendToPlayer("%sStealth:%s %s     %sSpellCasting:%s %s" % (amDefines.GREEN, amDefines.WHITE, str(player.stealth), amDefines.GREEN, amDefines.WHITE, str(player.spellcasting)))
+   player.sendToPlayer("%sYou are %s%s %swounded." % (amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN))
+   player.sendToPlayer("%sYou have %s kills and %s deaths" %(amDefines.GREEN, str(player.kills), str(player.deaths)))
+   
+   if(player.resting):
+      player.sendToPlayer("%sYou are resting." % (amDefines.BLUE))
+   if(player.sneaking):
+      player.sendToPlayer("%sYou are sneaking." % (amDefines.BLUE))
+   if(player.isAdmin):
+      player.sendToPlayer("%sYou have administrative privileges on the server." % (amDefines.YELLOW))
+      
+   return
