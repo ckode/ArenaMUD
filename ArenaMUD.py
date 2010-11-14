@@ -39,6 +39,8 @@ class Users(StatefulTelnetProtocol):
     race               = 0
     Class              = 0
     health             = 0
+    offense            = 50
+    defense            = 80
     isAdmin            = 0
     hp                 = 50
     maxhp              = 100
@@ -67,6 +69,9 @@ class Users(StatefulTelnetProtocol):
     moving             = 0
     # Test var for adding attacks per round
     attkcount          = 3
+    # List of good and bad buffs on player
+    GoodBuffs          = []
+    NegBuffs           = []
 
     def connectionMade(self):
         # Limit how many can connect at one time
