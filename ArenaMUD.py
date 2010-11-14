@@ -68,7 +68,7 @@ class Users(StatefulTelnetProtocol):
     briefDesc          = 1
     moving             = 0
     # Test var for adding attacks per round
-    attkcount          = 3
+    speed              = 0
     # List of good and bad buffs on player
     GoodBuffs          = []
     NegBuffs           = []

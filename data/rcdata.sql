@@ -21,7 +21,7 @@ INSERT INTO race (id, name, description, BaseHP, DamageBonus, CastingBonus, Visi
 INSERT INTO race (id, name, description, BaseHP, DamageBonus, CastingBonus, Vision, DefenseBonus, ToHitBonus, Stealth) VALUES (4, "Goblin", "A Goblin", 80, 0, 10, 2, 10, 10, 30);
 
 
-INSERT INTO class (id, name, description, HPBonus, MinDamage, MaxDamage, BaseArmor, MageryType, Stealth, WeaponMessages) VALUES (1, "Barbarian", "A barbarian", 15, 5, 20, 50, 1, 0, 1);
-INSERT INTO class (id, name, description, HPBonus, MinDamage, MaxDamage, BaseArmor, MageryType, Stealth, WeaponMessages) VALUES (2, "Mage", "A Mage", 0, 5, 25, 50, 2, 0, 2);
-INSERT INTO class (id, name, description, HPBonus, MinDamage, MaxDamage, BaseArmor, MageryType, Stealth, WeaponMessages) VALUES (3, "Theif", "A Thief", -15, 5, 15, 50, 0, 50, 3);
-INSERT INTO class (id, name, description, HPBonus, MinDamage, MaxDamage, BaseArmor, MageryType, Stealth, WeaponMessages) VALUES (4, "Priest", "A Priest", 0, 5, 25, 50, 3, 0, 4);
+INSERT INTO class (id, name, description, HPBonus, MinDamage, MaxDamage, BaseArmor, MageryType, Stealth, WeaponMessages, Speed) VALUES (1, "Barbarian", "A barbarian", 15, 5, 20, 50, 1, 0, 1, 2);
+INSERT INTO class (id, name, description, HPBonus, MinDamage, MaxDamage, BaseArmor, MageryType, Stealth, WeaponMessages, Speed) VALUES (2, "Mage", "A Mage", 0, 5, 10, 50, 2, 0, 2, 4);
+INSERT INTO class (id, name, description, HPBonus, MinDamage, MaxDamage, BaseArmor, MageryType, Stealth, WeaponMessages, Speed) VALUES (3, "Theif", "A Thief", -15, 5, 10, 50, 0, 50, 3, 4);
+INSERT INTO class (id, name, description, HPBonus, MinDamage, MaxDamage, BaseArmor, MageryType, Stealth, WeaponMessages, Speed) VALUES (4, "Priest", "A Priest", 0, 15, 40, 50, 3, 0, 4, 1);

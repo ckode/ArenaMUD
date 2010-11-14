@@ -371,6 +371,7 @@ def LoadClasses(Sonzo):
         amRace.ClassList[row[0]].MageryType                      = row[7]
         amRace.ClassList[row[0]].stealth                         = row[8]
         amRace.ClassList[row[0]].weapontext                      = row[9]
+        amRace.ClassList[row[0]].speed                           = row[10]
 
     print "Loaded %d classes." % (len(amRace.ClassList),)
 

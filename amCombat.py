@@ -152,6 +152,7 @@ def PlayerAttack(player):
         # Is attacker backstabbing?
         if player.ClassStealth and player.sneaking:
 
+            # Make the hit roll
             if HitRoll( player, curVictim ):
                 # Backstab modifier         
                 modifier = ( player.maxdamage + (player.maxdamage * ( float(player.stealth) / 100 ) ) )
@@ -166,7 +167,8 @@ def PlayerAttack(player):
         else:
                 # Make each attack that the attacker has per round.
                 totalDamage = 0
-                for attk in range(0, player.attkcount):  
+                for attk in range(0, player.speed):  
+                    # Make the hitroll
                     if HitRoll( player, curVictim ):
                         damage = random.randint(player.mindamage, player.maxdamage)
                         totalDamage += damage

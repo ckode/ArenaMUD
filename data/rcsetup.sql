@@ -38,5 +38,6 @@ CREATE TABLE class (
    BaseArmor          INTEGER NOT NULL,
    MageryType         INTEGER NOT NULL,
    Stealth            INTEGER NOT NULL,
-   WeaponMessages     INTEGER NOT NULL
+   WeaponMessages     INTEGER NOT NULL,
+   Speed              INTEGER NOT NULL
 );
