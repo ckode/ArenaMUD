@@ -120,8 +120,12 @@ def MovePlayer(player, Direction):
          if amMaps.Map.Rooms[NewRoom].RoomTrap > 0:
             amUtils.SpringRoomTrap(player, amMaps.Map.Rooms[NewRoom].RoomTrap)
             player.sneaking = False
-
-         # Show the player the room he/she just entered
+            # Did the player die from a trap? If so, don't continue, just return
+            if player.STATUS == amDefines.PURGATORY:
+               player.moving = False
+               return
+         
+         # Show the player the room he/she just entered if he didn't die from a trap
          amCommands.Look(player, player.room, player.briefDesc)
       else:
          # There is a doorway, but it's not passable

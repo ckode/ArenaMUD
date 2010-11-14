@@ -17,7 +17,7 @@
 from twisted.internet import reactor
 
 import amRooms, amDefines, amCommands, amUtils
-import amLog, amMaps
+import amLog, amMaps, amCombat
 
 import re, random, os
 
@@ -176,7 +176,7 @@ def ApplySpellEffects(player, spell):
     elif hpValue < 1:
         player.sendToPlayer("%s%s%s" % (_textcolor, spell.desc, amDefines.WHITE) )
 
-        KillPlayer(player, 0)
+        amCombat.KillPlayer(player, 0)
         return
     else:
         player.hp = hpValue
@@ -213,58 +213,12 @@ def SpringRoomTrap(player, trap):
         elif hpValue < 1:
             player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, amDefines.WHITE) )
             SendRoomDesc(player, trap.roomdesc)
-            KillPlayer(player, 0)
+            amCombat.KillPlayer(player, 0)
             return
         else:
             player.hp = hpValue
             player.sendToPlayer("%s%s%s" % (_textcolor, trap.playerdesc, amDefines.WHITE) )
             SendRoomDesc(player, trap.roomdesc)
-
-
-###################################################
-# KillPlayer()
-#
-# Kill the fool, and tell him to stay off my lines!
-###################################################
-def KillPlayer(player, killer):
-    global CombatQueue
-
-    player.deaths               += 1
-    player.hp                    = player.maxhp
-    player.effectingSpell        = 0
-    curRoom                      = player.room
-
-    player.attacking             = 0
-    player.victim                = 0
-
-    # Remove any combat in combat queue
-    player.factory.CombatQueue.RemoveAttack(player.playerid)
-    del amMaps.Map.Rooms[player.room].Players[player.playerid]
-    player.sendToPlayer("You are dead.")
-    player.sendToRoom("%s collapses in a heap and dies." % (player.name))
-    if player.attacking:
-        player.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
-
-    # Was he killed by someone? Tell everyone.
-    if killer > 0:
-        killer = player.factory.players[killer]
-        player.factory.sendMessageToAllClients("\r\n%s%s has killed %s!" % (amDefines.BLUE, killer.name, player.name))
-    else:
-        player.factory.sendMessageToAllClients("\r\n%s%s was killed!%s" % (amDefines.BLUE, player.name, amDefines.WHITE))
-
-
-    for _player in amMaps.Map.Rooms[curRoom].Players.keys():
-        otherplayer = player.factory.players[_player]
-        if otherplayer.victim == player.playerid:
-            otherplayer.attacking    = 0
-            otherplayer.victim       = 0
-            otherplayer.factory.CombatQueue.RemoveAttack(otherplayer.playerid)
-            otherplayer.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
-
-    # Spawn the player
-    EnterPurgatory(player)
-
-
 ###################################################
 # SpawnPlayer()
 #
