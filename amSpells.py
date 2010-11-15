@@ -16,24 +16,33 @@
 
 import amDefines, amUtils
 
-SpawnItems  = {}
-SpellList   = {}
+SpawnItems      = {}
+SpellList       = {}
 
-HP          = 1
-MAXHP       = 2
+HP              = 1
+MAXHP           = 2
+OFFENSE         = 3
+DEFENSE         = 4
+SPELLCASTING    = 5
+MAGICRES        = 6
+DAMAGEBONUS     = 7
+STEALTH         = 8
+REGEN           = 9
 
-
+# CastOn
+SELF            = 1
+VICTIM          = 2
+ALL             = 3
 
 class Spells():
     def __init__(self):
         self.id                          = 0
         self.name                        = ""
         self.cmd                         = ""
-        self.casted                      = 0
-        self.targets                     = 0
-        self.reqClass                    = []
+        self.CastOn                      = 0
+        self.Class                       = 0
         self.duration                    = 0
-        self.timeleft                    = 0
+        self.durationEffect              = False
         self.effects                     = {}
         self.guesture                    = {}
         self.effectText                  = ""
@@ -91,33 +100,81 @@ class Spells():
             RemoveSpell(player)
 
             return
-
-        # Apply the stat changes
-        ApplyStats(player)
-
-        player.sendToPlayer( self.effectText % (amDefines.BLUE, amDefines.WHITE) )
+        
+        # Create allbuffs list and append all currently applied spells (good and bad)
+        allbuffs = []
+        allbuffs.append(player.GoodBuffs)
+        allbuffs.append(player.NegBuffs)
+        
+        # Apply the stat changes for each spell
+        for spell in allbuffs:
+            # If the spell is an EoT spell, apple the effects
+            if spell.durationEffect == True:
+                for (stat, value) in self.effects.items():
+                    if stat == HP:
+                        if (player.hp + value) > player.maxhp:
+                            player.hp = player.maxhp
+                        else:
+                            player.hp += value
+                    
+        # Tell player about effects if exist
+        if self.effectText != "*":
+            player.sendToPlayer( self.effectText % (amDefines.BLUE, amDefines.WHITE) )
 
 
     ##############################################################
-    # ApplyStats()
+    # ApplySpell()
     #
     # Apply stats
     ##############################################################
-    def ApplyStats(self, player):
+    def ApplySpell(self, player):
        # Apply Stat changes
         for (stat, val) in self.effects.values():
             if stat == HP:
                 player.hp += val
             elif stat == MAXHP:
                 player.maxhp += val
+            elif stat == DEFENSE:
+                player.defense += val
+            elif stat == OFFENSE:
+                player.offense += val
+            elif stat == SPELLCASTING:
+                player.spellcasting += val
+            elif stat == MAGICRES:
+                player.magicres += val
+            elif stat == DAMAGEBONUS:
+                player.damagebonus += val
+            elif stat == STEALTH:
+                player.stealth += val
+            elif stat == REGEN:
+                player.regen += val
+                
+               
+                
 
     ##############################################################
-    # RemoveSpell()
+    # RemoveSpellEffects()
     #
     # Remove the spell and tell the player it wore off
     ##############################################################
-    def RemoveSpell(self, player):
-        player.effectingSpell = 0
-        player.maxhp = player.staticmaxhp
+    def RemoveSpellEffects(self, player):
+       # Remove Spell effects (leave HP alone)
+        for (stat, val) in self.effects.values():
+            if stat == MAXHP:
+                player.maxhp -= val
+            elif stat == DEFENSE:
+                player.defense -= val
+            elif stat == OFFENSE:
+                player.offense -= val
+            elif stat == SPELLCASTING:
+                player.spellcasting -= val
+            elif stat == MAGICRES:
+                player.magicres -= val
+            elif stat == DAMAGEBONUS:
+                player.damagebonus -= val
+            elif stat == STEALTH:
+                player.stealth -= val
+            elif stat == REGEN:
+                player.regen -= val
 
         player.sendToPlayer( self.WearOffText % (amDefines.BLUE, amDefines.WHITE) )

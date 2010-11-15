@@ -45,7 +45,6 @@ class Users(StatefulTelnetProtocol):
     hp                 = 50
     maxhp              = 100
     staticmaxhp        = 100
-    ac                 = 0
     stealth            = 0
     effectingSpell     = 0
     lastCast           = 0                     # How long since last casted (use loops to count down)
@@ -53,6 +52,7 @@ class Users(StatefulTelnetProtocol):
     sneaking           = False
     room               = 1
     resting            = False
+    RegenBonus         = 0
     kills              = 0
     deaths             = 0
     attackroll         = 0
