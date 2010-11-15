@@ -109,7 +109,7 @@ class Spells():
         # Apply the stat changes for each spell
         for spell in allbuffs:
             # If the spell is an EoT spell, apple the effects
-            if spell.durationEffect == True:
+            if spell.durationEffect:
                 for (stat, value) in self.effects.items():
                     if stat == HP:
                         if (player.hp + value) > player.maxhp:

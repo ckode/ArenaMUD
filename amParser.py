@@ -81,7 +81,7 @@ def commandParser(player, line):
         if cmdstr.match(each):
            # TESTING, REMOVE VISION OPTION WHEN DONE!
             if each == "vision":
-                if player.isAdmin == True:
+                if player.isAdmin:
                     if len(cmd[0]) > 4:
                        #if cmd[1] == 1 or cmd[1] == 2 or cmd[1] == 3:
                         player.vision = int(cmd[1])
@@ -142,7 +142,7 @@ def commandParser(player, line):
             # Call next map
             elif each == "nextmap":
                 if len(cmd[0]) == 7 and len(cmd) == 1:
-                    if player.isAdmin == True:
+                    if player.isAdmin:
                         commands[each](player)
                         return
             # Brief command (for brief room desc)
@@ -179,7 +179,7 @@ def commandParser(player, line):
                 continue
             # Remote command
             elif each == "remote":
-                if player.isAdmin == True:
+                if player.isAdmin:
                     if len(cmd[0]) > 2 and len(cmd) > 2:
                         for user in player.factory.players.values():
                             if user.name == cmd[1].capitalize():
@@ -655,7 +655,7 @@ def PurgatoryParser(player, line):
             # Call next map
             elif each == "nextmap":
                 if len(cmd[0]) == 7 and len(cmd) == 1:
-                    if player.isAdmin == True:
+                    if player.isAdmin:
                         commands[each](player)
                         return
             elif each == "spawn":

@@ -156,7 +156,7 @@ class ArenaQueue:
                 return False
         
             # Verify the map is consistent, else return False
-            if self.VerifyArena( Arena ) == False:
+            if not self.VerifyArena( Arena ):
                 return False
         else:
             print "Map doesn't exist!"
@@ -173,21 +173,21 @@ class ArenaQueue:
     def VerifyArena(self, Arena):           
 
         # Make sure all doors exist that rooms are point to.
-        if self.VerifyDoorsExist(Arena) == False:
+        if not self.VerifyDoorsExist(Arena):
             amLog.Logit("Error: Room points to a door that does not exist in map: %s" % Arena.MapFile )
 
         # Make sure all rooms exist that doors point to.
-        if self.VerifyRoomsExist(Arena) == False:
+        if not self.VerifyRoomsExist(Arena):
             amLog.Logit("Error: Door points to a room that does not exist in map: %s" % Arena.MapFile )
             return False
         
         # Make sure all room spells exist that rooms point to.
-        if self.VerifyRoomSpellsExist(Arena) == False:
+        if not self.VerifyRoomSpellsExist(Arena):
             amLog.Logit("Error: Rooms points to a room spell that does not exist in map: %s" % Arena.MapFile )
             return False
         
         # Make sure all room traps exist that rooms point to.
-        if self.VerifyRoomTrapsExist(Arena) == False:
+        if not self.VerifyRoomTrapsExist(Arena):
             amLog.Logit("Error: Rooms points to a room trap that does not exist in map: %s" % Arena.MapFile )
             return False
         

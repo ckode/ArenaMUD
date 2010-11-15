@@ -196,7 +196,7 @@ class SonzoFactory(ServerFactory):
 
         # Disable the following until the new map queue is complete
         
-        if self.ArenaQueue.ConfFileFail == True:
+        if self.ArenaQueue.ConfFileFail:
             self.ShutdownPreReactorStart()
 
 
