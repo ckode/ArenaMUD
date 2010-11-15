@@ -163,8 +163,9 @@ def PlayerAttack(player):
 
             # Make the hit roll
             if HitRoll( player, curVictim, ATTACKING ):
-                # Roll for damage and apply backstab damage modifier        
-                damage = BackstabModifier( player, DamageRoll( player, curVictim ) )
+                # Roll for damage and apply backstab damage modifier 
+                damage = DamageRoll( player, curVictim ) + BackstabModifier( player )
+
                 # Tell room of outcome
                 SendDamageTextToRoom( player, curVictim, damage, Message[2], Message[5], Message[8] )
             else:
@@ -218,8 +219,12 @@ def PlayerAttack(player):
 #
 # Applies damage modifications for Backstabs
 #==================================================
-def BackstabModifier( player, damage ):
-    return ( player.maxdamage + (player.maxdamage * ( float(player.stealth) / 100 ) ) )
+def BackstabModifier( player ):
+    bsModifier        = random.randint(player.maxdamage, ( player.maxdamage * 2 ) ) 
+    StealthModifier   = player.maxdamage * ( float(player.stealth) / 100 ) 
+    
+    return ( bsModifier + StealthModifier )
+
 
 #==================================================
 # DamageRoll()
