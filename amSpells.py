@@ -78,7 +78,7 @@ class Spells():
 
 
         # Tell everyone
-        if self.casted == 1:
+        if caster == 1:
             if player == caster:
                 victim = "yourself"
                 player.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
