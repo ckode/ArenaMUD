@@ -536,7 +536,6 @@ def PickClass(player, classnum):
         player.maxhp            = player.hp
         player.mindamage       += playerclass.mindamage
         player.maxdamage       += playerclass.maxdamage
-        player.ac              += playerclass.BaseArmor
         player.magery           = playerclass.MageryType
         # If class has stealth, then player can sneak
         if playerclass.stealth > 0:
@@ -591,7 +590,6 @@ def PickRace(player, racenum):
         player.maxhp            = player.hp
         player.mindamage       += race.damagebonus
         player.maxdamage       += race.damagebonus
-        player.ac              += race.defensebonus
         player.attackroll      += race.attackbonus
         player.spellcasting    += race.castingbonus
         player.vision           = race.vision

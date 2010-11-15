@@ -142,7 +142,8 @@ def HitRoll( player, victim , ATTACKTYPE ):
 def PlayerAttack(player):
     global CombatQueue
     
-
+    damage = 0
+    
     if player.attacking == 0:
         return
 
@@ -156,10 +157,7 @@ def PlayerAttack(player):
 
         # Get the class/weapon attack messages for swings and misses
         Message = amUtils.MessageList[player.weapontext].split("|")
-
         
-        
-
         # Is attacker backstabbing?
         if player.ClassStealth and player.sneaking:
 
@@ -167,10 +165,10 @@ def PlayerAttack(player):
             if HitRoll( player, curVictim, ATTACKING ):
                 # Roll for damage and apply backstab damage modifier        
                 damage = BackstabModifier( player, DamageRoll( player, curVictim ) )
-                
+                # Tell room of outcome
                 SendDamageTextToRoom( player, curVictim, damage, Message[2], Message[5], Message[8] )
-
             else:
+                # Tell room of outcome
                 SendDamageTextToRoom( player, curVictim, MISS, Message[0], Message[3], Message[6] )
 
         else:
@@ -183,13 +181,13 @@ def PlayerAttack(player):
                         damage = DamageRoll( player, curVictim )
                         # Total up damage thus far
                         totalDamage += damage
-                        # Not backstabbing, do normak damage and no surprise message
+                        # Tell room of outcome.
                         SendDamageTextToRoom( player, curVictim, damage, Message[1], Message[4], Message[7] )
-                        
                         # Check to see if player id dead already, if so break out of attack loop!
                         if totalDamage > curVictim.hp:
                             break
                     else:
+                        # Tell room of outcome
                         SendDamageTextToRoom( player, curVictim, MISS, Message[0], Message[3], Message[6] )
                         
                 damage = totalDamage
