@@ -14,7 +14,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import amDefines, amUtils
+import amDefines, amUtils, amCombat
 
 SpawnItems      = {}
 SpellList       = {}
@@ -35,10 +35,11 @@ VICTIM          = 2
 ALL             = 3
 
 class Spells():
-    def __init__(self):
+    def __init__(self, SpellCasterID):
         self.id                          = 0
         self.name                        = ""
         self.cmd                         = ""
+        self.CasterID                    = 0
         self.CastOn                      = 0
         self.Class                       = 0
         self.duration                    = 0
@@ -61,15 +62,18 @@ class Spells():
     ###################################################################
 
     def ApplySpell(self, player, caster):
-        # If it is an instant spell remove it from player
-        # If it isn't, begin counting down timeleft of it's duration
-        if self.duration == 0:
-            player.effectingSpell = 0
-        else:
-            self.timeleft = self.duration - 1
 
-        # Apply the stat changes
-        ApplyStats(player)
+        # Apply any stat changes
+        self.ApplySpellStats(player)
+        # If it is a duration effect spell, apply the effects.
+        if self.durationEffect:
+            self.CasterID = caster.playerid
+            if player.Spells.has_key(self.id):
+                player.Spells[self.id] = self
+            self.DurationSpellEffects(player)
+        else:
+            self.ApplyImmediateEffects(player, caster)
+
 
         # Does he make a guesture or pick it up?  If so, tell everyone
         if self.guesture[0] != "*":
@@ -78,15 +82,14 @@ class Spells():
 
 
         # Tell everyone
-        if caster == 1:
-            if player == caster:
-                victim = "yourself"
-                player.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
-                player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, player.name, amDefines.WHITE) )
-            else:
-                caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, player.name, amDefines.WHITE))
-                player.sendToPlayer( self.spellTextVictim % (amDefines.BLUE, caster.name, amDefines.WHITE) )
-                player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
+        if caster == player:
+             victim = "yourself"
+             player.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
+             player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, player.name, amDefines.WHITE) )
+        else:
+             caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, player.name, amDefines.WHITE))
+             player.sendToPlayer( self.spellTextVictim % (amDefines.BLUE, caster.name, amDefines.WHITE) )
+             player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
 
 
 
@@ -96,19 +99,16 @@ class Spells():
     # Apple effect of duration spell
     ############################################################
     def DurationSpellEffects(self, player):
-        if self.timeleft == 0:
-            RemoveSpell(player)
-
+        # is the duration effect over? if so, get rid of it, or subtract one from duration
+        if self.duration == 0:
+            RemoveSpellStats(player)
             return
-        
-        # Create allbuffs list and append all currently applied spells (good and bad)
-        allbuffs = []
-        allbuffs.append(player.GoodBuffs)
-        allbuffs.append(player.NegBuffs)
-        
+        else:
+            self.duration -= 1
+
         # Apply the stat changes for each spell
-        for spell in allbuffs:
-            # If the spell is an EoT spell, apple the effects
+        for spell in player.Spells:
+            # If the spell is an EoT spell, apply the effects
             if spell.durationEffect:
                 for (stat, value) in self.effects.items():
                     if stat == HP:
@@ -121,18 +121,33 @@ class Spells():
         if self.effectText != "*":
             player.sendToPlayer( self.effectText % (amDefines.BLUE, amDefines.WHITE) )
 
+    #=============================================================
+    # ApplyImmediateEffects()
+    #
+    #=============================================================
+    def ApplyImmediateEffects(self, player, caster):
+        for spell in allbuffs:
+            # If the spell is an EoT spell, apple the effects
+            if not spell.durationEffect:
+                for (stat, value) in self.effects.items():
+                    if stat == HP:
+                        if (player.hp + value) > player.maxhp:
+                            player.hp = player.maxhp
+                        else:
+                            player.hp += value
+        if player.hp < 1:
+            amCombat.Killplayer( player, caster )
+
 
     ##############################################################
-    # ApplySpell()
+    # ApplySpellStats()
     #
     # Apply stats
     ##############################################################
-    def ApplySpell(self, player):
+    def ApplySpellStats(self, player):
        # Apply Stat changes
         for (stat, val) in self.effects.values():
-            if stat == HP:
-                player.hp += val
-            elif stat == MAXHP:
+            if stat == MAXHP:
                 player.maxhp += val
             elif stat == DEFENSE:
                 player.defense += val
@@ -153,11 +168,11 @@ class Spells():
                 
 
     ##############################################################
-    # RemoveSpellEffects()
+    # RemoveSpellStats()
     #
     # Remove the spell and tell the player it wore off
     ##############################################################
-    def RemoveSpellEffects(self, player):
+    def RemoveSpellStats(self, player):
        # Remove Spell effects (leave HP alone)
         for (stat, val) in self.effects.values():
             if stat == MAXHP:
@@ -178,3 +193,4 @@ class Spells():
                 player.regen -= val
 
         player.sendToPlayer( self.WearOffText % (amDefines.BLUE, amDefines.WHITE) )
+        del player.Spells[self.id]
