@@ -70,8 +70,7 @@ class Users(StatefulTelnetProtocol):
     # Test var for adding attacks per round
     speed              = 0
     # List of good and bad buffs on player
-    GoodBuffs          = []
-    NegBuffs           = []
+    Spells             = {}
 
     def connectionMade(self):
         # Limit how many can connect at one time
