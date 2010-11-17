@@ -21,8 +21,9 @@ CREATE TABLE spells_items (
       cmd               VARCHAR(4) NOT NULL,       -- Command used to evoke
       casted            INTEGER NOT NULL,          -- Is it picked up or casted (picked up 0, casted 1)
       use               INTEGER NOT NULL,          -- 1 self, 2 both, 3 other person
-      reqClass          VARCHAR(50) NOT NULL,      -- List of class IDs separated by ":"
+      reqClass          INTEGER NOT NULL,          -- class IDs 
       duration          INTEGER NOT NULL,          -- How long it lasts 0 = instant like a single heal (if duration > 0 effects can go above max stat)
+      durationEffect    INTEGER NOT NULL,
       effects           VARCHAR(50) NOT NULL,      -- Stored as "stat: value" say HP = 1 "1: 20" would add 20HP
       guesture          VARCHAR(100) NOT NULL,     -- if item, %s picks up, if spell, makes guesture. separate self / room with "|" (or use "*" to ignore)
       effectText        VARCAHR(100) NOT NULL,     -- Text seen when duration effect happens. self only. (you feel better single heal, or You feel sick fo poison etc

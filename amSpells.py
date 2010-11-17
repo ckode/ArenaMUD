@@ -39,12 +39,12 @@ class Spells():
         self.id                          = 0
         self.name                        = ""
         self.cmd                         = ""
+        self.UsedOn                      = 0    # Who it can be used on, 1 self, 2 victim, 3 both
         self.CasterID                    = 0
-        self.CastOn                      = 0
-        self.Class                       = 0
-        self.duration                    = 0
+        self.Class                       = 0    # Required class to cast
+        self.duration                    = 0    # Duration count. (1 subtracted each duration)
         self.durationEffect              = False
-        self.effects                     = {}
+        self.effects                     = {}   # Dict of the effects  "STAT: Value"
         self.guesture                    = {}
         self.effectText                  = ""
         self.spellTextSelf               = ""
@@ -83,13 +83,13 @@ class Spells():
 
         # Tell everyone
         if caster == player:
-             victim = "yourself"
-             player.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
-             player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, player.name, amDefines.WHITE) )
+            victim = "yourself"
+            player.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
+            player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, player.name, amDefines.WHITE) )
         else:
-             caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, player.name, amDefines.WHITE))
-             player.sendToPlayer( self.spellTextVictim % (amDefines.BLUE, caster.name, amDefines.WHITE) )
-             player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
+            caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, player.name, amDefines.WHITE))
+            player.sendToPlayer( self.spellTextVictim % (amDefines.BLUE, caster.name, amDefines.WHITE) )
+            player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
 
 
 
