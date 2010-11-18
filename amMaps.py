@@ -232,7 +232,7 @@ class ArenaQueue:
                     amLog.Logit( ErrMesg )
                     return False 
         # All is well, return true
-        #return True       
+        return True       
     ########################################################
     # VerifyRoomSpellsExist()
     #
