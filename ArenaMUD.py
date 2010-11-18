@@ -251,6 +251,16 @@ class SonzoFactory(ServerFactory):
 
 #Create server factory
 factory = SonzoFactory()
+
+# Check to make sure at least one map laoded.  If not, shutdown!
+try:
+    tmp = len(amMaps.Map.Rooms)
+except:
+    amLog.Logit("Error: No maps loaded! Shutting down...")
+    factory.ShutdownPreReactorStart()
+    sys.exit(1)
+
+
 # Start listener on port 23 (telnet)
 factory.protocol = lambda: TelnetTransport(Users)
 reactor.listenTCP(23, factory)

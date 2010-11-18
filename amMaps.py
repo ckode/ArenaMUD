@@ -212,9 +212,8 @@ class ArenaQueue:
                     amLog.Logit( ErrMesg )
                     ErrMesg = "Skipping arena %s" % ( Arena.name )
                     amLog.Logit( ErrMesg )
-                    return False
-                    
-            
+                    return False           
+        # All is well, return true
         return True
     ########################################################
     # VerifyRoomsExist()
@@ -232,7 +231,8 @@ class ArenaQueue:
                     ErrMesg = "Skipping arena %s" % ( Arena.name )
                     amLog.Logit( ErrMesg )
                     return False 
-                
+        # All is well, return true
+        #return True       
     ########################################################
     # VerifyRoomSpellsExist()
     #
@@ -249,7 +249,9 @@ class ArenaQueue:
                     ErrMesg = "Skipping arena %s" % ( Arena.name )
                     amLog.Logit( ErrMesg )
                     return False 
-    
+
+        # All is well, return true
+        return True
     ########################################################
     # VerifyRoomTrapsExist()
     #
@@ -265,4 +267,6 @@ class ArenaQueue:
                     amLog.Logit( ErrMesg )
                     ErrMesg = "Skipping arena %s" % ( Arena.name )
                     amLog.Logit( ErrMesg )
-                    return False 
+                    return False
+        # All is well, return true
+        return True
