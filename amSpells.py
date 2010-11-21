@@ -14,7 +14,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import amDefines, amUtils, amCombat
+import copy, random
+
+import amDefines, amUtils, amCombat, amLog
 
 SpawnItems      = {}
 SpellList       = {}
@@ -28,6 +30,7 @@ MAGICRES        = 6
 DAMAGEBONUS     = 7
 STEALTH         = 8
 REGEN           = 9
+HELD            = 10
 
 # CastOn
 SELF            = 1
@@ -35,17 +38,18 @@ VICTIM          = 2
 ALL             = 3
 
 class Spells():
-    def __init__(self, SpellCasterID):
-        self.id                          = 0
+    def __init__( self ):
+        self.SpellID                     = 0
         self.name                        = ""
         self.cmd                         = ""
+        self.stype                       = 0    # Is it an item or spell
         self.UsedOn                      = 0    # Who it can be used on, 1 self, 2 victim, 3 both
         self.CasterID                    = 0
         self.Class                       = 0    # Required class to cast
         self.duration                    = 0    # Duration count. (1 subtracted each duration)
         self.durationEffect              = False
         self.effects                     = {}   # Dict of the effects  "STAT: Value"
-        self.guesture                    = {}
+        self.gesture                     = {}
         self.effectText                  = ""
         self.spellTextSelf               = ""
         self.spellTextRoom               = ""
@@ -62,36 +66,41 @@ class Spells():
     ###################################################################
 
     def ApplySpell(self, player, caster):
-
-        # Apply any stat changes
-        self.ApplySpellStats(player)
-        # If it is a duration effect spell, apply the effects.
-        if self.durationEffect:
-            self.CasterID = caster.playerid
-            if player.Spells.has_key(self.id):
-                player.Spells[self.id] = self
-            self.DurationSpellEffects(player)
-        else:
-            self.ApplyImmediateEffects(player, caster)
-
+    
 
         # Does he make a guesture or pick it up?  If so, tell everyone
-        if self.guesture[0] != "*":
-            player.sendToPlayer( self.guesture[0] % (amDefines.BLUE, amDefines.WHITE) )
-            player.sendToRoom( self.guesture[1] % (amDefines.BLUE, player.name, amDefines.WHITE) )
+        if self.gesture != "*":
+            curGesture = self.gesture.split("|")
+            caster.sendToPlayer( curGesture[0] % (amDefines.BLUE, amDefines.WHITE) )
+            caster.sendToRoom( curGesture[1] % (amDefines.BLUE, caster.name, amDefines.WHITE) )
 
 
         # Tell everyone
-        if caster == player:
+        if caster.playerid == player.playerid:
             victim = "yourself"
-            player.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
-            player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, player.name, amDefines.WHITE) )
+            caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
+            caster.sendToRoom( self.spellTextRoom % (amDefines.BLUE, player.name, amDefines.WHITE) )
         else:
             caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, player.name, amDefines.WHITE))
             player.sendToPlayer( self.spellTextVictim % (amDefines.BLUE, caster.name, amDefines.WHITE) )
-            player.sendToRoom( self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
+            caster.sendToRoomNotVictim( player.playerid, self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
+
+            
+        # If it is a duration effect spell, apply the effects.
+        if self.durationEffect:
+            # Apply any stat changes
+            self.ApplySpellStats(player)
+            
+            # Make a Deep copy of the spell, so we can edit its attributes (casterid, subtract duration, etc) without messing up the original
+            player.Spells[self.cmd] = amUtils.CopySpell(self)
 
 
+            player.Spells[self.cmd].CasterID = caster.playerid
+            player.Spells[self.cmd].DurationSpellEffects(player)
+        else:
+            player.Spells[self.cmd] = amUtils.CopySpell(self)
+            self.ApplySpellStats(player)
+            self.ApplyImmediateEffects(player, caster)
 
     ############################################################
     # DurationSpellEffects()
@@ -99,42 +108,58 @@ class Spells():
     # Apple effect of duration spell
     ############################################################
     def DurationSpellEffects(self, player):
+
         # is the duration effect over? if so, get rid of it, or subtract one from duration
         if self.duration == 0:
-            RemoveSpellStats(player)
+            self.RemoveSpell(player)
             return
         else:
             self.duration -= 1
 
-        # Apply the stat changes for each spell
-        for spell in player.Spells:
-            # If the spell is an EoT spell, apply the effects
-            if spell.durationEffect:
-                for (stat, value) in self.effects.items():
-                    if stat == HP:
-                        if (player.hp + value) > player.maxhp:
-                            player.hp = player.maxhp
-                        else:
-                            player.hp += value
+        # If the spell is an EoT spell, apply the effects
+        if self.durationEffect:
+            for (stat, value) in self.effects.items():
+                if "%" in value:
+                    try:
+                        stat = int(stat)
+                        minval, maxval = value.split("%")
+                        value = random.randint( int(minval), int(maxval) )
+                    except:
+                        amLog.Logit("Error applying duration effect spliting effect values")
+                        return
+                else:
+                    try:
+                        stat = int(stat)
+                        value = int(value)
+                    except:
+                        amLog.Logit( "Error converting stats/values in DurationSpellEffects()" )
+                        
+                # Apply the effects
+                if stat == HP:
+                    if (player.hp + value) > player.maxhp:
+                        player.hp = player.maxhp
+                    else:
+                        player.hp += value
                     
         # Tell player about effects if exist
         if self.effectText != "*":
             player.sendToPlayer( self.effectText % (amDefines.BLUE, amDefines.WHITE) )
+        if player.hp < 1:
+            amCombat.KillPlayer(player, self.CasterID)
 
     #=============================================================
     # ApplyImmediateEffects()
     #
     #=============================================================
     def ApplyImmediateEffects(self, player, caster):
-        for spell in allbuffs:
-            # If the spell is an EoT spell, apple the effects
-            if not spell.durationEffect:
-                for (stat, value) in self.effects.items():
-                    if stat == HP:
-                        if (player.hp + value) > player.maxhp:
-                            player.hp = player.maxhp
-                        else:
-                            player.hp += value
+        # If the spell is an EoT spell, apple the effects
+        if not self.durationEffect:
+            for stat, value in self.effects.items():
+                if stat == HP:
+                    if (player.hp + value) > player.maxhp:
+                        player.hp = player.maxhp
+                    else:
+                        player.hp += value
         if player.hp < 1:
             amCombat.Killplayer( player, caster )
 
@@ -146,7 +171,7 @@ class Spells():
     ##############################################################
     def ApplySpellStats(self, player):
        # Apply Stat changes
-        for (stat, val) in self.effects.values():
+        for stat, val in self.effects.items():
             if stat == MAXHP:
                 player.maxhp += val
             elif stat == DEFENSE:
@@ -163,18 +188,18 @@ class Spells():
                 player.stealth += val
             elif stat == REGEN:
                 player.regen += val
-                
+            elif stat == HELD:
+                player.held = True         
                
-                
 
     ##############################################################
     # RemoveSpellStats()
     #
     # Remove the spell and tell the player it wore off
     ##############################################################
-    def RemoveSpellStats(self, player):
+    def RemoveSpell(self, player):
        # Remove Spell effects (leave HP alone)
-        for (stat, val) in self.effects.values():
+        for stat, val in self.effects.items():
             if stat == MAXHP:
                 player.maxhp -= val
             elif stat == DEFENSE:
@@ -191,6 +216,8 @@ class Spells():
                 player.stealth -= val
             elif stat == REGEN:
                 player.regen -= val
+            elif stat == HELD:
+                player.held = False
 
         player.sendToPlayer( self.WearOffText % (amDefines.BLUE, amDefines.WHITE) )
-        del player.Spells[self.id]
+        del player.Spells[self.cmd]

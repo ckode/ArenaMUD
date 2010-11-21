@@ -25,52 +25,55 @@ from twisted.conch.telnet import TelnetTransport, StatefulTelnetProtocol
 # am specific imports
 import amParser, amPlayer, amDefines, amLog
 import amRooms, amDB, amUtils, amMaps, amCombat
+import amSpells
 
 # default Python library imports
 import sys
 from time import strftime, localtime
 
 class Users(StatefulTelnetProtocol):
+    def __init__(self):
     # User stats
-    playerid           = None
-    name               = ""
-    lastname           = ""
-    password           = ""
-    race               = 0
-    Class              = 0
-    health             = 0
-    offense            = 50
-    defense            = 80
-    isAdmin            = 0
-    hp                 = 50
-    maxhp              = 100
-    staticmaxhp        = 100
-    stealth            = 0
-    effectingSpell     = 0
-    lastCast           = 0                     # How long since last casted (use loops to count down)
-    ClassStealth       = False
-    sneaking           = False
-    room               = 1
-    resting            = False
-    RegenBonus         = 0
-    kills              = 0
-    deaths             = 0
-    attackroll         = 0
-    attacking          = 0
-    victim             = 0
-    vision             = 1
-    spellcasting       = 0
-    weapontext         = 0
-    mindamage          = 0
-    maxdamage          = 0
-    blind              = False
-    magery             = 0
-    briefDesc          = 1
-    moving             = 0
-    # Test var for adding attacks per round
-    speed              = 0
-    # List of good and bad buffs on player
-    Spells             = {}
+        self.playerid           = None
+        self.name               = ""
+        self.lastname           = ""
+        self.password           = ""
+        self.race               = 0
+        self.Class              = 0
+        self.health             = 0
+        self.offense            = 50
+        self.defense            = 80
+        self.isAdmin            = 0
+        self.hp                 = 50
+        self.maxhp              = 100
+        self.staticmaxhp        = 100
+        self.stealth            = 0
+        self.effectingSpell     = 0
+        self.lastCast           = 0                     # How long since last casted (use loops to count down)
+        self.ClassStealth       = False
+        self.sneaking           = False
+        self.room               = 1
+        self.resting            = False
+        self.RegenBonus         = 0
+        self.kills              = 0
+        self.deaths             = 0
+        self.held               = False
+        self.attackroll         = 0
+        self.attacking          = 0
+        self.victim             = 0
+        self.vision             = 1
+        self.spellcasting       = 0
+        self.weapontext         = 0
+        self.mindamage          = 0
+        self.maxdamage          = 0
+        self.blind              = False
+        self.magery             = 0
+        self.briefDesc          = 1
+        self.moving             = 0
+        # Test var for adding attacks per round
+        self.speed              = 0
+        # List of good and bad buffs on player
+        self.Spells             = {}
 
     def connectionMade(self):
         # Limit how many can connect at one time
@@ -192,6 +195,7 @@ class SonzoFactory(ServerFactory):
         amDB.LoadClasses(self)
         amDB.LoadRaces(self)
         amDB.LoadAnsiScreens()
+        amSpells.SpellList, amSpells.SpawnItems = amDB.LoadSpellsAndItems( self )
 
         # Disable the following until the new map queue is complete
         

@@ -18,6 +18,7 @@ from twisted.internet import reactor
 
 import sqlite3, string
 import amLog, amRooms, amUtils, amRace
+import amSpells
 
 ################################################
 # LoadPlayer()
@@ -203,6 +204,73 @@ def LoadMessages(Sonzo):
     print "Loaded %d messages." % (len(amUtils.MessageList),)
 
 
+#===============================================
+# LoadSpellsAndItems()
+# Loads all class spells and items
+#===============================================
+def LoadSpellsAndItems( Sonzo ):
+    # Sub function to check for errors while assigning the spell effects
+    def AssignSpell( curSpellListItem, effect ):
+        try: 
+            sp = effect.split(":")
+        except:
+            amLog.Logit("Error loading spell effect, could split effect by a colon. Effect: %s" % ( effect ) )
+            return
+        
+        try:
+            curSpellListItem.effects[ int(sp[0])] = sp[1]
+        except:
+            amLog.Logit("Error loading spell effect, Spell ID isn't an integer.  Effect: %s" % ( sp[0] ) )
+            return
+              
+    
+    # Main body of LoadSpellAndItems() function
+    Spells   = {}
+    Items    = {}
+
+    try:
+        conn     = sqlite3.connect( 'data\\rcdata.db' )
+        cur      = conn.cursor()
+    except:
+        amLog.Logit("Failed to open database: rcdata.db" )
+        player.Shutdown()
+
+    try:
+        cur.execute( 'SELECT * from spells_items')
+    except:
+        amLog.Logit("Failed to get door data from the database.")
+    for row in cur:
+        SpellIndex = str(row[2])
+        Spells[SpellIndex]                                 = amSpells.Spells()
+        Spells[SpellIndex].SpellID                         = row[0]
+        Spells[SpellIndex].name                            = str(row[1])
+        Spells[SpellIndex].cmd                             = str(row[2])
+        Spells[SpellIndex].stype                           = row[3]
+        Spells[SpellIndex].UsedOn                          = row[4]
+        Spells[SpellIndex].Class                           = row[5]
+        Spells[SpellIndex].duration                        = row[6]
+        Spells[SpellIndex].durationEffect                  = row[7]
+        effectString                                       = str(row[8]).split("|")
+        for each in effectString:
+            # Check for errors when assigning with subfunction
+            AssignSpell( Spells[SpellIndex], each )
+        
+        Spells[SpellIndex].gesture                         = str(row[9])
+        Spells[SpellIndex].effectText                      = str(row[10])
+        Spells[SpellIndex].spellTextSelf                   = str(row[11])
+        Spells[SpellIndex].spellTextRoom                   = str(row[12])
+        Spells[SpellIndex].spellTextVictim                 = str(row[13])
+        Spells[SpellIndex].WearOffText                    = str(row[14])
+        
+        # If it's actually an item, assign it to Items and delete from Spells.
+        if Spells[SpellIndex].stype == 0:
+            Items[row[0]] = Spells[SpellIndex]
+            del Spells[SpellIndex]
+    
+        
+    conn.close()
+    print "Spells loaded: %s Spawn Items loaded: %i" % ( len(Spells), len(Items) )
+    return Spells, Items
 ################################################
 # LoadDoors()
 # Loads Doors from database

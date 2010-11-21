@@ -86,6 +86,7 @@ def KillPlayer(player, killer):
 
     player.attacking             = 0
     player.victim                = 0
+    player.Spells.clear()
 
     # Remove any combat in combat queue
     player.factory.CombatQueue.RemoveAttack(player.playerid)
@@ -98,6 +99,7 @@ def KillPlayer(player, killer):
     # Was he killed by someone? Tell everyone.
     if killer > 0:
         killer = player.factory.players[killer]
+        killer.kills =+ 1
         player.factory.sendMessageToAllClients("\r\n%s%s has killed %s!" % (amDefines.BLUE, killer.name, player.name))
     else:
         player.factory.sendMessageToAllClients("\r\n%s%s was killed!%s" % (amDefines.BLUE, player.name, amDefines.WHITE))
@@ -204,7 +206,6 @@ def PlayerAttack(player):
             player.victim = 0
             player.factory.CombatQueue.RemoveAttack(player.playerid)
             KillPlayer(curVictim, player.playerid)
-            player.kills += 1
             player.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
     else:
         player.attacking = 0

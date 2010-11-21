@@ -17,7 +17,7 @@
 from twisted.internet import reactor
 
 import amDefines, amCommands, amDB
-import amRooms, amUtils, amRace
+import amRooms, amUtils, amRace, amSpells
 
 import re, string
 from time import strftime, localtime
@@ -76,6 +76,14 @@ def commandParser(player, line):
         amCommands.Look(player, player.room, player.briefDesc)
         return
 
+    # Is the command a spell?
+    if cmd[0] in amSpells.SpellList.keys():
+        if not amCommands.CastSpell( player, cmd ):
+            amCommands.Say(player, line)
+            player.sneaking = False
+            return
+        return
+        
     cmdstr = re.compile(re.escape(cmd[0].lower()))
     for each in commands.keys():
         if cmdstr.match(each):
@@ -345,7 +353,7 @@ def commandParser(player, line):
                 continue
 
 
-     # No command found so say it to the room
+    # No command found so say it to the room
     amCommands.Say(player, line)
     player.sneaking = False
     return
