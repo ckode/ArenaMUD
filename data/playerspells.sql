@@ -66,7 +66,7 @@ INSERT INTO spells_items VALUES (
             5,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
             15,           -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
             1,            -- durationEffect   Does a effect happen each duration loop (damage/healing ever 2 seconds, etc) stat boost = 0 durEff
-            "1:-10",       -- effects          * See below license info at top for explination
+            "1:-3",       -- effects          * See below license info at top for explination
             -- gesture          Use "*" for none, this is any pre-cast gestures made. 
             "%sYou reach for the sky!%s|%s%s reaches for the sky.%s",          
             -- Text effect:    The effect you see when the spell happens.  Can be "*" for none.
@@ -119,7 +119,7 @@ INSERT INTO spells_items VALUES (
             0,            -- durationEffect   Does a effect happen each duration loop (damage/healing ever 2 seconds, etc) stat boost = 0 durEff
             "10:1",       -- effects          * See below license info at top for explination
             -- gesture          Use "*" for none, this is any pre-cast gestures made. 
-            "%sYou reach for the ground!%s|%s%s reaches for the ground!%s",          
+            "%sYou points at the ground!%s|%s%s points at the ground!%s",          
             -- Text effect:    The effect you see when the spell happens.  Can be "*" for none.
             "*",
             -- spellTextself:  What you see, when you cast the spell.  (split for casting on self and others)
@@ -130,4 +130,30 @@ INSERT INTO spells_items VALUES (
             "%s%s casts entangle on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sYou are freed!%s"
+);
+
+
+-- Hold Person spell for Priest
+INSERT INTO spells_items VALUES (
+            5,               -- ID:              Spell / item ID
+            "hold person",   -- name:            Spell/Item Name as it appears in game
+            "hold",          -- cmd:             Command used to cast it. (not used if ITEM)
+            1,               -- casted:          1 = spell, 0 = item
+            2,               -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
+            4,               -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
+            5,               -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
+            0,               -- durationEffect   Does a effect happen each duration loop (damage/healing ever 2 seconds, etc) stat boost = 0 durEff
+            "10:1",          -- effects          * See below license info at top for explination
+            -- gesture          Use "*" for none, this is any pre-cast gestures made. 
+            "*",          
+            -- Text effect:    The effect you see when the spell happens.  Can be "*" for none.
+            "*",
+            -- spellTextself:  What you see, when you cast the spell.  (split for casting on self and others)
+            "%sYou cast hold person on %s%s",
+            -- spellTextRoom:  What the room not including you and the victim see
+            "%s%s casts hold person on %s%s",
+            -- spellTextVictim:   What the victim sees. (not shown to self)
+            "%s%s casts hold person on you!%s",
+            -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
+            "%sYou are no longer held!%s"
 );
