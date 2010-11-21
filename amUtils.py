@@ -17,7 +17,7 @@
 from twisted.internet import reactor
 
 import amRooms, amDefines, amCommands, amUtils
-import amLog, amMaps, amCombat
+import amLog, amMaps, amCombat, amSpells
 
 import re, random, os
 
@@ -134,7 +134,11 @@ def DisplayAction(player, ActionID):
 # Applies over time based spell effects (like DoT and healing spells)
 ###################################################
 def PlayerTimeBasedSpells(player):
-    return
+    if len(player.Spells) == 0:
+        return
+
+    for spell in player.Spells.values():
+        spell.DurationSpellEffects( player )
 
 ###################################################
 # RoomTimeBasedSpells()
@@ -253,7 +257,7 @@ def SpawnPlayer(player):
     player.Shout(amDefines.BLUE + player.name + " has spawn!")
 
 #####################################################
-# EnterPurgatory()\
+# EnterPurgatory()
 #
 # Where a players starts after login and where he goes
 # when he dies.  You have to type spawn to enter the game
@@ -264,7 +268,7 @@ def EnterPurgatory(player):
     player.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
     
 #####################################################
-# KickAllToPurgatory()\
+# KickAllToPurgatory()
 #
 # Kill all combat, empty any queues necessary and then
 # set the status of each player to purgatory
@@ -281,3 +285,32 @@ def KickAllToPurgatory(player):
                 del amMaps.Map.Rooms[user.room].Players[user.playerid]
                 user.STATUS = amDefines.PURGATORY
             user.room = 0
+            
+#=====================================================
+# CopySpell()
+#
+# Make a copy of the current spell, because Python's
+# deepcopy, doesn't copy the class objects methods,
+# only it's attributes. (why?!?!)
+#=====================================================
+def CopySpell( spell ):
+    newSpell = amSpells.Spells()
+    
+    newSpell.SpellID                     = spell.SpellID
+    newSpell.name                        = spell.name 
+    newSpell.cmd                         = spell.cmd 
+    newSpell.stype                       = spell.stype
+    newSpell.UsedOn                      = spell.UsedOn
+    newSpell.CasterID                    = spell.CasterID 
+    newSpell.Class                       = spell.Class
+    newSpell.duration                    = spell.duration
+    newSpell.durationEffect              = spell.durationEffect
+    newSpell.effects                     = spell.effects
+    newSpell.gesture                     = spell.gesture
+    newSpell.effectText                  = spell.effectText
+    newSpell.spellTextSelf               = spell.spellTextSelf
+    newSpell.spellTextRoom               = spell.spellTextRoom
+    newSpell.spellTextVictim             = spell.spellTextVictim
+    newSpell.WearOffText                 = spell.WearOffText
+    
+    return newSpell

@@ -18,7 +18,7 @@ from twisted.internet import reactor
 
 import amDefines, amDB, amLog, amCommands
 import amRooms, amUtils, amParser, amRace
-import amMaps
+import amMaps, amSpells
 
 import time, re, random
 
@@ -69,6 +69,12 @@ def MovePlayer(player, Direction):
 
    # Did player die before movement happen? Abort if in Purgatory
    if player.STATUS == amDefines.PURGATORY:
+      return
+
+   # If the player is held, he can't move!
+   if player.held:
+      player.moving = 0
+      player.sendToPlayer("You cannot move!")
       return
 
    amUtils.StatLine(player)
@@ -883,3 +889,45 @@ def Status(player):
       player.sendToPlayer("%sYou have administrative privileges on the server." % (amDefines.YELLOW))
       
    return
+
+#==================================================
+# CastSpell()
+#
+# A spell command was given, try to cast it
+#==================================================
+def CastSpell( player, Cmd ):
+   Spell = amSpells.SpellList[ Cmd[0] ]
+ 
+   # Can this player cast this spell? (spell and player are same class)
+   if player.Class != Spell.Class:
+      return False
+   
+   # If spell is self only, no other arguments can be supplied.
+   if len( Cmd ) > 1 and Spell.UsedOn == 1:
+      return False
+
+   # Just the command was given, can we cast it on ourself?
+   if len( Cmd ) == 1 and Spell.UsedOn == 1 or Spell.UsedOn == 3:
+      Spell.ApplySpell( player, player )
+      return True
+      
+   # A victim was given, is it castable on someone else?
+   elif len (Cmd ) == 2 and Spell.UsedOn > 1:
+      victimList = amUtils.FindPlayerInRoom(player, Cmd[1])
+
+      # Anybody to attack?
+      if len(victimList) == 0:
+         player.sendToPlayer("You don't see %s here!" % (Cmd[1],))
+         return True
+      # Was more than one players name matching?
+      elif len(victimList) > 1:
+         player.sendToPlayer("Fix this, list all possible victims.")
+         return True
+      # Just one, attack!!!       
+      else:
+         victimID = victimList.keys()[0]
+         victim = player.factory.players[victimID]
+         Spell.ApplySpell( victim, player )
+         return True
+   
+   
