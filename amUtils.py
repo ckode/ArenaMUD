@@ -137,6 +137,7 @@ def PlayerTimeBasedSpells(player):
     if len(player.Spells) == 0:
         return
 
+    # Loop though all the spells and apply the duration effects
     for spell in player.Spells.values():
         spell.DurationSpellEffects( player )
 
@@ -266,6 +267,7 @@ def EnterPurgatory(player):
     player.STATUS = amDefines.PURGATORY
     amCommands.Who(player)
     player.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
+    player.stun = False
     
 #####################################################
 # KickAllToPurgatory()
@@ -284,6 +286,7 @@ def KickAllToPurgatory(player):
             if user.STATUS == amDefines.PLAYING:
                 del amMaps.Map.Rooms[user.room].Players[user.playerid]
                 user.STATUS = amDefines.PURGATORY
+                user.stun = False
             user.room = 0
             
 #=====================================================

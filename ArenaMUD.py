@@ -58,6 +58,7 @@ class Users(StatefulTelnetProtocol):
         self.kills              = 0
         self.deaths             = 0
         self.held               = False
+        self.stun               = False
         self.attackroll         = 0
         self.attacking          = 0
         self.victim             = 0

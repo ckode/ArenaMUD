@@ -31,6 +31,7 @@ DAMAGEBONUS     = 7
 STEALTH         = 8
 REGEN           = 9
 HELD            = 10
+STUN            = 11
 
 # CastOn
 SELF            = 1
@@ -74,6 +75,15 @@ class Spells():
             caster.sendToPlayer( curGesture[0] % (amDefines.BLUE, amDefines.WHITE) )
             caster.sendToRoom( curGesture[1] % (amDefines.BLUE, caster.name, amDefines.WHITE) )
 
+        # Tell everyone
+        if caster.playerid == player.playerid:
+            victim = "yourself"
+            caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
+            caster.sendToRoom( self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
+        else:
+            caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, player.name, amDefines.WHITE))
+            player.sendToPlayer( self.spellTextVictim % (amDefines.BLUE, caster.name, amDefines.WHITE) )
+            caster.sendToRoomNotVictim( player.playerid, self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
             
         # If it is a duration effect spell, apply the effects.
         if self.duration:
@@ -85,20 +95,14 @@ class Spells():
 
 
             player.Spells[self.cmd].CasterID = caster.playerid
-            player.Spells[self.cmd].DurationSpellEffects(player)
+            player.Spells[self.cmd].duration -= 1
+            player.Spells[self.cmd].ApplyImmediateEffects( player, caster )
         else:
             self.ApplySpellStats(player)
             self.ApplyImmediateEffects(player, caster)
             
-        # Tell everyone
-        if caster.playerid == player.playerid:
-            victim = "yourself"
-            caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
-            caster.sendToRoom( self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
-        else:
-            caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, player.name, amDefines.WHITE))
-            player.sendToPlayer( self.spellTextVictim % (amDefines.BLUE, caster.name, amDefines.WHITE) )
-            caster.sendToRoomNotVictim( player.playerid, self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
+        amUtils.StatLine(player)
+    
 
     ############################################################
     # DurationSpellEffects()
@@ -125,13 +129,13 @@ class Spells():
                     except:
                         amLog.Logit("Error applying duration effect spliting effect values")
                         return
-                else:
-                    try:
-                        stat = int(stat)
-                        value = int(value)
-                    except:
-                        amLog.Logit( "Error converting stats/values in DurationSpellEffects()" )
-                        
+                    else:
+                        try:
+                            stat = int(stat)
+                            value = int(value)
+                        except:
+                            amLog.Logit( "Error converting stats/values in DurationSpellEffects()" )
+                            
                 # Apply the effects
                 if stat == HP:
                     if (player.hp + value) > player.maxhp:
@@ -142,6 +146,8 @@ class Spells():
         # Tell player about effects if exist
         if self.effectText != "*":
             player.sendToPlayer( self.effectText % (amDefines.BLUE, amDefines.WHITE) )
+            
+        amUtils.StatLine( player )
         if player.hp < 1:
             amCombat.KillPlayer(player, self.CasterID)
 
@@ -151,31 +157,31 @@ class Spells():
     #=============================================================
     def ApplyImmediateEffects(self, player, caster):
         # If the spell is an EoT spell, apple the effects
-        if not self.durationEffect:
-            for (stat, value) in self.effects.items():
-                if "%" in value:
-                    try:
-                        stat = int(stat)
-                        minval, maxval = value.split("%")
-                        value = random.randint( int(minval), int(maxval) )
-                    except:
-                        amLog.Logit("Error applying duration effect spliting effect values")
-                        return
-                else:
-                    try:
-                        stat = int(stat)
-                        value = int(value)
-                    except:
-                        amLog.Logit( "Error converting stats/values in DurationSpellEffects()" )
+        for (stat, value) in self.effects.items():
+            if "%" in value:
+                try:
+                    stat = int(stat)
+                    minval, maxval = value.split("%")
+                    value = random.randint( int(minval), int(maxval) )
+                except:
+                    amLog.Logit("Error applying duration effect spliting effect values")
+                    return
+            else:
+                try:
+                    stat = int(stat)
+                    value = int(value)
+                except:
+                    amLog.Logit( "Error converting stats/values in DurationSpellEffects()" )
                 
-                # Apply stats        
-                if stat == HP:
-                    if (player.hp + value) > player.maxhp:
-                        player.hp = player.maxhp
-                    else:
-                        player.hp += value
+            # Apply stats        
+            if stat == HP:
+                if (player.hp + value) > player.maxhp:
+                    player.hp = player.maxhp
+                else:
+                    player.hp += value
+        amUtils.StatLine( player )
         if player.hp < 1:
-            amCombat.Killplayer( player, caster )
+            amCombat.KillPlayer( player, caster.playerid )
 
 
     ##############################################################
@@ -203,7 +209,12 @@ class Spells():
             elif stat == REGEN:
                 player.regen += val
             elif stat == HELD:
-                player.held = True         
+                player.held = True   
+            elif stat == STUN:
+                player.stun            = True
+                player.resting         = False
+                player.attacking       = 0
+                player.factory.CombatQueue.RemoveAttack(player.playerid)
                
 
     ##############################################################
@@ -232,6 +243,9 @@ class Spells():
                 player.regen -= val
             elif stat == HELD:
                 player.held = False
+            elif stat == STUN:
+                player.stun              = False
+                
 
         player.sendToPlayer( self.WearOffText % (amDefines.BLUE, amDefines.WHITE) )
         del player.Spells[self.cmd]
