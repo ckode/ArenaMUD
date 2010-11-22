@@ -129,12 +129,12 @@ class Spells():
                     except:
                         amLog.Logit("Error applying duration effect spliting effect values")
                         return
-                    else:
-                        try:
-                            stat = int(stat)
-                            value = int(value)
-                        except:
-                            amLog.Logit( "Error converting stats/values in DurationSpellEffects()" )
+                else:
+                    try:
+                        stat = int(stat)
+                        value = int(value)
+                    except:
+                        amLog.Logit( "Error converting stats/values in DurationSpellEffects()" )
                             
                 # Apply the effects
                 if stat == HP:
