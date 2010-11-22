@@ -907,7 +907,10 @@ def CastSpell( player, Cmd ):
       return False
 
    # Just the command was given, can we cast it on ourself?
-   if len( Cmd ) == 1 and Spell.UsedOn == 1 or Spell.UsedOn == 3:
+   if len( Cmd ) == 1 and ( Spell.UsedOn == 1 or Spell.UsedOn == 3 ):
+      if Spell.cmd == "heal":
+         print "here"
+          
       Spell.ApplySpell( player, player )
       return True
       
@@ -925,7 +928,7 @@ def CastSpell( player, Cmd ):
          return True
       # Just one, attack!!!       
       else:
-         victimID = victimList.keys()[0]
+         victimID = victimList.keys()[0]          
          victim = player.factory.players[victimID]
          Spell.ApplySpell( victim, player )
          return True
