@@ -26,6 +26,10 @@ USERPID = 1
 FULLDESC = 0
 def commandParser(player, line):
 
+    # If player is stun, do nothing
+    if player.stun:
+        player.sendToPlayer("You stare blankly.")
+        return
     # Clean players input
     line = CleanPlayerInput(line)
 
