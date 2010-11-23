@@ -71,12 +71,16 @@ def MovePlayer(player, Direction):
    if player.STATUS == amDefines.PURGATORY:
       return
 
-   # If the player is held, he can't move!
+   # If the player is held or stun, he can't move!
    if player.held:
       player.moving = 0
       player.sendToPlayer("You cannot move!")
       return
-
+   elif player.stun:
+      player.moving = 0
+      player.sendToPlayer("You stare blankly.")
+      return
+   
    amUtils.StatLine(player)
 
    # Sub function that can be called when a player's path is blocked.
