@@ -36,6 +36,7 @@ INSERT INTO spells_items VALUES (
             "healing",    -- name:            Spell/Item Name as it appears in game
             "heal",       -- cmd:             Command used to cast it. (not used if ITEM)
             1,            -- casted:          1 = spell, 0 = item
+            8,            -- cooldown         How long it takes to cool down to cast again
             3,            -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
             4,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
             0,            -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
@@ -62,6 +63,7 @@ INSERT INTO spells_items VALUES (
             "creeping doom",    -- name:            Spell/Item Name as it appears in game
             "doom",       -- cmd:             Command used to cast it. (not used if ITEM)
             1,            -- casted:          1 = spell, 0 = item
+            30,           -- cooldown         How long it takes to cool down to cast again
             2,            -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
             5,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
             15,           -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
@@ -88,6 +90,7 @@ INSERT INTO spells_items VALUES (
             "healing portion",    -- name:            Spell/Item Name as it appears in game
             "*",                  -- cmd:             Command used to cast it. (not used if ITEM)
             0,                    -- casted:          1 = spell, 0 = item
+            30,                   -- cooldown         How long it takes to cool down to cast again (respawn for items)
             0,                    -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
             0,                    -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
             0,                    -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
@@ -113,6 +116,7 @@ INSERT INTO spells_items VALUES (
             "entangle",   -- name:            Spell/Item Name as it appears in game
             "enta",       -- cmd:             Command used to cast it. (not used if ITEM)
             1,            -- casted:          1 = spell, 0 = item
+            12,           -- cooldown         How long it takes to cool down to cast again
             2,            -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
             5,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
             5,            -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
@@ -139,6 +143,7 @@ INSERT INTO spells_items VALUES (
             "hold person",   -- name:            Spell/Item Name as it appears in game
             "hold",          -- cmd:             Command used to cast it. (not used if ITEM)
             1,               -- casted:          1 = spell, 0 = item
+            12,              -- cooldown         How long it takes to cool down to cast again
             2,               -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
             4,               -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
             5,               -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
@@ -165,6 +170,7 @@ INSERT INTO spells_items VALUES (
             "slam",       -- name:            Spell/Item Name as it appears in game
             "slam",       -- cmd:             Command used to cast it. (not used if ITEM)
             1,            -- casted:          1 = spell, 0 = item
+            15,           -- cooldown         How long it takes to cool down to cast again
             2,            -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
             1,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
             2,            -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
