@@ -268,6 +268,7 @@ def EnterPurgatory(player):
     amCommands.Who(player)
     player.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
     player.stun = False
+    player.SpellCooldown = False
     
 #####################################################
 # KickAllToPurgatory()
@@ -287,6 +288,7 @@ def KickAllToPurgatory(player):
                 del amMaps.Map.Rooms[user.room].Players[user.playerid]
                 user.STATUS = amDefines.PURGATORY
                 user.stun = False
+                user.SpellCooldown = False
             user.room = 0
             
 #=====================================================
@@ -317,3 +319,15 @@ def CopySpell( spell ):
     newSpell.WearOffText                 = spell.WearOffText
     
     return newSpell
+
+#=========================================================
+# ResetSpellCooldown()
+#
+# Resets a players ability to cast.
+#=========================================================
+def ResetSpellCooldown( player ):
+    try:
+        player.SpellCooldown = False
+    except:
+        pass
+    return

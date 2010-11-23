@@ -16,6 +16,8 @@
 
 import copy, random
 
+from twisted.internet import reactor
+
 import amDefines, amUtils, amCombat, amLog
 
 SpawnItems      = {}
@@ -45,6 +47,7 @@ class Spells():
         self.cmd                         = ""
         self.stype                       = 0    # Is it an item or spell
         self.UsedOn                      = 0    # Who it can be used on, 1 self, 2 victim, 3 both
+        self.CoolDown                    = 0
         self.CasterID                    = 0
         self.Class                       = 0    # Required class to cast
         self.duration                    = 0    # Duration count. (1 subtracted each duration)
@@ -68,7 +71,11 @@ class Spells():
 
     def ApplySpell(self, player, caster):
     
-
+        # Caster has to cool down after casting
+        caster.SpellCooldown = True
+        # Add CallLater to reset SpellCooldown so player can cast again
+        reactor.callLater(self.CoolDown, amUtils.ResetSpellCooldown, caster)
+        
         # Does he make a guesture or pick it up?  If so, tell everyone
         if self.gesture != "*":
             curGesture = self.gesture.split("|")

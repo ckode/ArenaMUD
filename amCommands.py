@@ -902,14 +902,17 @@ def CastSpell( player, Cmd ):
    if player.Class != Spell.Class:
       return False
    
+   # If the caster hasnt' cooled down from his last cast, he can't cast yet
+   if player.SpellCooldown == True:
+      player.sendToPlayer("You can't cast right now!")
+      return True
+   
    # If spell is self only, no other arguments can be supplied.
    if len( Cmd ) > 1 and Spell.UsedOn == 1:
       return False
 
    # Just the command was given, can we cast it on ourself?
    if len( Cmd ) == 1 and ( Spell.UsedOn == 1 or Spell.UsedOn == 3 ):
-      if Spell.cmd == "heal":
-         print "here"
           
       Spell.ApplySpell( player, player )
       return True
