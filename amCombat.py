@@ -87,6 +87,7 @@ def KillPlayer(player, killer):
     player.attacking             = 0
     player.victim                = 0
     player.stun                  = False
+    player.SpellCooldown         = False
     player.Spells.clear()
 
     # Remove any combat in combat queue

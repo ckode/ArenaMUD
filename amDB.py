@@ -246,21 +246,22 @@ def LoadSpellsAndItems( Sonzo ):
         Spells[SpellIndex].name                            = str(row[1])
         Spells[SpellIndex].cmd                             = str(row[2])
         Spells[SpellIndex].stype                           = row[3]
-        Spells[SpellIndex].UsedOn                          = row[4]
-        Spells[SpellIndex].Class                           = row[5]
-        Spells[SpellIndex].duration                        = row[6]
-        Spells[SpellIndex].durationEffect                  = row[7]
-        effectString                                       = str(row[8]).split("|")
+        Spells[SpellIndex].CoolDown                        = row[4]
+        Spells[SpellIndex].UsedOn                          = row[5]
+        Spells[SpellIndex].Class                           = row[6]
+        Spells[SpellIndex].duration                        = row[7]
+        Spells[SpellIndex].durationEffect                  = row[8]
+        effectString                                       = str(row[9]).split("|")
         for each in effectString:
             # Check for errors when assigning with subfunction
             AssignSpell( Spells[SpellIndex], each )
         
-        Spells[SpellIndex].gesture                         = str(row[9])
-        Spells[SpellIndex].effectText                      = str(row[10])
-        Spells[SpellIndex].spellTextSelf                   = str(row[11])
-        Spells[SpellIndex].spellTextRoom                   = str(row[12])
-        Spells[SpellIndex].spellTextVictim                 = str(row[13])
-        Spells[SpellIndex].WearOffText                    = str(row[14])
+        Spells[SpellIndex].gesture                         = str(row[10])
+        Spells[SpellIndex].effectText                      = str(row[11])
+        Spells[SpellIndex].spellTextSelf                   = str(row[12])
+        Spells[SpellIndex].spellTextRoom                   = str(row[13])
+        Spells[SpellIndex].spellTextVictim                 = str(row[14])
+        Spells[SpellIndex].WearOffText                     = str(row[15])
         
         # If it's actually an item, assign it to Items and delete from Spells.
         if Spells[SpellIndex].stype == 0:

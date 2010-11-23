@@ -20,6 +20,7 @@ CREATE TABLE spells_items (
       name              VARCHAR(25) NOT NULL,      -- Item or spell name
       cmd               VARCHAR(4) NOT NULL,       -- Command used to evoke
       casted            INTEGER NOT NULL,          -- Is it picked up or casted (picked up 0, casted 1)
+      cooldown          INTEGER NOT NULL,          -- How long after casting spell can you cast again
       use               INTEGER NOT NULL,          -- 1 self, 2 both, 3 other person, 4 area effect
       reqClass          INTEGER NOT NULL,          -- class IDs 
       duration          INTEGER NOT NULL,          -- How long it lasts 0 = instant like a single heal (if duration > 0 effects can go above max stat)

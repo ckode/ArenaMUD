@@ -49,7 +49,7 @@ class Users(StatefulTelnetProtocol):
         self.staticmaxhp        = 100
         self.stealth            = 0
         self.effectingSpell     = 0
-        self.lastCast           = 0                     # How long since last casted (use loops to count down)
+        self.SpellCooldown      = False                 
         self.ClassStealth       = False
         self.sneaking           = False
         self.room               = 1
