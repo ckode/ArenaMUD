@@ -72,7 +72,8 @@ def commandParser(player, line):
                  'sneak':            amCommands.Sneak,
                  'break':            amCommands.Break,
                  'nextmap':          amCommands.NextMap,
-                 'status':           amCommands.Status
+                 'status':           amCommands.Status,
+                 'spells':           amCommands.ListSpells
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -355,6 +356,11 @@ def commandParser(player, line):
                     commands[each](player)
                     return
                 continue
+            elif each == "spells":
+                if len(cmd) == 1 and len(cmd[0]) > 4:
+                    commands[each](player)
+                    return
+                continue
 
 
     # No command found so say it to the room
@@ -495,6 +501,13 @@ def  LoginPlayer(player, line):
     else:
         line = line.split()
         name = line[0]
+        #limit the name to a reasonable length
+        if len(name) > 15:
+            player.transport.write(amDefines.DEFAULT + "Name is limited to 15 characters, try again.\r\n" + amDefines.WHITE)
+            player.STATUS = amDefines.LOGIN
+            player.transport.write("Enter your warriors name: ")            
+            return
+        #name should now be 15 or less characters in length
         name = name.capitalize()
         for each in player.factory.players.keys():
             if player.factory.players[each].name == name:
