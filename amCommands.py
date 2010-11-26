@@ -485,8 +485,11 @@ def Gossip(player, line):
 # Command -> Who
 ################################################
 def Who(player):
-   player.sendToPlayer(amDefines.LCYAN + "<<=-=-=-=-=-=-=-=-=-=-=-=-=-= Whos Online =-=-=-=-=-=-=-=-=-=-=-=-=--=>>")
-   player.sendToPlayer(amDefines.LCYAN + "    Player                         Kills        Deaths       K/D Ratio")
+   global RaceList
+   global ClassList
+   
+   player.sendToPlayer("%s<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= %sWhos Online%s =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=>>" % (amDefines.LCYAN, amDefines.LMAGENTA, amDefines.LCYAN))
+   player.sendToPlayer("%s    Warrior         Race            Class           Kills   Deaths   K/D Ratio" % (amDefines.LGREEN))
    for user in player.factory.players.values():
       try:
          ratio = "%.2f" % ( float(user.kills) / float(user.deaths) )
@@ -497,12 +500,13 @@ def Who(player):
                ratio = "%.2f" % (user.kills)
 
       if user.STATUS == amDefines.PURGATORY:
-         usersname = user.name + " (Purgatory)"
-         player.sendToPlayer("%s => %s%s% s%s %s%s" % (amDefines.LCYAN, amDefines.LMAGENTA, usersname.ljust(31, ' '), amDefines.LCYAN, str(user.kills).rjust(5, ' '), str(user.deaths).rjust(13, ' '), str(ratio).rjust(16, ' ') ) )
+         playercolor = amDefines.LRED
       else:
-         player.sendToPlayer("%s => %s%s%s%s %s%s" % (amDefines.LCYAN, amDefines.LMAGENTA, user.name.ljust(31, ' '), amDefines.LCYAN, str(user.kills).rjust(5, ' '), str(user.deaths).rjust(13, ' '), str(ratio).rjust(16, ' ') ) )
+         playercolor = amDefines.LMAGENTA
+         
+      player.sendToPlayer("%s => %s%s%s %s %s %s  %s    %s" % (amDefines.LCYAN, playercolor, user.name.ljust(15, ' '), amDefines.LCYAN, amRace.RaceList[user.race].name.ljust(15,' '), amRace.ClassList[user.Class].name.ljust(15,' '), str(user.kills).rjust(5, ' '), str(user.deaths).rjust(6, ' '), str(ratio).rjust(9, ' ') ) )
 
-   player.sendToPlayer(amDefines.LCYAN + "<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->>")
+   player.sendToPlayer("%s<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=>>" %(amDefines.LCYAN))
    amUtils.StatLine(player)
 
 ################################################
@@ -939,5 +943,19 @@ def CastSpell( player, Cmd ):
          victim = player.factory.players[victimID]
          Spell.ApplySpell( victim, player )
          return True
+      
+################################################
+# Command -> ListSpells(player)
+################################################
+def ListSpells(player):
    
-   
+   player.sendToPlayer("%s<<=-=-=-=-=-=-=-=-=-=-= %sYour Spellbook%s =-=-=-=-=-=-=-=-=-=-=>>" % (amDefines.LCYAN, amDefines.LMAGENTA, amDefines.LCYAN))
+   player.sendToPlayer("%s  Spell                Mnemonic     Cooldown     Duration" % (amDefines.GREEN))
+      
+   for Spell in amSpells.SpellList.values():
+      if player.Class == Spell.Class:
+         player.sendToPlayer("%s  %s %s %s %s" % (amDefines.LMAGENTA, Spell.name.ljust(20,' '), Spell.cmd.ljust(12,' '), str(Spell.CoolDown).rjust(8,' '), str(Spell.duration).rjust(8,' ')))
+         
+   player.sendToPlayer("%s<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->>" % (amDefines.LCYAN))
+         
+   return
