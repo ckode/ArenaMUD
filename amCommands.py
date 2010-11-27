@@ -75,10 +75,12 @@ def MovePlayer(player, Direction):
    if player.held:
       player.moving = 0
       player.sendToPlayer("You cannot move!")
+      player.sendToRoomNotVictim( player.playerid, "%s%s struggles to move!" % (amDefines.YELLOW, player.name) )
       return
    elif player.stun:
       player.moving = 0
-      player.sendToPlayer("You stare blankly.")
+      player.sendToPlayer("You stumble about dazedly and cannot move!")
+      player.sendToRoomNotVictim( player.playerid, "%s%s stumbles about dazedly!." % (amDefines.WHITE, player.name, victim.name) )
       return
    
    amUtils.StatLine(player)
@@ -733,40 +735,46 @@ def LookPlayer(player, otherplayerID):
 
    victim = player.factory.players[otherplayerID]
 
-   # No sneaking doing this! (make it noticed when someone looks at someone in the room
+   # If they are sneaking they cant be looked at.
    if victim.sneaking == True:
       player.sendToPlayer("%sYou do not see %s here!" %(amDefines.WHITE, victim.name) )
       return
 
-   player.sneaking = False  #if they were sneaking, they aint no more.
+   player.sneaking = False  #if player looks at another player while sneaking, they aren't sneaking any more.
 
+   if victim.hp < ( ( float(victim.maxhp) / 100) * 25 ):
+      HealthStr = "horribly"
+      hpcolor = amDefines.LRED
+   elif victim.hp < ( ( float(victim.maxhp) / 100) * 50 ):
+      HealthStr = "badly"
+      hpcolor = amDefines.YELLOW
+   elif victim.hp < ( ( float(victim.maxhp) / 100) * 75 ):
+      HealthStr = "somewhat"
+      hpcolor = amDefines.LGREEN
+   elif victim.hp < ( ( float(victim.maxhp) / 100) * 85 ):
+      HealthStr = "lightly"
+      hpcolor = amDefines.WHITE
+   elif victim.hp < ( ( float(victim.maxhp) / 100) * 95 ):
+      HealthStr = "barely"
+      hpcolor = amDefines.WHITE
+   else:
+      HealthStr = "not"
+      hpcolor = amDefines.WHITE
+      
    # If player.hp is higher than maxhp, make it blue (only a buff can do this)
    if victim.hp > victim.maxhp:
       hpcolor = amDefines.BLUE
-   # Is the players HP less than 25% of total hps?
-   elif victim.hp < ( ( float(victim.maxhp) / 100) * 25 ):
-      hpcolor = amDefines.LRED
-   else:
-      hpcolor = amDefines.WHITE
-
-   #figure out health string
-   if victim.hp < ( ( float(victim.maxhp) / 100) * 25 ):
-      HealthStr = "horribly"
-   elif victim.hp < ( ( float(victim.maxhp) / 100) * 50 ):
-      HealthStr = "badly"
-   elif victim.hp < ( ( float(victim.maxhp) / 100) * 75 ):
-      HealthStr = "somewhat"
-   elif victim.hp < ( ( float(victim.maxhp) / 100) * 85 ):
-      HealthStr = "lightly"
-   elif victim.hp < ( ( float(victim.maxhp) / 100) * 95 ):
-      HealthStr = "barely"
-   else:
-      HealthStr = "not"
 
    player.sendToPlayer("%s<<=-=-=-=-=-=-=-= %s =-=-=-=-=-=-=-=>>" %(amDefines.LCYAN, victim.name))
    player.sendToPlayer("%s%s is a %s %s" %(amDefines.YELLOW, victim.name, amRace.RaceList[victim.race].name, amRace.ClassList[victim.Class].name))
    player.sendToPlayer("%s has %s kills and %s deaths" %(victim.name, str(victim.kills), str(victim.deaths)))
    player.sendToPlayer("%s%s is %s wounded.%s" %(hpcolor, victim.name, HealthStr, amDefines.WHITE))
+   
+   #if there are any effects the victim is under here is where you can show them
+   if victim.stun:
+      player.sendToPlayer("%s%s looks completely stunned!" %(amDefines.YELLOW, victim.name))
+   elif victim.held:
+      player.sendToPlayer("%s%s is held and cannot move!" % (amDefines.YELLOW, victim.name))
 
    player.sendToRoomNotVictim( victim.playerid, "%s%s looks %s up and down." % (amDefines.WHITE, player.name, victim.name) )
    victim.sendToPlayer( "%s%s looks you up and down." % (amDefines.WHITE, player.name) )
@@ -889,6 +897,10 @@ def Status(player):
    player.sendToPlayer("%sYou are %s%s %swounded." % (amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN))
    player.sendToPlayer("%sYou have %s kills and %s deaths" %(amDefines.GREEN, str(player.kills), str(player.deaths)))
    
+   if(player.stun):
+      player.sendToPlayer("%sYou are stunned!" % (amDefines.LBLUE))
+   if(player.held):
+      player.sendToPlayer("You are held and cannot move!" % (amDefines.LBLUE))
    if(player.resting):
       player.sendToPlayer("%sYou are resting." % (amDefines.BLUE))
    if(player.sneaking):

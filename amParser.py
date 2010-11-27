@@ -29,6 +29,7 @@ def commandParser(player, line):
     # If player is stun, do nothing
     if player.stun:
         player.sendToPlayer("You stare blankly.")
+        player.sendToRoomNotVictim( player.playerid, "%s%s stares blankly!" % (amDefines.YELLOW, player.name) )
         return
     # Clean players input
     line = CleanPlayerInput(line)
