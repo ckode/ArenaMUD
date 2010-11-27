@@ -123,7 +123,7 @@ INSERT INTO spells_items VALUES (
             0,            -- durationEffect   Does a effect happen each duration loop (damage/healing ever 2 seconds, etc) stat boost = 0 durEff
             "10:1",       -- effects          * See below license info at top for explination
             -- gesture          Use "*" for none, this is any pre-cast gestures made. 
-            "%sYou points at the ground!%s|%s%s points at the ground!%s",          
+            "%sYou point at the ground!%s|%s%s points at the ground!%s",          
             -- Text effect:    The effect you see when the spell happens.  Can be "*" for none.
             "*",
             -- spellTextself:  What you see, when you cast the spell.  (split for casting on self and others)
