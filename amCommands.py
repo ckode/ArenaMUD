@@ -866,41 +866,41 @@ def Status(player):
    global RaceList
    global ClassList
 
+   if player.hp < ( ( float(player.maxhp) / 100) * 25 ):
+      HealthStr = "horribly"
+      hpcolor = amDefines.LRED
+   elif player.hp < ( ( float(player.maxhp) / 100) * 50 ):
+      HealthStr = "badly"
+      hpcolor = amDefines.YELLOW
+   elif player.hp < ( ( float(player.maxhp) / 100) * 75 ):
+      HealthStr = "somewhat"
+      hpcolor = amDefines.LGREEN
+   elif player.hp < ( ( float(player.maxhp) / 100) * 85 ):
+      HealthStr = "lightly"
+      hpcolor = amDefines.WHITE
+   elif player.hp < ( ( float(player.maxhp) / 100) * 95 ):
+      HealthStr = "barely"
+      hpcolor = amDefines.WHITE
+   else:
+      HealthStr = "not"
+      hpcolor = amDefines.WHITE
+      
    # If player.hp is higher than maxhp, make it blue (only a buff can do this)
    if player.hp > player.maxhp:
       hpcolor = amDefines.BLUE
-   # Is the players HP less than 25% of total hps?
-   elif player.hp < ( ( float(player.maxhp) / 100) * 25 ):
-      hpcolor = amDefines.LRED
-   else:
-      hpcolor = amDefines.WHITE
-
-   #figure out health string
-   if player.hp < ( ( float(player.maxhp) / 100) * 25 ):
-      HealthStr = "horribly"
-   elif player.hp < ( ( float(player.maxhp) / 100) * 50 ):
-      HealthStr = "badly"
-   elif player.hp < ( ( float(player.maxhp) / 100) * 75 ):
-      HealthStr = "somewhat"
-   elif player.hp < ( ( float(player.maxhp) / 100) * 85 ):
-      HealthStr = "lightly"
-   elif player.hp < ( ( float(player.maxhp) / 100) * 95 ):
-      HealthStr = "barely"
-   else:
-      HealthStr = "not"
 
    player.sendToPlayer("%sName:%s %s" % (amDefines.GREEN, amDefines.WHITE, player.name ))
    player.sendToPlayer("%sRace:%s %s      %sClass:%s %s" % (amDefines.GREEN, amDefines.WHITE, amRace.RaceList[player.race].name, amDefines.GREEN, amDefines.WHITE, amRace.ClassList[player.Class].name))
-   player.sendToPlayer("%sHealth:%s %s of %s%s" % (amDefines.GREEN, hpcolor, str(player.hp), amDefines.WHITE, str(player.maxhp)))
+   player.sendToPlayer("%sHealth:%s %s %sof %s" % (amDefines.GREEN, hpcolor, str(player.hp), amDefines.WHITE, str(player.maxhp)))
    player.sendToPlayer("%sOffense:%s %s     %sDefense:%s %s" % (amDefines.GREEN, amDefines.WHITE, str(player.offense), amDefines.GREEN, amDefines.WHITE, str(player.defense)))
    player.sendToPlayer("%sStealth:%s %s     %sSpellCasting:%s %s" % (amDefines.GREEN, amDefines.WHITE, str(player.stealth), amDefines.GREEN, amDefines.WHITE, str(player.spellcasting)))
    player.sendToPlayer("%sYou are %s%s %swounded." % (amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN))
    player.sendToPlayer("%sYou have %s kills and %s deaths" %(amDefines.GREEN, str(player.kills), str(player.deaths)))
    
    if(player.stun):
-      player.sendToPlayer("%sYou are stunned!" % (amDefines.LBLUE))
+      player.sendToPlayer("%sYou are stunned!" % (amDefines.YELLOW))
    if(player.held):
-      player.sendToPlayer("You are held and cannot move!" % (amDefines.LBLUE))
+      player.sendToPlayer("%sYou are held and cannot move!" % (amDefines.YELLOW))
    if(player.resting):
       player.sendToPlayer("%sYou are resting." % (amDefines.BLUE))
    if(player.sneaking):
@@ -922,15 +922,21 @@ def CastSpell( player, Cmd ):
    if player.Class != Spell.Class:
       return False
    
-   # If the caster hasnt' cooled down from his last cast, he can't cast yet
+   # If the caster hasn't cooled down from his last cast, he can't cast yet
    if player.SpellCooldown == True:
       player.sendToPlayer("You can't cast right now!")
       return True
    
    # If spell is self only, no other arguments can be supplied.
    if len( Cmd ) > 1 and Spell.UsedOn == 1:
-      return False
-
+      player.sendToPlayer("%sYou cannot use this on others, only yourself!" % (amDefines.YELLOW))
+      return True
+   
+   # If it must be casted on a victim enforce that here an argument must be supplied.
+   if len( Cmd ) < 2 and Spell.UsedOn == 2:
+      player.sendToPlayer("%sYou must specify a target!" % (amDefines.BROWN))
+      return True
+   
    # Just the command was given, can we cast it on ourself?
    if len( Cmd ) == 1 and ( Spell.UsedOn == 1 or Spell.UsedOn == 3 ):
           
@@ -953,8 +959,13 @@ def CastSpell( player, Cmd ):
       else:
          victimID = victimList.keys()[0]          
          victim = player.factory.players[victimID]
-         Spell.ApplySpell( victim, player )
-         return True
+         #if you cannot cast this on yourself, enforce that here
+         if player == victim:
+            player.sendToPlayer("%sYou cannot use this on yourself!" % (amDefines.LGREEN))
+            return True
+         else:
+            Spell.ApplySpell( victim, player )
+            return True
       
 ################################################
 # Command -> ListSpells(player)
