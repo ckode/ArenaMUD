@@ -72,15 +72,23 @@ def FindPlayerInRoom(player, Name):
 #################################################
 def StatLine(player):
     # Send a players stat line
-
+    
+    if player.hp < ( ( float(player.maxhp) / 100) * 25 ):
+        hpcolor = amDefines.LRED
+    elif player.hp < ( ( float(player.maxhp) / 100) * 50 ):
+        hpcolor = amDefines.YELLOW
+    elif player.hp < ( ( float(player.maxhp) / 100) * 75 ):
+        hpcolor = amDefines.LGREEN
+    elif player.hp < ( ( float(player.maxhp) / 100) * 85 ):
+        hpcolor = amDefines.WHITE
+    elif player.hp < ( ( float(player.maxhp) / 100) * 95 ):
+        hpcolor = amDefines.WHITE
+    else:
+        hpcolor = amDefines.WHITE
+        
     # If player.hp is higher than maxhp, make it blue (only a buff can do this)
     if player.hp > player.maxhp:
         hpcolor = amDefines.BLUE
-    # Is the players HP less than 25% of total hps?
-    elif player.hp < ( ( float(player.maxhp) / 100) * 25 ):
-        hpcolor = amDefines.LRED
-    else:
-        hpcolor = amDefines.WHITE
 
     if player.resting:
         STATLINE = "[HP=%s%d%s/%d]: (resting) " % (hpcolor, player.hp, amDefines.WHITE, player.maxhp)
