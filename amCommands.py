@@ -961,7 +961,7 @@ def CastSpell( player, Cmd ):
          victim = player.factory.players[victimID]
          #if you cannot cast this on yourself, enforce that here
          if player == victim:
-            player.sendToPlayer("%sYou cannot use this on yourself!" % (amDefines.LGREEN))
+            player.sendToPlayer("%sYou cannot use this on yourself!" % (amDefines.YELLOW))
             return True
          else:
             Spell.ApplySpell( victim, player )
