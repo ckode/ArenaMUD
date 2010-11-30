@@ -189,3 +189,29 @@ INSERT INTO spells_items VALUES (
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sYou get up and rub some dirt on it.%s"
 );
+
+-- Blade Poison for Thief
+INSERT INTO spells_items VALUES (
+            7,            -- ID:              Spell / item ID
+            "thieves poison",   -- name:      Spell/Item Name as it appears in game
+            "pois",       -- cmd:             Command used to cast it. (not used if ITEM)
+            1,            -- casted:          1 = spell, 0 = item
+            60,           -- cooldown         How long it takes to cool down to cast again
+            1,            -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
+            3,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
+            15,           -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
+            0,            -- durationEffect   Does a effect happen each duration loop (damage/healing ever 2 seconds, etc) stat boost = 0 durEff
+            "12:-3",      -- effects          * See below license info at top for explination
+            -- gesture          Use "*" for none, this is any pre-cast gestures made. 
+            "%sYou apply poison to your sword!%s|%s%s applies poison to their sword!%s",          
+            -- Text effect:    The effect you see when the spell happens.  Can be "*" for none.
+            "%sYou feel sick.%s",
+            -- spellTextself:  What you see, when you cast the spell.  (split for casting on self and others)
+            "*",
+            -- spellTextRoom:  What the room not including you and the victim see
+            "*",
+            -- spellTextVictim:   What the victim sees. (not shown to self)
+            "*",
+            -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
+            "%sYour blade is no longer poisoned.%s"
+);

@@ -67,6 +67,7 @@ class Users(StatefulTelnetProtocol):
         self.weapontext         = 0
         self.mindamage          = 0
         self.maxdamage          = 0
+        self.extraDamageSpell   = {}
         self.blind              = False
         self.magery             = 0
         self.briefDesc          = 1

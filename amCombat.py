@@ -15,7 +15,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
-import amMaps, amUtils, amDefines
+import amMaps, amUtils, amDefines, amSpells
 
 
 ATTACKING               = 0
@@ -175,6 +175,11 @@ def PlayerAttack(player):
 
                 # Tell room of outcome
                 SendDamageTextToRoom( player, curVictim, damage, Message[2], Message[5], Message[8] )
+                if len(player.extraDamageSpell) == 1:
+                    dmg = player.extraDamageSpell.keys()[0]
+                    effectText = player.extraDamageSpell[dmg]                   
+                    curVictim.sendToPlayer(effectText % (amDefines.RED, amDefines.WHITE) )
+                    damage += dmg
             else:
                 # Tell room of outcome
                 SendDamageTextToRoom( player, curVictim, MISS, Message[0], Message[3], Message[6] )
@@ -191,6 +196,11 @@ def PlayerAttack(player):
                         totalDamage += damage
                         # Tell room of outcome.
                         SendDamageTextToRoom( player, curVictim, damage, Message[1], Message[4], Message[7] )
+                        if len(player.extraDamageSpell) == 1:
+                            dmg = player.extraDamageSpell.keys()[0]
+                            effectText = player.extraDamageSpell[dmg]
+                            curVictim.sendToPlayer(effectText % (amDefines.RED, amDefines.WHITE) )
+                            totalDamage += dmg
                         # Check to see if player id dead already, if so break out of attack loop!
                         if totalDamage > curVictim.hp:
                             break
