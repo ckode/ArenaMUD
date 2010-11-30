@@ -353,12 +353,12 @@ def commandParser(player, line):
                     return
                 continue
             elif each == "status":
-                if len(cmd) == 1 and len(cmd[0]) > 3:
+                if len(cmd) == 1 and len(cmd[0]) > 1:
                     commands[each](player)
                     return
                 continue
             elif each == "spells":
-                if len(cmd) == 1 and len(cmd[0]) > 4:
+                if len(cmd) == 1 and len(cmd[0]) > 1:
                     commands[each](player)
                     return
                 continue
