@@ -206,7 +206,10 @@ class Spells():
        # Apply Stat changes
         for stat, val in self.effects.items():
             stat = int(stat)
-            val = int(val)
+            
+            # Ensure val isn't a range (ie, include a % that can't be converted to an INT)
+            if "%" not in val:
+                val = int(val)
             
             if stat == MAXHP:
                 player.maxhp += val
@@ -244,8 +247,11 @@ class Spells():
        # Remove Spell effects (leave HP alone)
         for stat, val in self.effects.items():
             stat = int(stat)
-            val = int(val)        
-        
+            
+            # Ensure val isn't a range (ie, include a % that can't be converted to an INT)
+            if "%" not in val:
+                val = int(val)
+                    
             if stat == MAXHP:
                 player.maxhp -= val
             elif stat == DEFENSE:
