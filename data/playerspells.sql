@@ -215,3 +215,57 @@ INSERT INTO spells_items VALUES (
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sYour blade is no longer poisoned.%s"
 );
+
+
+-- Weakness for Mages
+INSERT INTO spells_items VALUES (
+            8,            -- ID:              Spell / item ID
+            "weakness",   -- name:      Spell/Item Name as it appears in game
+            "weak",       -- cmd:             Command used to cast it. (not used if ITEM)
+            1,            -- casted:          1 = spell, 0 = item
+            60,           -- cooldown         How long it takes to cool down to cast again
+            2,            -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
+            2,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
+            15,           -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
+            0,            -- durationEffect   Does a effect happen each duration loop (damage/healing ever 2 seconds, etc) stat boost = 0 durEff
+            "3:-5|4:-5|6:-10|7:-5",      -- effects          * See below license info at top for explination
+            -- gesture          Use "*" for none, this is any pre-cast gestures made. 
+            "*",          
+            -- Text effect:    The effect you see when the spell happens.  Can be "*" for none.
+            "*",
+            -- spellTextself:  What you see, when you cast the spell.  (split for casting on self and others)
+            "%sYou cast weakness on %s!%s",
+            -- spellTextRoom:  What the room not including you and the victim see
+            "%s%s casts weakness on %s!%s",
+            -- spellTextVictim:   What the victim sees. (not shown to self)
+            "%s%s casts weakness on you!%s",
+            -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
+            "%sYou feel stronger.%s"
+);
+
+
+-- Slam for barb
+INSERT INTO spells_items VALUES (
+            9,            -- ID:              Spell / item ID
+            "cone of ice",    -- name:        Spell/Item Name as it appears in game
+            "cone",       -- cmd:             Command used to cast it. (not used if ITEM)
+            1,            -- casted:          1 = spell, 0 = item
+            25,           -- cooldown         How long it takes to cool down to cast again
+            2,            -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
+            2,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
+            2,            -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
+            0,            -- durationEffect   Does a effect happen each duration loop (damage/healing ever 2 seconds, etc) stat boost = 0 durEff
+            "11:1",       -- effects          * See below license info at top for explination
+            -- gesture          Use "*" for none, this is any pre-cast gestures made. 
+            "*",          
+            -- Text effect:    The effect you see when the spell happens.  Can be "*" for none.
+            "*",
+            -- spellTextself:  What you see, when you cast the spell.  (split for casting on self and others)
+            "%sYou you cast cone of ice on %s!%s",
+            -- spellTextRoom:  What the room not including you and the victim see
+            "%s%s casts cone of ice on %s!%s",
+            -- spellTextVictim:   What the victim sees. (not shown to self)
+            "%s%s casts cone of ice on you!%s",
+            -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
+            "%sYou thaw out.%s"
+);

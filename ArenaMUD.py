@@ -43,6 +43,8 @@ class Users(StatefulTelnetProtocol):
         self.health             = 0
         self.offense            = 50
         self.defense            = 80
+        self.magicres           = 0
+        self.damagebonus        = 0
         self.isAdmin            = 0
         self.hp                 = 50
         self.maxhp              = 100
