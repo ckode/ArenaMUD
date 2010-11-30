@@ -87,6 +87,7 @@ def KillPlayer(player, killer):
     player.attacking             = 0
     player.victim                = 0
     player.stun                  = False
+    player.held                  = False
     player.SpellCooldown         = False
     player.Spells.clear()
 
@@ -175,6 +176,8 @@ def PlayerAttack(player):
 
                 # Tell room of outcome
                 SendDamageTextToRoom( player, curVictim, damage, Message[2], Message[5], Message[8] )
+                
+                # If the player has a spell that causes extra damage to melee, apply it
                 if len(player.extraDamageSpell) == 1:
                     dmg = player.extraDamageSpell.keys()[0]
                     effectText = player.extraDamageSpell[dmg]                   
@@ -196,6 +199,8 @@ def PlayerAttack(player):
                         totalDamage += damage
                         # Tell room of outcome.
                         SendDamageTextToRoom( player, curVictim, damage, Message[1], Message[4], Message[7] )
+                        
+                        # If the player has a spell that causes extra damage to melee, apply it
                         if len(player.extraDamageSpell) == 1:
                             dmg = player.extraDamageSpell.keys()[0]
                             effectText = player.extraDamageSpell[dmg]
@@ -239,7 +244,7 @@ def BackstabModifier( player ):
     bsModifier        = random.randint(player.maxdamage, ( player.maxdamage * 2 ) ) 
     StealthModifier   = player.maxdamage * ( float(player.stealth) / 100 ) 
     
-    return ( bsModifier + StealthModifier )
+    return ( bsModifier + StealthModifier + player.damagebonus)
 
 
 #==================================================
@@ -251,7 +256,7 @@ def DamageRoll( player, victim ):
     # Later, add in victim buffs that lower lower damage
     
     damage = random.randint(player.mindamage, player.maxdamage) 
-    return damage
+    return (damage + int(player.damagebonus) )
 
 #==================================================
 # SendDamageTextToRoom()

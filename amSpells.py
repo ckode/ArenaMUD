@@ -205,6 +205,9 @@ class Spells():
     def ApplySpellStats(self, player):
        # Apply Stat changes
         for stat, val in self.effects.items():
+            stat = int(stat)
+            val = int(val)
+            
             if stat == MAXHP:
                 player.maxhp += val
             elif stat == DEFENSE:
@@ -240,6 +243,9 @@ class Spells():
     def RemoveSpell(self, player):
        # Remove Spell effects (leave HP alone)
         for stat, val in self.effects.items():
+            stat = int(stat)
+            val = int(val)        
+        
             if stat == MAXHP:
                 player.maxhp -= val
             elif stat == DEFENSE:
