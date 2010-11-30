@@ -34,6 +34,7 @@ STEALTH         = 8
 REGEN           = 9
 HELD            = 10
 STUN            = 11
+EXTRA_MELEE_DMG = 12
 
 # CastOn
 SELF            = 1
@@ -85,12 +86,17 @@ class Spells():
         # Tell everyone
         if caster.playerid == player.playerid:
             victim = "yourself"
-            caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
-            caster.sendToRoom( self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
+            if self.spellTextSelf != "*":
+                caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, victim, amDefines.WHITE) )
+            if self.spellTextRoom != "*":
+                caster.sendToRoom( self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
         else:
-            caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, player.name, amDefines.WHITE))
-            player.sendToPlayer( self.spellTextVictim % (amDefines.BLUE, caster.name, amDefines.WHITE) )
-            caster.sendToRoomNotVictim( player.playerid, self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
+            if self.spellTextSelf != "*":
+                caster.sendToPlayer( self.spellTextSelf % (amDefines.BLUE, player.name, amDefines.WHITE))
+            if self.spellTextRoom != "*":
+                player.sendToPlayer( self.spellTextVictim % (amDefines.BLUE, caster.name, amDefines.WHITE) )
+            if self.spellTextRoom != "*":
+                caster.sendToRoomNotVictim( player.playerid, self.spellTextRoom % (amDefines.BLUE, caster.name, player.name, amDefines.WHITE) )
             
         # If it is a duration effect spell, apply the effects.
         if self.duration:
@@ -150,9 +156,9 @@ class Spells():
                     else:
                         player.hp += value
                     
-        # Tell player about effects if exist
-        if self.effectText != "*":
-            player.sendToPlayer( self.effectText % (amDefines.BLUE, amDefines.WHITE) )
+                # Tell player about effects if exist
+                if self.effectText != "*":
+                    player.sendToPlayer( self.effectText % (amDefines.BLUE, amDefines.WHITE) )
             
         amUtils.StatLine( player )
         if player.hp < 1:
@@ -222,6 +228,8 @@ class Spells():
                 player.resting         = False
                 player.attacking       = 0
                 player.factory.CombatQueue.RemoveAttack(player.playerid)
+            elif stat == EXTRA_MELEE_DMG:
+                player.extraDamageSpell[self.SpellID] = self.effectText
                
 
     ##############################################################
@@ -252,6 +260,8 @@ class Spells():
                 player.held = False
             elif stat == STUN:
                 player.stun              = False
+            elif stat == EXTRA_MELEE_DMG:
+                player.extraDamageSpell.clear()
                 
 
         player.sendToPlayer( self.WearOffText % (amDefines.BLUE, amDefines.WHITE) )
