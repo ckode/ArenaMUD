@@ -851,9 +851,7 @@ def NextMap(player):
    for user in player.factory.players.values():
       if user.STATUS == amDefines.PLAYING or user.STATUS == amDefines.PURGATORY:
          user.sendToPlayer("Changing map...")
-      user.kills   = 0
-      user.deaths  = 0
-   
+         
    # Move everyone to purgatory
    amUtils.KickAllToPurgatory(player)
    # Switch to the next map

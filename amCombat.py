@@ -80,20 +80,11 @@ def KillPlayer(player, killer):
     global CombatQueue
 
     player.deaths               += 1
-    player.hp                    = player.maxhp
-    player.effectingSpell        = 0
     curRoom                      = player.room
 
-    player.attacking             = 0
-    player.victim                = 0
-    player.stun                  = False
-    player.held                  = False
-    player.SpellCooldown         = False
-    player.Spells.clear()
 
-    # Remove any combat in combat queue
-    player.factory.CombatQueue.RemoveAttack(player.playerid)
-    del amMaps.Map.Rooms[player.room].Players[player.playerid]
+
+
     player.sendToPlayer("You are dead.")
     player.sendToRoom("%s collapses in a heap and dies." % (player.name))
     if player.attacking:
@@ -118,6 +109,7 @@ def KillPlayer(player, killer):
             otherplayer.victim       = 0
             otherplayer.factory.CombatQueue.RemoveAttack(otherplayer.playerid)
             otherplayer.sendToPlayer("%s*Combat Off*%s" % (amDefines.BROWN, amDefines.WHITE) )
+  
 
     # Spawn the player
     amUtils.EnterPurgatory(player)
