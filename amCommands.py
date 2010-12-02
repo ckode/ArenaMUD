@@ -985,12 +985,15 @@ def ListSpells(player):
 # Command -> Reroll(player)
 #################################################
 def Reroll(player):
-   
-   player.sendToRoom("%s%s decides to reroll, and disappears in a puff of smoke!" %(amDefines.YELLOW, player.name))
 
-   amUtils.ResetAllPlayerStats(player)
+   # If player is playing, tell room player rerolled, and add a increment the players death count.
+   if player.STATUS == amDefines.PLAYING:
+       player.sendToRoom("%s%s decides to reroll, and disappears in a puff of smoke!" %(amDefines.YELLOW, player.name))
+       player.deaths += 1
 
-   player.STATUS = amDefines.LOGIN
-   player.sendToPlayer("%s%s*** You have rerolled your character! ***" % (amDefines.CLEARSCREEN, amDefines.BROWN))
-   player.sendToPlayer("%sEnter your Warrior's name or press <ENTER> to continue: " % (amDefines.WHITE))
-   del player.factory.players[player.playerid]
+   amUtils.ResetPlayerStats(player)
+
+   player.STATUS = amDefines.GETCLASS
+   player.sendToPlayer("%s%s*** You have rerolled your character! ***\r\nPress enter to continue." % (amDefines.CLEARSCREEN, amDefines.BROWN))
+
+   player.Rerolling = True

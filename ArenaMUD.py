@@ -79,6 +79,8 @@ class Users(StatefulTelnetProtocol):
         # List of good and bad buffs on player
         self.Spells             = {}
 
+        self.Rerolling          = False
+
     def connectionMade(self):
         # Limit how many can connect at one time
         print self.transport.getPeer().host + " CONNECTED!"
