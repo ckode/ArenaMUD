@@ -263,7 +263,7 @@ def SpawnPlayer(player):
     amMaps.Map.Rooms[player.room].Players[player.playerid] = player.name
     amCommands.Look(player, player.room, player.briefDesc)
     player.sendToRoom("%s%s appears in a flash!%s" % (amDefines.YELLOW, player.name, amDefines.WHITE) )
-    player.Shout(amDefines.BLUE + player.name + " has spawn!")
+    player.Shout(amDefines.BLUE + player.name + " has spawned!")
 
 #####################################################
 # EnterPurgatory()
@@ -385,8 +385,11 @@ def ResetPlayerStats( player ):
     player.Spells.clear()
     
     # Remove player from combat queue and from the room
-    player.factory.CombatQueue.RemoveAttack(player.playerid)
-    del amMaps.Map.Rooms[player.room].Players[player.playerid]
+    #but only do this if they are not in purgatory otherwise trying to delete them from a room
+    #that they arent in... it craps out.
+    if player.STATUS == amDefines.PLAYING:
+        player.factory.CombatQueue.RemoveAttack(player.playerid)
+        del amMaps.Map.Rooms[player.room].Players[player.playerid]
     
     
 #=========================================================
