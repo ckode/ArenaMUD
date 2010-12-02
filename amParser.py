@@ -74,7 +74,8 @@ def commandParser(player, line):
                  'break':            amCommands.Break,
                  'nextmap':          amCommands.NextMap,
                  'status':           amCommands.Status,
-                 'spells':           amCommands.ListSpells
+                 'spells':           amCommands.ListSpells,
+                 'reroll':           amCommands.Reroll
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -359,6 +360,11 @@ def commandParser(player, line):
                 continue
             elif each == "spells":
                 if len(cmd) == 1 and len(cmd[0]) > 1:
+                    commands[each](player)
+                    return
+                continue
+            elif each == "reroll":
+                if len(cmd) == 1 and len(cmd[0]) > 4:
                     commands[each](player)
                     return
                 continue

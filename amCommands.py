@@ -980,3 +980,17 @@ def ListSpells(player):
    player.sendToPlayer("%s<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->>" % (amDefines.LCYAN))
          
    return
+
+#################################################
+# Command -> Reroll(player)
+#################################################
+def Reroll(player):
+   
+   player.sendToRoom("%s%s decides to reroll, and disappears in a puff of smoke!" %(amDefines.YELLOW, player.name))
+
+   amUtils.ResetAllPlayerStats(player)
+
+   player.STATUS = amDefines.LOGIN
+   player.sendToPlayer("%s%s*** You have rerolled your character! ***" % (amDefines.CLEARSCREEN, amDefines.BROWN))
+   player.sendToPlayer("%sEnter your Warrior's name or press <ENTER> to continue: " % (amDefines.WHITE))
+   del player.factory.players[player.playerid]

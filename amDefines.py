@@ -78,6 +78,7 @@ CURPOS             = chr(27) + "6n"
 SAVECUR            = chr(27) + "s"
 RESTORECUR         = chr(27) + "r"
 DELETELEFT         = chr(27) + "[1K"
+CLEARSCREEN        = chr(27) + "[2J"
 
 #          Light Levels
 NORMALVISION       = 1
