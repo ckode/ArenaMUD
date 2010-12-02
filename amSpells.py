@@ -60,6 +60,7 @@ class Spells():
         self.spellTextRoom               = ""
         self.spellTextVictim             = ""
         self.WearOffText                 = ""
+        self.statusText                  = ""
 
 
 

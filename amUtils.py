@@ -324,6 +324,7 @@ def CopySpell( spell ):
     newSpell.spellTextRoom               = spell.spellTextRoom
     newSpell.spellTextVictim             = spell.spellTextVictim
     newSpell.WearOffText                 = spell.WearOffText
+    newSpell.statusText                  = spell.statusText
     
     return newSpell
 
