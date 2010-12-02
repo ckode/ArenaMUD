@@ -665,7 +665,8 @@ def PurgatoryParser(player, line):
                  'who':              amCommands.Who,
                  'help':             amCommands.Help,
                  'superuser':        "",
-                 'nextmap':          amCommands.NextMap
+                 'nextmap':          amCommands.NextMap,
+                 'reroll':           amCommands.Reroll
                }
 
     cmd = line.split()
