@@ -31,6 +31,7 @@ CREATE TABLE spells_items (
       spellTextself     VARCHAR(100) NOT NULL,     -- Text displayed to self
       spellTextRoom     VARCHAR(100) NOT NULL,     -- Text displayed to room
       spellTextVictim   VARCHAR(100) NOT NULL,     -- Text displayed to person casted upon, set as "*" if self cast only or picked up item
-      spellWearOff      VARCHAR(100) NOT NULL      -- Wear off text if duration spell "*" if not
+      spellWearOff      VARCHAR(100) NOT NULL,     -- Wear off text if duration spell "*" if not
+      statusText        VARCHAR(100) NOT NULL      -- The text shown to the player when he types status in the game that shows the spells effected by
 );
 

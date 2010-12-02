@@ -895,16 +895,16 @@ def Status(player):
    player.sendToPlayer("%sYou are %s%s %swounded." % (amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN))
    player.sendToPlayer("%sYou have %s kills and %s deaths" %(amDefines.GREEN, str(player.kills), str(player.deaths)))
    
-   if(player.stun):
-      player.sendToPlayer("%sYou are stunned!" % (amDefines.YELLOW))
-   if(player.held):
-      player.sendToPlayer("%sYou are held and cannot move!" % (amDefines.YELLOW))
+
+   for spell in player.Spells.values():
+       if spell.statusText != "*":
+           player.sendToPlayer(spell.statusText % (amDefines.BLUE, amDefines.WHITE) )
    if(player.resting):
-      player.sendToPlayer("%sYou are resting." % (amDefines.BLUE))
+       player.sendToPlayer("%sYou are resting." % (amDefines.BLUE))
    if(player.sneaking):
-      player.sendToPlayer("%sYou are sneaking." % (amDefines.BLUE))
+       player.sendToPlayer("%sYou are sneaking." % (amDefines.BLUE))
    if(player.isAdmin):
-      player.sendToPlayer("%sYou have administrative privileges on the server." % (amDefines.YELLOW))
+       player.sendToPlayer("%sYou have administrative privileges on the server." % (amDefines.YELLOW))
       
    return
 

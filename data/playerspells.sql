@@ -53,6 +53,8 @@ INSERT INTO spells_items VALUES (
             -- spellTextVictim:   What the victim sees. (not shown to self)
             "%s%s casts healing on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
+            "*",
+            -- statusText:    Spell Status Text (when typing stats
             "*"
 );
  
@@ -80,7 +82,9 @@ INSERT INTO spells_items VALUES (
             -- spellTextVictim:   What the victim sees. (not shown to self)
             "%s%s casts creeping doom on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
-            "%sThe swarm has left.%s"
+            "%sThe swarm has left.%s",
+            -- statusText:    Spell Status Text (when typing stats
+            "%sYou are being attacked by a swarm of insects!%s"
 );
             
 
@@ -107,6 +111,8 @@ INSERT INTO spells_items VALUES (
             -- spellTextVictim:   What the victim sees. (not shown to self)
             "*",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
+            "*",
+            -- statusText:    Spell Status Text (when typing stats
             "*"
 );
        
@@ -133,7 +139,9 @@ INSERT INTO spells_items VALUES (
             -- spellTextVictim:   What the victim sees. (not shown to self)
             "%s%s casts entangle on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
-            "%sYou are freed!%s"
+            "%sYou are freed!%s",
+            -- statusText:    Spell Status Text (when typing stats
+            "%sYou have been entangled by surrounding plants!%s"
 );
 
 
@@ -160,7 +168,9 @@ INSERT INTO spells_items VALUES (
             -- spellTextVictim:   What the victim sees. (not shown to self)
             "%s%s casts hold person on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
-            "%sYou are no longer held!%s"
+            "%sYou are no longer held!%s",
+            -- statusText:    Spell Status Text (when typing stats
+            "%sYou are being held by some unseen force!%s"
 );
 
 
@@ -187,7 +197,9 @@ INSERT INTO spells_items VALUES (
             -- spellTextVictim:   What the victim sees. (not shown to self)
             "%s%s slams you to the ground!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
-            "%sYou get up and rub some dirt on it.%s"
+            "%sYou get up and rub some dirt on it.%s",
+            -- statusText:    Spell Status Text (when typing stats
+            "*"
 );
 
 -- Blade Poison for Thief
@@ -213,7 +225,9 @@ INSERT INTO spells_items VALUES (
             -- spellTextVictim:   What the victim sees. (not shown to self)
             "*",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
-            "%sYour blade is no longer poisoned.%s"
+            "%sYour blade is no longer poisoned.%s",
+            -- statusText:    Spell Status Text (when typing stats
+            "*"
 );
 
 
@@ -240,7 +254,9 @@ INSERT INTO spells_items VALUES (
             -- spellTextVictim:   What the victim sees. (not shown to self)
             "%s%s casts weakness on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
-            "%sYou feel stronger.%s"
+            "%sYou feel stronger.%s",
+            -- statusText:    Spell Status Text (when typing stats
+            "%sYou feel weak!%s"
 );
 
 
@@ -267,5 +283,7 @@ INSERT INTO spells_items VALUES (
             -- spellTextVictim:   What the victim sees. (not shown to self)
             "%s%s casts cone of ice on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
-            "%sYou thaw out.%s"
+            "%sYou thaw out.%s",
+            -- statusText:    Spell Status Text (when typing stats
+            "%sYou are frozen!%s"
 );

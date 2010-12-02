@@ -262,6 +262,7 @@ def LoadSpellsAndItems( Sonzo ):
         Spells[SpellIndex].spellTextRoom                   = str(row[13])
         Spells[SpellIndex].spellTextVictim                 = str(row[14])
         Spells[SpellIndex].WearOffText                     = str(row[15])
+        Spells[SpellIndex].statusText                      = str(row[16])
         
         # If it's actually an item, assign it to Items and delete from Spells.
         if Spells[SpellIndex].stype == 0:
