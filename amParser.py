@@ -629,12 +629,16 @@ def PickRace(player, racenum):
         player.STATUS           = amDefines.PLAYING
         player.staticmaxhp      = player.maxhp
 
-        player.Shout(amDefines.BLUE + player.name + " has joined.")
-        player.sendToPlayer(amDefines.YELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
-        player.factory.players[player.playerid] = player
+        if player.Rerolling == False:
+            print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
+            player.Shout("%sA %s %s named %s has joined." % (amDefines.BLUE, race.name, amRace.ClassList[player.Class].name, player.name) )
+            player.sendToPlayer(amDefines.YELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+            player.factory.players[player.playerid] = player
+        else:
+            player.Shout("%s%s has rerolled into a %s %s." % (amDefines.BLUE, player.name, race.name, amRace.ClassList[player.Class].name) )
+            player.Rerolling = False
 
         amUtils.EnterPurgatory(player)
-        print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
     else:
         InvalidChoice()
         DisplayChoices()
@@ -714,4 +718,10 @@ def PurgatoryParser(player, line):
                     return
                 elif len(cmd[0]) != 1:
                     return
+            elif each == "reroll":
+                if len(cmd) == 1 and len(cmd[0]) > 4:
+                    commands[each](player)
+                    return
+                continue
+                
     player.sendToPlayer("Command had no effect. Type 'spawn' to spawn or type 'help' for help.")

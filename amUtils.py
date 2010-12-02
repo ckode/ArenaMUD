@@ -71,7 +71,9 @@ def FindPlayerInRoom(player, Name):
 # Sends the players statline (health and mana)
 #################################################
 def StatLine(player):
-    # Send a players stat line
+    # If player not playing, return
+    if player.STATUS != amDefines.PLAYING:
+        return
     
     if player.hp < ( ( float(player.maxhp) / 100) * 25 ):
         hpcolor = amDefines.LRED
@@ -94,8 +96,6 @@ def StatLine(player):
         STATLINE = "[HP=%s%d%s/%d]: (resting) " % (hpcolor, player.hp, amDefines.WHITE, player.maxhp)
     else:
         STATLINE = "[HP=%s%d%s/%d]: " % ( hpcolor, player.hp, amDefines.WHITE, player.maxhp)
-    if player.STATUS == amDefines.PURGATORY:
-        STATLINE = "%s>" % (amDefines.WHITE)
 
     STATSIZE = len(STATLINE)
     player.transport.write(amDefines.SAVECUR)
@@ -385,11 +385,13 @@ def ResetPlayerStats( player ):
     player.Spells.clear()
     
     # Remove player from combat queue and from the room
-    #but only do this if they are not in purgatory otherwise trying to delete them from a room
-    #that they arent in... it craps out.
-    if player.STATUS == amDefines.PLAYING:
-        player.factory.CombatQueue.RemoveAttack(player.playerid)
+    player.factory.CombatQueue.RemoveAttack(player.playerid)
+
+    # Try to remove the player from whatever room they are in. (if in a room)
+    try:
         del amMaps.Map.Rooms[player.room].Players[player.playerid]
+    except:
+        pass
     
     
 #=========================================================
