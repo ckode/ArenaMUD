@@ -17,7 +17,7 @@
 from twisted.internet import reactor
 
 import amRooms, amDefines, amCommands, amUtils
-import amLog, amMaps, amCombat, amSpells
+import amLog, amMaps, amCombat, amSpells, amRace
 
 import re, random, os
 
@@ -272,11 +272,11 @@ def SpawnPlayer(player):
 # when he dies.  You have to type spawn to enter the game
 #####################################################
 def EnterPurgatory(player):
+    amUtils.ResetPlayerStats( player )
     player.STATUS = amDefines.PURGATORY
     amCommands.Who(player)
     player.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
-    player.stun = False
-    player.SpellCooldown = False
+
     
 #####################################################
 # KickAllToPurgatory()
@@ -292,12 +292,11 @@ def KickAllToPurgatory(player):
     for user in player.factory.players.values():
 
         if user.STATUS == amDefines.PLAYING or user.STATUS == amDefines.PURGATORY:
-            if user.STATUS == amDefines.PLAYING:
-                del amMaps.Map.Rooms[user.room].Players[user.playerid]
-                user.STATUS = amDefines.PURGATORY
-                user.stun = False
-                user.SpellCooldown = False
-            user.room = 0
+            # Reset all the players stats
+            ResetAllPlayerStats( user )
+            user.STATUS = amDefines.PURGATORY
+            amCommands.Who( user )
+            user.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
             
 #=====================================================
 # CopySpell()
@@ -339,3 +338,66 @@ def ResetSpellCooldown( player ):
     except:
         pass
     return
+
+#=========================================================
+# ResetPlayerStats()
+#
+# Resets player stats after death or purgatory
+#=========================================================
+def ResetPlayerStats( player ):
+    
+    # Get Race and Class data
+    playerclass             = amRace.ClassList[player.Class]
+    race                    = amRace.RaceList[player.race]
+    
+    # Assign class attributes
+    player.hp               = playerclass.hpbonus
+    player.maxhp            = player.hp
+    player.mindamage       += playerclass.mindamage
+    player.maxdamage       += playerclass.maxdamage
+    player.magery           = playerclass.MageryType
+    # If class has stealth, then player can sneak
+    if playerclass.stealth > 0:
+        player.ClassStealth = True
+    player.stealth         += playerclass.stealth
+    player.weapontext       = playerclass.weapontext
+    player.STATUS           = amDefines.GETRACE
+    player.speed            = playerclass.speed    
+    
+    # Now apply race attributes
+    player.hp              += race.basehp
+    player.maxhp            = player.hp
+    player.mindamage       += race.damagebonus
+    player.maxdamage       += race.damagebonus
+    player.attackroll      += race.attackbonus
+    player.spellcasting    += race.castingbonus
+    player.vision           = race.vision
+    player.stealth         += race.stealth
+    player.staticmaxhp      = player.maxhp
+
+    # Reset other stats
+    player.attacking             = 0
+    player.victim                = 0
+    player.effectingSpell        = 0
+    player.stun                  = False
+    player.held                  = False
+    player.SpellCooldown         = False
+    player.Spells.clear()
+    
+    # Remove player from combat queue and from the room
+    player.factory.CombatQueue.RemoveAttack(player.playerid)
+    del amMaps.Map.Rooms[player.room].Players[player.playerid]
+    
+    
+#=========================================================
+# ResetAllPlayerStats()
+#
+# Resets kills and deaths, then calls ResetPlayerStats() 
+# to do the rest.
+#=========================================================
+def ResetAllPlayerStats( player ):
+    player.kills      = 0
+    player.deaths     = 0
+    
+    # Just call ResetPlayerStats() to reset everything else
+    ResetPlayerStats( player )
