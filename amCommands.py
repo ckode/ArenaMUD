@@ -483,6 +483,14 @@ def Gossip(player, line):
    else:
       player.Shout(amDefines.MAGENTA + player.name + " gossips (purgatory): " + line)
 
+      
+#===============================================
+# WhoCmd
+#===============================================
+def WhoCmd( player ):
+   player.sendToPlayer("%s>> Current Map: %s%s" % (amDefines.GREEN, amDefines.LCYAN, amMaps.Map.MapInfo[0]) )
+   Who( player )
+   return
 ################################################
 # Command -> Who
 ################################################
@@ -493,20 +501,21 @@ def Who(player):
    player.sendToPlayer("%s<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= %sWhos Online%s =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=>>" % (amDefines.LCYAN, amDefines.LMAGENTA, amDefines.LCYAN))
    player.sendToPlayer("%s    Warrior         Race            Class           Kills   Deaths   K/D Ratio" % (amDefines.LGREEN))
    for user in player.factory.players.values():
-      try:
-         ratio = "%.2f" % ( float(user.kills) / float(user.deaths) )
-      except:
+      if user.STATUS == amDefines.PLAYING or user.STATUS == amDefines.PURGATORY:
+         try:
+            ratio = "%.2f" % ( float(user.kills) / float(user.deaths) )
+         except:
             if user.kills == 0:
                ratio = "%.2f" % float(0.00)
             else:
                ratio = "%.2f" % (user.kills)
 
-      if user.STATUS == amDefines.PURGATORY:
-         playercolor = amDefines.LRED
-      else:
-         playercolor = amDefines.LMAGENTA
+         if user.STATUS == amDefines.PURGATORY:
+            playercolor = amDefines.LRED
+         else:
+            playercolor = amDefines.LMAGENTA
          
-      player.sendToPlayer("%s => %s%s%s %s %s %s  %s    %s" % (amDefines.LCYAN, playercolor, user.name.ljust(15, ' '), amDefines.LCYAN, amRace.RaceList[user.race].name.ljust(15,' '), amRace.ClassList[user.Class].name.ljust(15,' '), str(user.kills).rjust(5, ' '), str(user.deaths).rjust(6, ' '), str(ratio).rjust(9, ' ') ) )
+         player.sendToPlayer("%s => %s%s%s %s %s %s  %s    %s" % (amDefines.LCYAN, playercolor, user.name.ljust(15, ' '), amDefines.LCYAN, amRace.RaceList[user.race].name.ljust(15,' '), amRace.ClassList[user.Class].name.ljust(15,' '), str(user.kills).rjust(5, ' '), str(user.deaths).rjust(6, ' '), str(ratio).rjust(9, ' ') ) )
 
    player.sendToPlayer("%s<<=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=>>" %(amDefines.LCYAN))
    amUtils.StatLine(player)
