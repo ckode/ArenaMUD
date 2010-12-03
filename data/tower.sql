@@ -1,3 +1,6 @@
+-- Map Info
+INSERT INTO "MapInfo" VALUES("Garin's Tower", "Garin's Tower is a large tower with three floors.");
+
 -- Tower Grounds
 INSERT INTO "rooms" VALUES (1, "Northwest Tower Grounds", "The northwest corner of the Garin's Tower sits on the edge of the Hissing", "Swamp. The creepy hissing sound that comes from the swamp is very", "unsettling. The smell of death surely comes from whatever is making", "the hissing sound.", "*", "3:1|5:16", 1, 0, 0, 0);
 INSERT INTO "rooms" VALUES (2, "Northern Tower Grounds", "North of the Garin's Tower sits on the edge of the Hissing Swamp. The", "creepy hissing sound that comes from the swamp is very unsettling. ", "The smell of death surely comes from whatever is making the hissing", "sound.", "*", "3:2|7:1", 1, 0, 0, 0);

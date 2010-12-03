@@ -16,7 +16,7 @@
 
 from twisted.internet import reactor
 
-import amDefines, amCommands, amDB
+import amDefines, amCommands, amDB, amMaps
 import amRooms, amUtils, amRace, amSpells
 
 import re, string
@@ -633,6 +633,7 @@ def PickRace(player, racenum):
             print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."
             player.Shout("%sA %s %s named %s has joined." % (amDefines.BLUE, race.name, amRace.ClassList[player.Class].name, player.name) )
             player.sendToPlayer(amDefines.YELLOW + "Welcome " + player.name + "!\r\nType 'help' for help" )
+            player.sendToPlayer("%s>> Current Map: %s%s" % (amDefines.GREEN, amDefines.LCYAN, amMaps.Map.MapInfo[0]) )
             player.factory.players[player.playerid] = player
         else:
             player.Shout("%s%s has rerolled into a %s %s." % (amDefines.BLUE, player.name, race.name, amRace.ClassList[player.Class].name) )

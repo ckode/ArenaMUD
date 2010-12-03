@@ -58,3 +58,8 @@ CREATE TABLE RoomTraps (
     roomdesc          VARCHAR(75) NOT NULL,
     name              VARCHAR(25) NOT NULL
 );
+
+CREATE TABLE MapInfo (
+    name              VARCHAR(30) NOT NULL,
+    description       VARCHAR(1024) NOT NULL
+);

@@ -14,6 +14,8 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+-- Map Info
+INSERT INTO "MapInfo" VALUES("Test Map", "A test map");
 
 -- Rooms
 INSERT INTO "rooms" VALUES(1,'Town Square','This is the Town Square of Dagnoroth!  You see trash piled up everywhere as ','the city has fallen from grace of the last few years! There appears to be ','a large hole here with a horrible smell rising from it.  To the north is the ','notorious Sonzo Ave.', "*", "1:1|5:5|3:7|7:9", 1, 0, 0, 1);

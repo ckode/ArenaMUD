@@ -59,13 +59,17 @@ CREATE TABLE RoomTraps (
     name              VARCHAR(25) NOT NULL
 );
 
-
+CREATE TABLE MapInfo (
+    name              VARCHAR(30) NOT NULL,
+    description       VARCHAR(1024) NOT NULL
+);
 
 
 PRAGMA foreign_keys=OFF;
 
 BEGIN TRANSACTION;
 
+INSERT INTO "MapInfo" VALUES("The Crypt", "A Crypt");
 
 INSERT INTO "rooms" VALUES(1,'Crypt Entrance','This grim crypts facade is covered with hundreds of years of spider webs.','There appears to be very little light inside. Neglect has helped this once','beautiful entrance become a macabre ruin.','*','*','1:12|9:1',1,0,0,0);
 

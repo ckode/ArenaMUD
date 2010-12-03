@@ -856,6 +856,7 @@ def NextMap(player):
    amUtils.KickAllToPurgatory(player)
    # Switch to the next map
    player.factory.ArenaQueue.LoadNextArena()
+   player.Shout( "%sNow playing: %s%s" % (amDefines.GREEN, amDefines.LCYAN, amMaps.Map.MapInfo[0]) )
    
 ################################################
 # Command -> Status(player)
@@ -992,8 +993,8 @@ def Reroll(player):
 
    # If player is playing, tell room player rerolled, and add a increment the players death count.
    if player.STATUS == amDefines.PLAYING:
-       player.sendToRoom("%s%s decides to reroll, and disappears in a puff of smoke!" %(amDefines.YELLOW, player.name))
-       player.deaths += 1
+      player.sendToRoom("%s%s decides to reroll, and disappears in a puff of smoke!" %(amDefines.YELLOW, player.name))
+      player.deaths += 1
 
    amUtils.ResetPlayerStats(player)
 
