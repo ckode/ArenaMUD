@@ -74,9 +74,10 @@ class Spells():
     def ApplySpell(self, player, caster):
     
         # Caster has to cool down after casting
-        caster.SpellCooldown = True
-        # Add CallLater to reset SpellCooldown so player can cast again
-        reactor.callLater(self.CoolDown, amUtils.ResetSpellCooldown, caster)
+        SpellSeed = random.randint(1, 10000)
+        caster.SpellsCasted[self.SpellID] = SpellSeed
+        # Add CallLater to reset the spell so player can cast it again
+        reactor.callLater(self.CoolDown, amUtils.ResetSpellCooldown, caster, self.SpellID, SpellSeed)
         
         # Does he make a guesture or pick it up?  If so, tell everyone
         if self.gesture != "*":

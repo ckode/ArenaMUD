@@ -333,11 +333,14 @@ def CopySpell( spell ):
 #
 # Resets a players ability to cast.
 #=========================================================
-def ResetSpellCooldown( player ):
-    try:
-        player.SpellCooldown = False
-    except:
-        pass
+def ResetSpellCooldown( player, SpellID, SpellSeed ):
+    # If the spell exist in cooldown AND the Spell seed 
+    # is the same, delete the spell. (seed ensure it's the
+    # same casting it's removing since caster could have died)
+    if player.SpellsCasted.has_key(SpellID):
+        if player.SpellsCasted[SpellID] == SpellSeed:
+            del player.SpellsCasted[SpellID]
+
     return
 
 #=========================================================
@@ -382,8 +385,8 @@ def ResetPlayerStats( player ):
     player.effectingSpell        = 0
     player.stun                  = False
     player.held                  = False
-    player.SpellCooldown         = False
     player.Spells.clear()
+    player.SpellsCasted.clear()
     
     # Remove player from combat queue and from the room
     player.factory.CombatQueue.RemoveAttack(player.playerid)
