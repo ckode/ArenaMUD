@@ -19,6 +19,9 @@ import amLog, amDB, os
 
 Map = None
 
+NAME = 0
+DESC = 1
+
 class Arena:
     def __init__(self):
         self.name         = ""
@@ -27,6 +30,7 @@ class Arena:
         self.Doors        = {}
         self.RoomSpells   = {}
         self.RoomTraps    = {}
+        self.MapInfo      = {}
 
 
 class ArenaQueue:
@@ -112,6 +116,7 @@ class ArenaQueue:
         
         # Load next Arena.
         Map = self.LoadArena( self.ArenaIndex[self.CurrentArena], Arena() )
+        
     
     #################################################
     # LoadArena()
@@ -123,6 +128,13 @@ class ArenaQueue:
         Arena.MapFile = "%s\data\%s" % ( os.getcwd(), MapFile )
 
         if os.path.exists( Arena.MapFile ):
+            # Load the map info
+            try:
+                Arena.MapInfo = amDB.LoadMapInfo( Arena.MapFile )
+            except:
+                ErrMesg = "Error: Failed to load map info from arena file: %s" % ( Arena.MapFile )
+                amLog.Logit( ErrMesg )
+                return False
             # Load the doors
             try:
                 Arena.Doors = amDB.LoadDoors( Arena.MapFile )

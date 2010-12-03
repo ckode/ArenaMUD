@@ -411,6 +411,29 @@ def LoadRoomTraps( MapDB ):
     return RoomTraps
 
 
+#################################################
+# LoadMapInfo()
+# Load map info from the database
+#################################################
+def LoadMapInfo( MapDB ):
+    MapInfo = {}
+
+    try:
+        conn     = sqlite3.connect( MapDB )
+        cur      = conn.cursor()
+    except:
+        amLog.Logit("Failed to open database: %s" % ( MapDB ) )
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM MapInfo")
+    except:
+        amLog.Logit("Failed to query database for map info information!")
+    for row in cur:
+        MapInfo[0]    = str(row[0])
+        MapInfo[1]    = str(row[1])
+        
+    return MapInfo
+
 ###########################################
 # Load Classes
 ###########################################
