@@ -50,8 +50,7 @@ class Users(StatefulTelnetProtocol):
         self.maxhp              = 100
         self.staticmaxhp        = 100
         self.stealth            = 0
-        self.effectingSpell     = 0
-        self.SpellCooldown      = False                 
+        self.effectingSpell     = 0              
         self.ClassStealth       = False
         self.sneaking           = False
         self.room               = 1
@@ -70,6 +69,7 @@ class Users(StatefulTelnetProtocol):
         self.mindamage          = 0
         self.maxdamage          = 0
         self.extraDamageSpell   = {}
+        self.SpellsCasted       = {}
         self.blind              = False
         self.magery             = 0
         self.briefDesc          = 1
