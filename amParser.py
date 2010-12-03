@@ -42,7 +42,7 @@ def commandParser(player, line):
     commands = { '/quit':            amCommands.Quit,
                  'gossip':           amCommands.Gossip,
                  'emote':            amCommands.Emote,
-                 'who':              amCommands.Who,
+                 'who':              amCommands.WhoCmd,
                  'set':              amCommands.Set,
                  'help':             amCommands.Help,
                  'look':             amCommands.Look,
