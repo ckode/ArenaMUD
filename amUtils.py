@@ -112,6 +112,9 @@ def StatLine(player):
 #################################################
 def NaturalHealing(player):
     healRate = 4
+    # Add regen bonus if applicable
+    healRate += player.HealBonus
+    
     if player.resting:
         healRate = healRate * 2
     if (player.hp + healRate) > player.maxhp:
