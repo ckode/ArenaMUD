@@ -75,7 +75,8 @@ def commandParser(player, line):
                  'nextmap':          amCommands.NextMap,
                  'status':           amCommands.Status,
                  'spells':           amCommands.ListSpells,
-                 'reroll':           amCommands.Reroll
+                 'reroll':           amCommands.Reroll,
+                 'get':              amCommands.Get,
                }
     cmd = line.split()
     # Player just hit enter, look around the room.
@@ -123,6 +124,11 @@ def commandParser(player, line):
             elif each == "attack":
                 if len(cmd) == 2:
                     amCommands.Attack(player, line[(len(cmd[0]) + 1):])
+                    return
+            # Get item
+            elif each == "get":
+                if len(cmd) == 2:
+                    amCommands.Get(player, line[(len(cmd[0]) + 1):])
                     return
             # Look
             elif each == "look":

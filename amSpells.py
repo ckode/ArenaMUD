@@ -20,7 +20,7 @@ from twisted.internet import reactor
 
 import amDefines, amUtils, amCombat, amLog
 
-SpawnItems      = {}
+ItemsList       = {}
 SpellList       = {}
 
 HP              = 1
@@ -119,6 +119,36 @@ class Spells():
         amUtils.StatLine(player)
     
 
+    #===============================================
+    # ApplyItem()
+    #
+    # Apply whatever item was picked up
+    #===============================================
+    def ApplyItem(self, player):
+          
+        if self.gesture != "*":
+            curGesture = self.gesture.split("|")
+            player.sendToPlayer( curGesture[0] % (amDefines.BLUE, amDefines.WHITE) )
+            player.sendToRoom( curGesture[1] % (amDefines.BLUE, player.name, amDefines.WHITE) )
+            
+                # If it is a duration effect spell, apply the effects.
+        if self.duration:
+            # Apply any stat changes
+            self.ApplySpellStats(player)
+            
+            # Make a Deep copy of the spell, so we can edit its attributes (casterid, subtract duration, etc) without messing up the original
+            player.Spells[self.cmd] = amUtils.CopySpell(self)
+
+
+            player.Spells[self.cmd].CasterID = player.playerid
+            player.Spells[self.cmd].duration -= 1
+            player.Spells[self.cmd].ApplyImmediateEffects( player, player )
+        else:
+            self.ApplySpellStats(player)
+            self.ApplyImmediateEffects(player, player)
+            
+        amUtils.StatLine(player)
+        
     ############################################################
     # DurationSpellEffects()
     #

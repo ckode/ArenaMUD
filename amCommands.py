@@ -646,10 +646,14 @@ def Look(player, RoomNum, DESC):
          player.sendLine(amDefines.WHITE + Room.Desc4)
       if Room.Desc5 != "*":
          player.sendLine(amDefines.WHITE + Room.Desc5)
+
+
+
+   # People in the room
    PeopleInRoom = amUtils.WhoIsInTheRoom(player, RoomNum)
    Count = len(PeopleInRoom)
    if (Count > 1 and player.room == RoomNum) or (Count > 0 and player.room != RoomNum) :
-      names = amDefines.GREEN + "Also here: " + amDefines.LMAGENTA
+      names = "%sAlso here: %s" % (amDefines.GREEN, amDefines.LMAGENTA)
       for each in PeopleInRoom.values():
          # You don't see yourself!
          if each != player.name:
@@ -660,6 +664,11 @@ def Look(player, RoomNum, DESC):
                names = names + each + "." + amDefines.WHITE
 
       player.sendLine(names)
+   
+   # Items in the room
+   ItemsInRoom = amMaps.Map.Rooms[RoomNum].ItemsYouNotice()
+   if ItemsInRoom != None:
+      player.sendLine("%sYou notice: %s" % (amDefines.MAGENTA, ItemsInRoom) )
 
    player.sendToPlayer(Room.DisplayExits() + amDefines.WHITE)
    #amUtils.StatLine(player)
@@ -825,6 +834,47 @@ def Attack(player, attacked):
          player.sendToRoomNotVictim(victim.playerid, "%s%s moves to attack %s!%s" % (amDefines.BROWN, player.name, victim.name,  amDefines.WHITE))
 
 
+#=================================================
+# Get()
+#
+# Get an item in the room (then cast it)
+#=================================================
+def Get(player, line):
+   
+   # Get current room
+   Room = amMaps.Map.Rooms[player.room]
+   
+   # Get a list of items in the room
+   items = Room.FindItemInRoom( player, line )
+
+   # No items found
+   if items == None:
+      player.sendToPlayer("%sYou don't see %s here." % (amDefines.WHITE, line) )
+      return
+   
+   # More than one found.
+   if len(items) > 1:
+      player.sendToPlayer("%sWhich do you mean?" % (amDefines.WHITE) )
+      for each in items.keys():
+         player.sendToPlayer("%s - %s" % (amDefines.WHITE, each) )
+      return
+   
+   # Apply the items effect to the player
+   key = items.keys()[0]
+   items[key].ApplyItem( player )
+   
+   # Now delete the item from the room.
+   try:
+      del amMaps.Map.Rooms[player.room].Items[key]
+   except:
+      print "Failed to remove item from room on GET"
+      
+   # Set the respawn timer!
+   reactor.callLater(items[key].CoolDown, amUtils.SpawnItem, items[key])
+   
+   return
+         
+   
 def Rest(player):
    player.resting = True
    if player.attacking == True:
