@@ -14,7 +14,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import amDefines, amUtils, amMaps
+import amDefines, amUtils, amMaps\
+       
+import re
 
 RoomList          = {}
 RoomSpellList     = {}
@@ -123,6 +125,7 @@ class RoomObj():
         self.ItemsInRoom       = {}  # Items laying on the ground in the room
         self.ItemsInRoomCount  = {}  # Count of how many items are on the ground (do we need this?)
         self.Players           = {}  # List of players currently in the room
+        self.Items             = {}  # List of items in the room
 
 
     ##########################
@@ -181,7 +184,47 @@ class RoomObj():
         # No door, return zero
         return 0
 
+    #==========================================
+    # ItemList()
+    #
+    # Return a text list of items in the room by name
+    #==========================================
+    def ItemsYouNotice(self):
+        NumItems = len(self.Items)
+        
+        if NumItems == 0:
+            return None
+        else:
+            itemStr = ""
+            x = 1
+            for itemName in self.Items.keys():
+                if x == NumItems and x == 1:
+                    itemStr += itemName
+                elif x == itemsName:
+                    itemStr += ", %s" % (itemName)
+                    
+        return itemStr
+                
 
+    #===========================================
+    # FindItemInRoom()
+    #
+    # Returns a hash of items "Name: ItemObject"
+    #===========================================
+    def FindItemInRoom(self, player, Name):
+        
+        itemList = {}
+
+        NameSearch = re.compile( re.escape(Name.lower()) )
+        for itemName, item in amMaps.Map.Rooms[player.room].Items.items():
+            if itemName != "":
+                if NameSearch.match( itemName.lower() ):
+                    itemList[itemName] = item
+
+        if len(itemList) == 0:
+            return None
+        else:
+            return itemList                    
 
 ###############################################
 # Door Object

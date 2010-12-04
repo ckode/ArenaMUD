@@ -265,6 +265,33 @@ def SpawnPlayer(player):
     player.sendToRoom("%s%s appears in a flash!%s" % (amDefines.YELLOW, player.name, amDefines.WHITE) )
     player.Shout(amDefines.BLUE + player.name + " has spawned!")
 
+    
+###################################################
+# SpawnItem()
+#
+# Spawns a player in an empty room (no other players)
+# Of someone is in every room, just spawn the player
+###################################################
+def SpawnItem(item):
+
+    SpawnRooms = []
+    
+    # Look for empty rooms that allow spawning
+    for room in amMaps.Map.Rooms.values():
+        if len(room.Items) == 0 and room.NoSpawn == 0:
+            SpawnRooms.append(room)
+
+    # If no empty spawn rooms where found, just get rooms that allow spawning
+    if len(SpawnRooms) == 0:
+        for room in amMaps.Map.Rooms.values():
+            if room.NoSpawn == 0:
+                SpawnRooms.append(room)
+
+    newRoom = SpawnRooms[( random.randint( 1, len(SpawnRooms) ) ) - 1 ]
+
+    amMaps.Map.Rooms[newRoom.RoomNum].Items[item.name] = item
+
+
 #####################################################
 # EnterPurgatory()
 #

@@ -91,7 +91,7 @@ INSERT INTO spells_items VALUES (
 -- Healing potion 
 INSERT INTO spells_items VALUES (
             3,                    -- ID:              Spell / item ID
-            "healing portion",    -- name:            Spell/Item Name as it appears in game
+            "healing potion",        -- name:            Spell/Item Name as it appears in game
             "*",                  -- cmd:             Command used to cast it. (not used if ITEM)
             0,                    -- casted:          1 = spell, 0 = item
             30,                   -- cooldown         How long it takes to cool down to cast again (respawn for items)
@@ -99,7 +99,7 @@ INSERT INTO spells_items VALUES (
             0,                    -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
             0,                    -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
             0,                    -- durationEffect   Does a effect happen each duration loop (damage/healing ever 2 seconds, etc) stat boost = 0 durEff
-            "1:5%15",             -- effects          * See below license info at top for explination
+            "1:15%30",             -- effects          * See below license info at top for explination
             -- gesture     Use "*" for none, this is any pre-cast gestures made. 
             "%sYou pick up a healing potion and drink it!%s|%s%s picks up a healing potion and drinks it!%s",          
             -- Text effect:    The effect you see when the spell happens.  Can be "*" for none.
@@ -286,4 +286,32 @@ INSERT INTO spells_items VALUES (
             "%sYou thaw out.%s",
             -- statusText:    Spell Status Text (when typing stats
             "%sYou are frozen!%s"
+);
+
+-- Poison potion 
+INSERT INTO spells_items VALUES (
+            10,                   -- ID:              Spell / item ID
+            "flask of liquid",    -- name:            Spell/Item Name as it appears in game
+            "*",                  -- cmd:             Command used to cast it. (not used if ITEM)
+            0,                    -- casted:          1 = spell, 0 = item
+            30,                   -- cooldown         How long it takes to cool down to cast again (respawn for items)
+            0,                    -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
+            0,                    -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
+            10,                   -- duration         How long a spell lasts. 0 Instant, duration loop = 2 seconds, 30sec spell = 15 duration
+            1,                    -- durationEffect   Does a effect happen each duration loop (damage/healing ever 2 seconds, etc) stat boost = 0 durEff
+            "1:-2",               -- effects          * See below license info at top for explination
+            -- gesture     Use "*" for none, this is any pre-cast gestures made. 
+            "%sYou pick up a flask of liquid and drink it!%s|%s%s picks up a flask of liquid and drinks it!%s",          
+            -- Text effect:    The effect you see when the spell happens.  Can be "*" for none.
+            "%sYou feel sick.%s",
+            -- spellTextself:  What you see, when you cast the spell.  (split for casting on self and others)
+            "*",
+            -- spellTextRoom:  What the room not including you and the victim see
+            "*",
+            -- spellTextVictim:   What the victim sees. (not shown to self)
+            "*",
+            -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
+            "%sThe poison wears off.%s",
+            -- statusText:    Spell Status Text (when typing stats
+            "%sYou are poisoned!%s"
 );

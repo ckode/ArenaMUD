@@ -201,14 +201,17 @@ class SonzoFactory(ServerFactory):
         amDB.LoadClasses(self)
         amDB.LoadRaces(self)
         amDB.LoadAnsiScreens()
-        amSpells.SpellList, amSpells.SpawnItems = amDB.LoadSpellsAndItems( self )
+        amSpells.SpellList, amSpells.ItemsList = amDB.LoadSpellsAndItems( self )
 
         # Disable the following until the new map queue is complete
         
         if self.ArenaQueue.ConfFileFail:
             self.ShutdownPreReactorStart()
 
-
+            
+        # Spawn the items
+        for item in amSpells.ItemsList.values():
+            amUtils.SpawnItem( item )
 
     def sendMessageToAllClients(self, mesg):
         for client in self.players.values():
