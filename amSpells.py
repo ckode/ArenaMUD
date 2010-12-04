@@ -31,7 +31,7 @@ SPELLCASTING    = 5
 MAGICRES        = 6
 DAMAGEBONUS     = 7
 STEALTH         = 8
-REGEN           = 9
+HEALBONUS       = 9
 HELD            = 10
 STUN            = 11
 EXTRA_MELEE_DMG = 12
@@ -131,7 +131,7 @@ class Spells():
             player.sendToPlayer( curGesture[0] % (amDefines.BLUE, amDefines.WHITE) )
             player.sendToRoom( curGesture[1] % (amDefines.BLUE, player.name, amDefines.WHITE) )
             
-                # If it is a duration effect spell, apply the effects.
+        # If it is a duration effect spell, apply the effects.
         if self.duration:
             # Apply any stat changes
             self.ApplySpellStats(player)
@@ -257,8 +257,8 @@ class Spells():
                 player.damagebonus += val
             elif stat == STEALTH:
                 player.stealth += val
-            elif stat == REGEN:
-                player.regen += val
+            elif stat == HEALBONUS:
+                player.HealBonus += val
             elif stat == HELD:
                 player.held = True   
             elif stat == STUN:
@@ -298,8 +298,8 @@ class Spells():
                 player.damagebonus -= val
             elif stat == STEALTH:
                 player.stealth -= val
-            elif stat == REGEN:
-                player.regen -= val
+            elif stat == HEALBONUS:
+                player.HealBonus -= val
             elif stat == HELD:
                 player.held = False
             elif stat == STUN:

@@ -55,7 +55,7 @@ class Users(StatefulTelnetProtocol):
         self.sneaking           = False
         self.room               = 1
         self.resting            = False
-        self.RegenBonus         = 0
+        self.HealBonus          = 0
         self.kills              = 0
         self.deaths             = 0
         self.held               = False
