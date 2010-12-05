@@ -387,13 +387,13 @@ def ResetPlayerStats( player ):
     # Assign class attributes
     player.hp               = playerclass.hpbonus
     player.maxhp            = player.hp
-    player.mindamage       += playerclass.mindamage
-    player.maxdamage       += playerclass.maxdamage
+    player.mindamage        = playerclass.mindamage
+    player.maxdamage        = playerclass.maxdamage
     player.magery           = playerclass.MageryType
     # If class has stealth, then player can sneak
     if playerclass.stealth > 0:
         player.ClassStealth = True
-    player.stealth         += playerclass.stealth
+    player.stealth          = playerclass.stealth
     player.weapontext       = playerclass.weapontext
     player.STATUS           = amDefines.GETRACE
     player.speed            = playerclass.speed    

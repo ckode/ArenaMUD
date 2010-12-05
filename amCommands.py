@@ -18,7 +18,7 @@ from twisted.internet import reactor
 
 import amDefines, amDB, amLog, amCommands
 import amRooms, amUtils, amParser, amRace
-import amMaps, amSpells
+import amMaps, amSpells, amCombat
 
 import time, re, random
 
@@ -34,6 +34,9 @@ WEST         =  7
 NW           =  8
 UP           =  9
 DOWN         = 10
+
+ATTACKING               = 0
+CASTING                 = 1
 
 MOVINGTEXT = {  1: " leaves to the north.| arrives from the south.",
                 2: " leaves to the northeast.| arrives from the southwest.",
@@ -1001,9 +1004,9 @@ def CastSpell( player, Cmd ):
    
    # Just the command was given, can we cast it on ourself?
    if len( Cmd ) == 1 and ( Spell.UsedOn == 1 or Spell.UsedOn == 3 ):
-          
-      Spell.ApplySpell( player, player )
-      return True
+      if amCombat.HitRoll( player, player, CASTING ):
+         Spell.ApplySpell( player, player )
+         return True
       
    # A victim was given, is it castable on someone else?
    elif len (Cmd ) == 2 and Spell.UsedOn > 1:
@@ -1026,8 +1029,9 @@ def CastSpell( player, Cmd ):
             player.sendToPlayer("%sYou cannot use this on yourself!" % (amDefines.YELLOW))
             return True
          else:
-            Spell.ApplySpell( victim, player )
-            return True
+            if amCombat.HitRoll( player, player, CASTING ):
+               Spell.ApplySpell( victim, player )
+               return True
       
 ################################################
 # Command -> ListSpells(player)

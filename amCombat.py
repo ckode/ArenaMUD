@@ -125,10 +125,16 @@ def HitRoll( player, victim , ATTACKTYPE ):
     if ATTACKTYPE == ATTACKING:
         ToHitValue = victim.defense - player.offense
     elif ATTACKTYPE == CASTING:
-        ToHitValue = victim.magicres - player.spellcasting
+        # If the player is casting on self, 20% chance of fail
+        if player.name == victim.name:
+            ToHitValue = 20
+        else:
+            ToHitValue = victim.magicres - player.spellcasting
         
-    Roll = random.randint(0, 100)
-    
+    # Roll and see if it's a hit / successful cast
+    Roll = random.randint(0, 100)  
+
+    #print "Roll: %i ToHit: %i" % (Roll, ToHitValue)
     if Roll > ToHitValue:
         return True
     else:
@@ -248,6 +254,11 @@ def DamageRoll( player, victim ):
     # Later, add in victim buffs that lower lower damage
     
     damage = random.randint(player.mindamage, player.maxdamage) 
+    print "MinDam: %i, MaxDam: %i" % (player.mindamage, player.maxdamage)
+    print "Dam: %i, DamBon: %i" % (damage, player.damagebonus)
+    
+    
+    
     return (damage + int(player.damagebonus) )
 
 #==================================================
