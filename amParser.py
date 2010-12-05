@@ -572,8 +572,8 @@ def PickClass(player, classnum):
         player.Class            = classnum
         player.hp               = playerclass.hpbonus
         player.maxhp            = player.hp
-        player.mindamage       += playerclass.mindamage
-        player.maxdamage       += playerclass.maxdamage
+        player.mindamage        = playerclass.mindamage
+        player.maxdamage        = playerclass.maxdamage
         player.magery           = playerclass.MageryType
         # If class has stealth, then player can sneak
         if playerclass.stealth > 0:
