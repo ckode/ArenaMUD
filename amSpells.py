@@ -36,6 +36,10 @@ HELD            = 10
 STUN            = 11
 EXTRA_MELEE_DMG = 12
 
+# Type
+ITEM            = 0
+SPELL           = 1
+
 # CastOn
 SELF            = 1
 VICTIM          = 2
@@ -137,12 +141,12 @@ class Spells():
             self.ApplySpellStats(player)
             
             # Make a Deep copy of the spell, so we can edit its attributes (casterid, subtract duration, etc) without messing up the original
-            player.Spells[self.cmd] = amUtils.CopySpell(self)
+            player.Spells[self.SpellID] = amUtils.CopySpell(self)
 
 
-            player.Spells[self.cmd].CasterID = player.playerid
-            player.Spells[self.cmd].duration -= 1
-            player.Spells[self.cmd].ApplyImmediateEffects( player, player )
+            player.Spells[self.SpellID].CasterID = player.playerid
+            player.Spells[self.SpellID].duration -= 1
+            player.Spells[self.SpellID].ApplyImmediateEffects( player, player )
         else:
             self.ApplySpellStats(player)
             self.ApplyImmediateEffects(player, player)
@@ -309,4 +313,10 @@ class Spells():
                 
 
         player.sendToPlayer( self.WearOffText % (amDefines.BLUE, amDefines.WHITE) )
-        del player.Spells[self.cmd]
+        
+        # If effect of type spell, remove it
+        if self.stype == SPELL:
+            del player.Spells[self.cmd]
+        # if of type item, remove it.
+        elif self.stype == ITEM:
+            del player.Spells[self.SpellID]
