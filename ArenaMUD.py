@@ -35,20 +35,21 @@ class Users(StatefulTelnetProtocol):
     def __init__(self):
     # User stats
         self.playerid           = None
+        self.ClassType          = 0
         self.name               = ""
         self.lastname           = ""
         self.password           = ""
         self.race               = 0
         self.Class              = 0
         self.health             = 0
-        self.offense            = 50
-        self.defense            = 80
+        self.offense            = 0
+        self.defense            = 0
         self.magicres           = 0
         self.damagebonus        = 0
         self.isAdmin            = 0
-        self.hp                 = 50
-        self.maxhp              = 100
-        self.staticmaxhp        = 100
+        self.hp                 = 0
+        self.maxhp              = 0
+        self.staticmaxhp        = 0
         self.stealth            = 0
         self.effectingSpell     = 0              
         self.ClassStealth       = False

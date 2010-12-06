@@ -32,6 +32,7 @@ class Race():
         self.defensebonus     = 0
         self.attackbonus      = 0
         self.stealth          = 0
+        self.MRBonus          = 0
 
 
 
@@ -45,6 +46,7 @@ ClassList = {}
 class Class():
     def __init__(self):
         self.id               = 0
+        self.ClassType        = 0
         self.name             = ""
         self.desc             = ""      # TextBlock ID
         self.hpBonus          = 0
@@ -55,5 +57,10 @@ class Class():
         self.stealth          = 0
         self.weapontext       = 0
         self.speed            = 0
+        self.Spellcasting     = 0
+        self.MR               = 0
+        self.Offense          = 0
+        self.Defense          = 0
+
 
 

@@ -262,7 +262,8 @@ def LoadSpellsAndItems( Sonzo ):
         Spells[SpellIndex].spellTextRoom                   = str(row[13])
         Spells[SpellIndex].spellTextVictim                 = str(row[14])
         Spells[SpellIndex].WearOffText                     = str(row[15])
-        Spells[SpellIndex].statusText                      = str(row[16])
+        Spells[SpellIndex].failText                        = str(row[16])
+        Spells[SpellIndex].statusText                      = str(row[17])
         
         # If it's actually an item, assign it to Items and delete from Spells.
         if Spells[SpellIndex].stype == 0:
@@ -465,6 +466,11 @@ def LoadClasses(Sonzo):
         amRace.ClassList[row[0]].stealth                         = row[8]
         amRace.ClassList[row[0]].weapontext                      = row[9]
         amRace.ClassList[row[0]].speed                           = row[10]
+        amRace.ClassList[row[0]].ClassType                       = row[11]
+        amRace.ClassList[row[0]].Spellcasting                    = row[12]
+        amRace.ClassList[row[0]].MR                              = row[13]
+        amRace.ClassList[row[0]].Offense                         = row[14]
+        amRace.ClassList[row[0]].Defense                         = row[15]
 
     print "Loaded %d classes." % (len(amRace.ClassList),)
 
@@ -499,6 +505,7 @@ def LoadRaces(Sonzo):
         amRace.RaceList[row[0]].defensebonus                    = row[7]
         amRace.RaceList[row[0]].attackbonus                     = row[8]
         amRace.RaceList[row[0]].stealth                         = row[9]
+        amRace.RaceList[row[0]].MRBonus                         = row[10]
 
     print "Loaded %d races." % (len(amRace.RaceList),)
 

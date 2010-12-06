@@ -25,7 +25,8 @@ CREATE TABLE race (
    Vision             INTEGER NOT NULL,         -- 1 normal, 2 night, 3 DARK vision
    DefenseBonus       INTEGER NOT NULL,         -- Makes you harder to hit
    ToHitBonus         INTEGER NOT NULL,         -- Makes you more accurate
-   Stealth            INTEGER NOT NULL          -- Bonus to stealth if class has stealth
+   Stealth            INTEGER NOT NULL,         -- Bonus to stealth if class has stealth
+   MRBonus            INTEGER NOT NULL
 );
 
 CREATE TABLE class (
@@ -39,5 +40,10 @@ CREATE TABLE class (
    MageryType         INTEGER NOT NULL,
    Stealth            INTEGER NOT NULL,
    WeaponMessages     INTEGER NOT NULL,
-   Speed              INTEGER NOT NULL
+   Speed              INTEGER NOT NULL,
+   ClassType          INTEGER NOT NULL,
+   SpellCasting       INTEGER NOT NULL,
+   MR                 INTEGER NOT NULL,
+   Offense            INTEGER NOT NULL,
+   Defense            INTEGER NOT NULL
 );

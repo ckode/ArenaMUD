@@ -18,8 +18,8 @@ import random
 import amMaps, amUtils, amDefines, amSpells
 
 
-ATTACKING               = 0
-CASTING                 = 1
+ATTACKING               = 1
+CASTING                 = 2
 
 MISS                    = 0
 
@@ -94,7 +94,7 @@ def KillPlayer(player, killer):
     if killer > 0:
         try:
             killer = player.factory.players[killer]
-            killer.kills =+ 1
+            killer.kills += 1
             player.factory.sendMessageToAllClients("\r\n%s%s has killed %s!" % (amDefines.BLUE, killer.name, player.name))
         except:
             player.factory.sendMessageToAllClients("\r\n%s%s was killed!%s" % (amDefines.BLUE, player.name, amDefines.WHITE))
@@ -125,20 +125,27 @@ def HitRoll( player, victim , ATTACKTYPE ):
     if ATTACKTYPE == ATTACKING:
         ToHitValue = victim.defense - player.offense
     elif ATTACKTYPE == CASTING:
-        # If the player is casting on self, 20% chance of fail
-        if player.name == victim.name:
-            ToHitValue = 20
+        # If the player is casting on self, 10% chance of fail
+        if player.name == victim.name and player.spellcasting > 0:
+            ToHitValue = 10
         else:
-            ToHitValue = victim.magicres - player.spellcasting
+            if player.spellcasting < 1:
+                ToHitValue = 101
+            else:
+                ToHitValue = victim.magicres - player.spellcasting
+
         
     # Roll and see if it's a hit / successful cast
-    Roll = random.randint(0, 100)  
+    Roll = random.randint(1, 100)  
 
-    #print "Roll: %i ToHit: %i" % (Roll, ToHitValue)
+    #print "Roll: %i ToHitValue: %i" % (Roll, ToHitValue)
+    # Did the attack land? 
     if Roll > ToHitValue:
         return True
     else:
-        return False
+        return False 
+
+        
 
 ###################################################
 # PlayerAttack()
@@ -149,6 +156,7 @@ def PlayerAttack(player):
     global CombatQueue
     
     damage = 0
+    AttackType = player.ClassType
     
     if player.attacking == 0:
         return
@@ -168,7 +176,7 @@ def PlayerAttack(player):
         if player.ClassStealth and player.sneaking:
 
             # Make the hit roll
-            if HitRoll( player, curVictim, ATTACKING ):
+            if HitRoll( player, curVictim, AttackType ):
                 # Roll for damage and apply backstab damage modifier 
                 damage = DamageRoll( player, curVictim ) + BackstabModifier( player )
 
@@ -190,7 +198,7 @@ def PlayerAttack(player):
                 totalDamage = 0
                 for attk in range(0, player.speed):  
                     # Make the hitroll
-                    if HitRoll( player, curVictim, ATTACKING ):
+                    if HitRoll( player, curVictim, AttackType ):
                         # Roll damage and tell the room
                         damage = DamageRoll( player, curVictim )
                         # Total up damage thus far
@@ -253,11 +261,7 @@ def BackstabModifier( player ):
 def DamageRoll( player, victim ):
     # Later, add in victim buffs that lower lower damage
     
-    damage = random.randint(player.mindamage, player.maxdamage) 
-    print "MinDam: %i, MaxDam: %i" % (player.mindamage, player.maxdamage)
-    print "Dam: %i, DamBon: %i" % (damage, player.damagebonus)
-    
-    
+    damage = random.randint(player.mindamage, player.maxdamage)   
     
     return (damage + int(player.damagebonus) )
 

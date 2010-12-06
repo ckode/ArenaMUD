@@ -582,6 +582,10 @@ def PickClass(player, classnum):
         player.weapontext       = playerclass.weapontext
         player.STATUS           = amDefines.GETRACE
         player.speed            = playerclass.speed
+        player.offense          = playerclass.Offense
+        player.defense          = playerclass.Defense
+        player.spellcasting     = playerclass.Spellcasting
+        player.magicres         = playerclass.MR
 
         # Now display race choices
         player.transport.write("Choose a race:\r\n")
@@ -634,6 +638,7 @@ def PickRace(player, racenum):
         player.stealth         += race.stealth
         player.STATUS           = amDefines.PLAYING
         player.staticmaxhp      = player.maxhp
+        player.magicres        += race.MRBonus
 
         if player.Rerolling == False:
             print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."

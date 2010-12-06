@@ -64,6 +64,7 @@ class Spells():
         self.spellTextRoom               = ""
         self.spellTextVictim             = ""
         self.WearOffText                 = ""
+        self.failText                    = ""
         self.statusText                  = ""
 
 
