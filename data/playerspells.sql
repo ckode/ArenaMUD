@@ -54,6 +54,8 @@ INSERT INTO spells_items VALUES (
             "%s%s casts healing on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "*",
+            -- spellFail      Text if the spell fails
+            "%sYou attempt to cast healing, but fail!%s|%s%s attempts to cast healing, but fails!%s",
             -- statusText:    Spell Status Text (when typing stats
             "*"
 );
@@ -83,6 +85,8 @@ INSERT INTO spells_items VALUES (
             "%s%s casts creeping doom on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sThe swarm has left.%s",
+            -- spellFail      Text if the spell fails
+            "%sYou attempt to cast doom, but fail!%s|%s%s attempts to cast doom, but failed!%s",
             -- statusText:    Spell Status Text (when typing stats
             "%sYou are being attacked by a swarm of insects!%s"
 );
@@ -112,6 +116,8 @@ INSERT INTO spells_items VALUES (
             "*",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "*",
+            -- spellFail      Text if the spell fails
+            "*",
             -- statusText:    Spell Status Text (when typing stats
             "*"
 );
@@ -140,6 +146,8 @@ INSERT INTO spells_items VALUES (
             "%s%s casts entangle on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sYou are freed!%s",
+            -- spellFail      Text if the spell fails
+            "%sYou attempt to cast entangle, but fail!%s|%s%s attempts to cast entangle, but failed!%s",
             -- statusText:    Spell Status Text (when typing stats
             "%sYou have been entangled by surrounding plants!%s"
 );
@@ -169,6 +177,8 @@ INSERT INTO spells_items VALUES (
             "%s%s casts hold person on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sYou are no longer held!%s",
+            -- spellFail      Text if the spell fails
+            "%sYou attempt to cast hold person, but fail!%s|%s%s attempts to cast hold person, but failed!%s",
             -- statusText:    Spell Status Text (when typing stats
             "%sYou are being held by some unseen force!%s"
 );
@@ -198,6 +208,8 @@ INSERT INTO spells_items VALUES (
             "%s%s slams you to the ground!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sYou get up and rub some dirt on it.%s",
+            -- spellFail      Text if the spell fails
+            "%sYou attempt to slam your enemy, but miss!%s|%s%s attempts to slam his enemy, but missed!%s",
             -- statusText:    Spell Status Text (when typing stats
             "*"
 );
@@ -226,6 +238,8 @@ INSERT INTO spells_items VALUES (
             "*",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sYour blade is no longer poisoned.%s",
+            -- spellFail      Text if the spell fails
+            "%sYou attempt to apply poison to your blade, but fail!%s|%s%s attempts to apply poison on his blade, but failed!%s",
             -- statusText:    Spell Status Text (when typing stats
             "*"
 );
@@ -255,7 +269,9 @@ INSERT INTO spells_items VALUES (
             "%s%s casts weakness on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sYou feel stronger.%s",
-            -- statusText:    Spell Status Text (when typing stats
+            -- spellFail      Text if the spell fails
+            "%sYou attempt to cast weakness, but fail!%s|%s%s attempts to cast weakness, but failed!%s",
+            -- statusText:    Spell Status Text (when typing stats)
             "%sYou feel weak!%s"
 );
 
@@ -284,6 +300,8 @@ INSERT INTO spells_items VALUES (
             "%s%s casts cone of ice on you!%s",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sYou thaw out.%s",
+            -- spellFail      Text if the spell fails
+            "%sYou attempt to cast cone of ice, but fail!%s|%s%s attempts to cast cone of ice, but failed!%s",
             -- statusText:    Spell Status Text (when typing stats
             "%sYou are frozen!%s"
 );
@@ -313,6 +331,8 @@ INSERT INTO spells_items VALUES (
             "*",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sThe ring of natural healing vanishes!%s",
+            -- spellFail      Text if the spell fails
+            "*",
             -- statusText:    Spell Status Text (when typing stats
             "%sYou are wearing a ring of natural healing.%s"
 );
@@ -341,6 +361,8 @@ INSERT INTO spells_items VALUES (
             "*",
             -- spellWearOff:  The text seen when a duration spell wears off.  ("*" if not a duration spell)
             "%sThe regeneration stops.%s",
+            -- spellFail      Text if the spell fails
+            "*",
             -- statusText:    Spell Status Text (when typing stats
             "%sYou are regenrating.%s"
 );

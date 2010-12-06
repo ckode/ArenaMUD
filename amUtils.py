@@ -354,6 +354,7 @@ def CopySpell( spell ):
     newSpell.spellTextRoom               = spell.spellTextRoom
     newSpell.spellTextVictim             = spell.spellTextVictim
     newSpell.WearOffText                 = spell.WearOffText
+    newSpell.failText                    = spell.failText
     newSpell.statusText                  = spell.statusText
     
     return newSpell
@@ -397,6 +398,12 @@ def ResetPlayerStats( player ):
     player.weapontext       = playerclass.weapontext
     player.STATUS           = amDefines.GETRACE
     player.speed            = playerclass.speed    
+    player.ClassType        = playerclass.ClassType
+    player.offense          = playerclass.Offense
+    player.defense          = playerclass.Defense
+    player.spellcasting     = playerclass.Spellcasting
+    player.magicres         = playerclass.MR
+    
     
     # Now apply race attributes
     player.hp              += race.basehp
@@ -408,6 +415,7 @@ def ResetPlayerStats( player ):
     player.vision           = race.vision
     player.stealth         += race.stealth
     player.staticmaxhp      = player.maxhp
+    player.magicres        += race.MRBonus
 
     # Reset other stats
     player.attacking             = 0

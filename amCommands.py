@@ -35,8 +35,8 @@ NW           =  8
 UP           =  9
 DOWN         = 10
 
-ATTACKING               = 0
-CASTING                 = 1
+ATTACKING               = 1
+CASTING                 = 2
 
 MOVINGTEXT = {  1: " leaves to the north.| arrives from the south.",
                 2: " leaves to the northeast.| arrives from the southwest.",
@@ -954,7 +954,8 @@ def Status(player):
    player.sendToPlayer("%sRace:%s %s      %sClass:%s %s" % (amDefines.GREEN, amDefines.WHITE, amRace.RaceList[player.race].name, amDefines.GREEN, amDefines.WHITE, amRace.ClassList[player.Class].name))
    player.sendToPlayer("%sHealth:%s %s %sof %s" % (amDefines.GREEN, hpcolor, str(player.hp), amDefines.WHITE, str(player.maxhp)))
    player.sendToPlayer("%sOffense:%s %s     %sDefense:%s %s" % (amDefines.GREEN, amDefines.WHITE, str(player.offense), amDefines.GREEN, amDefines.WHITE, str(player.defense)))
-   player.sendToPlayer("%sStealth:%s %s     %sSpellCasting:%s %s" % (amDefines.GREEN, amDefines.WHITE, str(player.stealth), amDefines.GREEN, amDefines.WHITE, str(player.spellcasting)))
+   player.sendToPlayer("%sMagic Resistence:%s %s     %sSpellCasting:%s %s" % (amDefines.GREEN, amDefines.WHITE, player.magicres, amDefines.GREEN, amDefines.WHITE, str(player.spellcasting)))
+   player.sendToPlayer("%sStealth:%s %i" % (amDefines.GREEN, amDefines.WHITE, player.stealth) )
    player.sendToPlayer("%sYou are %s%s %swounded." % (amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN))
    player.sendToPlayer("%sYou have %s kills and %s deaths" %(amDefines.GREEN, str(player.kills), str(player.deaths)))
    
@@ -1007,6 +1008,12 @@ def CastSpell( player, Cmd ):
       if amCombat.HitRoll( player, player, CASTING ):
          Spell.ApplySpell( player, player )
          return True
+      else:
+         if Spell.failText != "*":
+            failtext = Spell.failText.split("|")
+            player.sendToPlayer(failtext[0] % (amDefines.WHITE, amDefines.WHITE) ) 
+            player.sendToRoomNotVictim( player, failtext[1] % (amDefines.WHITE, player.name, amDefines.WHITE) )
+         return True
       
    # A victim was given, is it castable on someone else?
    elif len (Cmd ) == 2 and Spell.UsedOn > 1:
@@ -1029,10 +1036,16 @@ def CastSpell( player, Cmd ):
             player.sendToPlayer("%sYou cannot use this on yourself!" % (amDefines.YELLOW))
             return True
          else:
-            if amCombat.HitRoll( player, player, CASTING ):
+            if amCombat.HitRoll( player, victim, CASTING ):
                Spell.ApplySpell( victim, player )
                return True
-      
+            else:
+               if Spell.failText != "*":
+                  failtext = Spell.failText.split("|")
+                  player.sendToPlayer(failtext[0] % (amDefines.WHITE, amDefines.WHITE) )
+                  player.sendToRoomNotVictim( player, failtext[1] % (amDefines.WHITE, player.name, amDefines.WHITE) )
+               return True
+                  
 ################################################
 # Command -> ListSpells(player)
 ################################################
