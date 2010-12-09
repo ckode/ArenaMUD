@@ -85,7 +85,7 @@ def MovePlayer(player, Direction):
    elif player.stun:
       player.moving = 0
       player.sendToPlayer("You stumble about dazedly and cannot move!")
-      player.sendToRoomNotVictim( player.playerid, "%s%s stumbles about dazedly!." % (amDefines.WHITE, player.name, victim.name) )
+      player.sendToRoomNotVictim( player.playerid, "%s%s stumbles about dazedly!" % (amDefines.WHITE, player.name) )
       return
    
    amUtils.StatLine(player)

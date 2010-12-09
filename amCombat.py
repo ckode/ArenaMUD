@@ -122,15 +122,13 @@ def KillPlayer(player, killer):
 # Calulates if a hit ocurrs returns true or false
 #========================================================
 def HitRoll( player, victim , ATTACKTYPE ):
-    # If this a melee attack (including melee spells), or a non-melee spell based attack
+    # If this a melee attack (including  skills), or a non-melee spell based attack
     if ATTACKTYPE == ATTACKING or ATTACKTYPE == SKILL:
-        print "ATTACK OR SKILL"
         if player.name == victim.name:
             ToHitValue = 10
         else:
             ToHitValue = victim.defense - player.offense
     elif ATTACKTYPE == CASTING:
-        print "SPELL"
         # If the player is casting on self, 10% chance of fail
         if player.name == victim.name and player.spellcasting > 0:
             ToHitValue = 10
