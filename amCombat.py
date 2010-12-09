@@ -18,8 +18,9 @@ import random
 import amMaps, amUtils, amDefines, amSpells
 
 
-ATTACKING               = 1
-CASTING                 = 2
+ATTACKING               = 0
+CASTING                 = 1
+SKILL                   = 2
 
 MISS                    = 0
 
@@ -122,8 +123,11 @@ def KillPlayer(player, killer):
 #========================================================
 def HitRoll( player, victim , ATTACKTYPE ):
     # If this a melee attack (including melee spells), or a non-melee spell based attack
-    if ATTACKTYPE == ATTACKING:
-        ToHitValue = victim.defense - player.offense
+    if ATTACKTYPE == ATTACKING or ATTACKTYPE == SKILL:
+        if player.name == victim.name:
+            ToHitValue = 10
+        else:
+            ToHitValue = victim.defense - player.offense
     elif ATTACKTYPE == CASTING:
         # If the player is casting on self, 10% chance of fail
         if player.name == victim.name and player.spellcasting > 0:
