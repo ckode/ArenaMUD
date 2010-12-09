@@ -35,8 +35,10 @@ NW           =  8
 UP           =  9
 DOWN         = 10
 
-ATTACKING               = 1
-CASTING                 = 2
+ATTACKING               = 0
+CASTING                 = 1
+SKILL                   = 2
+
 
 MOVINGTEXT = {  1: " leaves to the north.| arrives from the south.",
                 2: " leaves to the northeast.| arrives from the southwest.",
@@ -982,6 +984,13 @@ def Status(player):
 #==================================================
 def CastSpell( player, Cmd ):
    Spell = amSpells.SpellList[ Cmd[0] ]
+   
+   # IS this a skill or an actual spell?
+   if Spell.stype == CASTING:
+      ATTACKTYPE = CASTING
+   elif Spell.stype == SKILL:
+      ATTACKTYPE = SKILL
+
  
    # Can this player cast this spell? (spell and player are same class)
    if player.Class != Spell.Class:
@@ -1005,7 +1014,7 @@ def CastSpell( player, Cmd ):
    
    # Just the command was given, can we cast it on ourself?
    if len( Cmd ) == 1 and ( Spell.UsedOn == 1 or Spell.UsedOn == 3 ):
-      if amCombat.HitRoll( player, player, CASTING ):
+      if amCombat.HitRoll( player, player, ATTACKTYPE ):
          Spell.ApplySpell( player, player )
          return True
       else:
@@ -1036,7 +1045,7 @@ def CastSpell( player, Cmd ):
             player.sendToPlayer("%sYou cannot use this on yourself!" % (amDefines.YELLOW))
             return True
          else:
-            if amCombat.HitRoll( player, victim, CASTING ):
+            if amCombat.HitRoll( player, victim, ATTACKTYPE ):
                Spell.ApplySpell( victim, player )
                return True
             else:

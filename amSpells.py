@@ -39,6 +39,7 @@ EXTRA_MELEE_DMG = 12
 # Type
 ITEM            = 0
 SPELL           = 1
+SKILL           = 2
 
 # CastOn
 SELF            = 1
@@ -316,7 +317,7 @@ class Spells():
         player.sendToPlayer( self.WearOffText % (amDefines.BLUE, amDefines.WHITE) )
         
         # If effect of type spell, remove it
-        if self.stype == SPELL:
+        if self.stype == SPELL or self.stype == SKILL:
             del player.Spells[self.cmd]
         # if of type item, remove it.
         elif self.stype == ITEM:

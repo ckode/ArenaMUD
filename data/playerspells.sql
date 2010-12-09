@@ -189,7 +189,7 @@ INSERT INTO spells_items VALUES (
             6,            -- ID:              Spell / item ID
             "slam",       -- name:            Spell/Item Name as it appears in game
             "slam",       -- cmd:             Command used to cast it. (not used if ITEM)
-            1,            -- casted:          1 = spell, 0 = item
+            2,            -- casted:          1 = spell, 0 = item
             15,           -- cooldown         How long it takes to cool down to cast again
             2,            -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
             1,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
@@ -219,7 +219,7 @@ INSERT INTO spells_items VALUES (
             7,            -- ID:              Spell / item ID
             "thieves poison",   -- name:      Spell/Item Name as it appears in game
             "pois",       -- cmd:             Command used to cast it. (not used if ITEM)
-            1,            -- casted:          1 = spell, 0 = item
+            2,            -- casted:          1 = spell, 0 = item
             60,           -- cooldown         How long it takes to cool down to cast again
             1,            -- Use:             For spells, 0 = item, 1 = cast on self, 2, cast on victim, 3 = Cast on anyone, 4 = AreaEffect
             3,            -- reqClass:        Class required to cast. 0 for items / ALL (4 = priest)
