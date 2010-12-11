@@ -237,7 +237,7 @@ def Quit(player):
 ################################################
 def Open(player, something):
    global DIRECTIONS
-
+   
    objList = something.split()[0]
    obj = re.compile(re.escape(objList.lower()))
    # Only doors exist now
@@ -389,9 +389,10 @@ def BashDoor(player, DIRECTION):
          # Open the door on both sides of the door.
          amMaps.Map.Doors[CurDoorID].Passable = True
          amMaps.Map.Doors[CurDoorID].DoorStatus = amRooms.OPEN
-         player.BroadcastToRoom("%sThe %s to the %s flies open." % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[amRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoomID)
+         
          player.sendToPlayer("%sYou bash the %s to the %s open!" % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
          player.sendToRoom("%s%s bashes the %s to the %s open!" % (amDefines.WHITE, player.name, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
+         player.BroadcastToRoom("%sThe %s to the %s flies open!" % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[amRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoomID)
       else: # You don't see a door!
          player.sendToPlayer("%s%s%s" % (amDefines.WHITE, "You do not see anything to bash open to the ", amRooms.DIRTEXT[DIRECTION]) )
 
@@ -435,8 +436,8 @@ def OpenDoor(player, DIRECTION):
             amMaps.Map.Doors[CurDoorID].Passable = True
             amMaps.Map.Doors[CurDoorID].DoorStatus = amRooms.OPEN
             player.BroadcastToRoom("%sThe %s to the %s opens." % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[amRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoomID)
-            player.sendToPlayer("%sYou open the %s to the %s" % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
-            player.sendToRoom("%s%s opens the %s to the %s" % (amDefines.WHITE, player.name, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
+            player.sendToPlayer("%sYou open the %s to the %s." % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
+            player.sendToRoom("%s%s opens the %s to the %s." % (amDefines.WHITE, player.name, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
       else: # You don't see a door!
          player.sendToPlayer("%s%s%s" % (amDefines.WHITE, "You do not see anything to open to the ", amRooms.DIRTEXT[DIRECTION]) )
 
@@ -471,9 +472,10 @@ def CloseDoor(player, DIRECTION):
              # Close the door
          amMaps.Map.Doors[CurDoorID].Passable = False
          amMaps.Map.Doors[CurDoorID].DoorStatus = amRooms.CLOSED
+      
+         player.sendToPlayer("%sYou close the %s to the %s." % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
+         player.sendToRoom("%s%s closes the %s to the %s." % (amDefines.WHITE, player.name, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
          player.BroadcastToRoom("%sThe %s to the %s closes." % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[amRooms.OPPOSITEDOOR[DIRECTION]]), OtherRoomID)
-         player.sendToPlayer("%sYou close the %s to the %s" % (amDefines.WHITE, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
-         player.sendToRoom("%s%s closes the %s to the %s" % (amDefines.WHITE, player.name, amRooms.DOORTYPE[CurDoor.DoorType], amRooms.DIRTEXT[DIRECTION]) )
    else:
       # You don't see a door!
       player.sendToPlayer("%s%s%s" % (amDefines.WHITE, "You do not see anything to close to the ", amRooms.DIRTEXT[DIRECTION]) )
@@ -972,10 +974,6 @@ def Status(player):
    
    L8  = "%sYou have %i kills and %i deaths" % ( amDefines.GREEN, player.kills, player.deaths )
    
-   L9  = "%sYou are %s%s %swounded." % ( amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN )
-   
-   L10 = "%sYou have %i kills and %i deaths" % ( amDefines.GREEN, player.kills, player.deaths )
-   
    # Separator line to make the stat look better and easier to read
    HR = "%s=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" % ( amDefines.WHITE )
    
@@ -993,8 +991,6 @@ def Status(player):
    player.sendToPlayer(HR)   
    player.sendToPlayer(L7)
    player.sendToPlayer(L8)
-   player.sendToPlayer(L9)
-   player.sendToPlayer(L10)
     
 
    # Cycle through spells affecting the player and tell them
