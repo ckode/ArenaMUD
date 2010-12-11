@@ -448,7 +448,13 @@ def ResetAllPlayerStats( player ):
     # Just call ResetPlayerStats() to reset everything else
     ResetPlayerStats( player )
     
-    
+
+#=========================================================
+# FormatLine()
+#
+# Appends two strings together and left justify the second
+# one based on Fill.
+#=========================================================
 def FormatLine( First, Last, Fill ):
     
     FirstLen = len(First)
