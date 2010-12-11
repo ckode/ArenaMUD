@@ -447,3 +447,19 @@ def ResetAllPlayerStats( player ):
     
     # Just call ResetPlayerStats() to reset everything else
     ResetPlayerStats( player )
+    
+    
+def FormatLine( First, Last, Fill ):
+    
+    FirstLen = len(First)
+    
+    # Check to make sure "First" len() isn't greater than "Fill"
+    if FirstLen > Fill:
+        amLog.Logit("Error: FormatLine(), 'First' length greater than 'Fill'\r\nFirst = %s, Fill = %i" % (First, Fill) )
+        # Just append and send the line back
+        return (First + Last)
+        
+    # Append the appropriate amount of spaces
+    fillText = " " * (Fill - FirstLen)
+    
+    return ( First + fillText + Last )
