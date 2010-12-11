@@ -410,7 +410,7 @@ def ResetPlayerStats( player ):
     player.maxhp            = player.hp
     player.mindamage       += race.damagebonus
     player.maxdamage       += race.damagebonus
-    player.attackroll      += race.attackbonus
+    player.offense         += race.attackbonus
     player.spellcasting    += race.castingbonus
     player.vision           = race.vision
     player.stealth         += race.stealth
@@ -420,7 +420,6 @@ def ResetPlayerStats( player ):
     # Reset other stats
     player.attacking             = 0
     player.victim                = 0
-    player.effectingSpell        = 0
     player.stun                  = False
     player.held                  = False
     player.Spells.clear()

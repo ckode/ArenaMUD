@@ -33,7 +33,10 @@ from time import strftime, localtime
 
 class Users(StatefulTelnetProtocol):
     def __init__(self):
-    # User stats
+        
+        # User attributes
+        
+        # Base stats
         self.playerid           = None
         self.ClassType          = 0
         self.name               = ""
@@ -45,42 +48,59 @@ class Users(StatefulTelnetProtocol):
         self.offense            = 0
         self.defense            = 0
         self.magicres           = 0
-        self.damagebonus        = 0
-        self.isAdmin            = 0
+        self.damagebonus        = 0        
         self.hp                 = 0
-        self.maxhp              = 0
-        self.staticmaxhp        = 0
         self.stealth            = 0
-        self.effectingSpell     = 0              
-        self.ClassStealth       = False
-        self.sneaking           = False
-        self.room               = 1
-        self.resting            = False
-        self.HealBonus          = 0
-        self.kills              = 0
-        self.deaths             = 0
-        self.held               = False
-        self.stun               = False
-        self.attackroll         = 0
-        self.attacking          = 0
-        self.victim             = 0
-        self.vision             = 1
         self.spellcasting       = 0
-        self.weapontext         = 0
+        self.vision             = 1
+        self.speed              = 0
         self.mindamage          = 0
         self.maxdamage          = 0
+        
+        # Class specfic 
+        self.magery             = 0   # May not need this
+        
+        # place holders
+        self.victim             = 0
+        self.room               = 1
+        
+        
+        # Max Stats 
+        self.maxhp              = 0
+        self.staticmaxhp        = 0
+        
+        # Flags
+        self.isAdmin            = 0
+        self.sneaking           = False             
+        self.ClassStealth       = False
+        self.resting            = False
+        self.held               = False
+        self.stun               = False
+        self.HealBonus          = 0    
+        self.blind              = False
+        self.moving             = 0
+        self.attacking          = 0
+        self.briefDesc          = 1
+        self.Rerolling          = False
+        
+        
+        # playing stats
+        self.kills              = 0
+        self.deaths             = 0
+    
+        
+        # other player information
+        self.weapontext         = 0
+
+        
+
+        # List of things applied to the player
         self.extraDamageSpell   = {}
         self.SpellsCasted       = {}
-        self.blind              = False
-        self.magery             = 0
-        self.briefDesc          = 1
-        self.moving             = 0
-        # Test var for adding attacks per round
-        self.speed              = 0
-        # List of good and bad buffs on player
         self.Spells             = {}
 
-        self.Rerolling          = False
+
+
 
     def connectionMade(self):
         # Limit how many can connect at one time
