@@ -20,7 +20,7 @@ import amDefines, amDB, amLog, amCommands
 import amRooms, amUtils, amParser, amRace
 import amMaps, amSpells, amCombat
 
-import time, re, random
+import time, re, random, textwrap
 
 
 NONE         =  0
@@ -952,15 +952,50 @@ def Status(player):
    if player.hp > player.maxhp:
       hpcolor = amDefines.BLUE
 
-   player.sendToPlayer("%sName:%s %s" % (amDefines.GREEN, amDefines.WHITE, player.name ))
-   player.sendToPlayer("%sRace:%s %s      %sClass:%s %s" % (amDefines.GREEN, amDefines.WHITE, amRace.RaceList[player.race].name, amDefines.GREEN, amDefines.WHITE, amRace.ClassList[player.Class].name))
-   player.sendToPlayer("%sHealth:%s %s %sof %s" % (amDefines.GREEN, hpcolor, str(player.hp), amDefines.WHITE, str(player.maxhp)))
-   player.sendToPlayer("%sOffense:%s %s     %sDefense:%s %s" % (amDefines.GREEN, amDefines.WHITE, str(player.offense), amDefines.GREEN, amDefines.WHITE, str(player.defense)))
-   player.sendToPlayer("%sMagic Resistence:%s %s     %sSpellCasting:%s %s" % (amDefines.GREEN, amDefines.WHITE, player.magicres, amDefines.GREEN, amDefines.WHITE, str(player.spellcasting)))
-   player.sendToPlayer("%sStealth:%s %i" % (amDefines.GREEN, amDefines.WHITE, player.stealth) )
-   player.sendToPlayer("%sYou are %s%s %swounded." % (amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN))
-   player.sendToPlayer("%sYou have %s kills and %s deaths" %(amDefines.GREEN, str(player.kills), str(player.deaths)))
+   # Format the output strings for the stat output   
+   L1  = "%sName:%s %s" % ( amDefines.GREEN, amDefines.WHITE, player.name )
    
+   L2a = "%sRace:%s %s" % ( amDefines.GREEN, amDefines.WHITE, amRace.RaceList[player.race].name )
+   L2b = "%sClass:%s %s" % ( amDefines.GREEN, amDefines.WHITE, amRace.ClassList[player.Class].name )
+   
+   L3  = "%sHealth:%s %i %sof %i" % ( amDefines.GREEN, hpcolor, player.hp, amDefines.WHITE, player.maxhp )
+   
+   L4a = "%sOffense:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.offense )
+   L4b = "%sDefense:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.defense )
+   
+   L5a = "%sSpellCasting:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.spellcasting )
+   L5b = "%sMagic Res:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.magicres )
+   
+   L6  = "%sStealth:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.stealth )
+   
+   L7  = "%sYou are %s%s %s wounded." % ( amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN )
+   
+   L8  = "%sYou have %i kills and %i deaths" % ( amDefines.GREEN, player.kills, player.deaths )
+   
+   L9  = "%sYou are %s%s %swounded." % ( amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN )
+   
+   L10 = "%sYou have %i kills and %i deaths" % ( amDefines.GREEN, player.kills, player.deaths )
+   
+   # Separator line to make the stat look better and easier to read
+   HR = "%s=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" % ( amDefines.WHITE )
+   
+   
+   # Set fill length for FormatLine and send the text to the user
+   FILL = 30
+   
+   player.sendToPlayer(HR)
+   player.sendToPlayer(L1)
+   player.sendToPlayer( amUtils.FormatLine(L2a, L2b, FILL) )
+   player.sendToPlayer(L3)
+   player.sendToPlayer( amUtils.FormatLine(L4a, L4b, FILL) )
+   player.sendToPlayer( amUtils.FormatLine(L5a, L5b, FILL) )
+   player.sendToPlayer(L6)   
+   player.sendToPlayer(HR)   
+   player.sendToPlayer(L7)
+   player.sendToPlayer(L8)
+   player.sendToPlayer(L9)
+   player.sendToPlayer(L10)
+    
 
    # Cycle through spells affecting the player and tell them
    for spell in player.Spells.values():
