@@ -929,7 +929,42 @@ def NextMap(player):
 ################################################
 def Status(player):
    global RaceList
-   global ClassList
+   global ClassList  
+   
+   # Sub function to left justify text
+   def FormatLineLJust( First, Last, Fill ):  
+      FirstLen = len(First)
+      
+      # Check to make sure "First" len() isn't greater than "Fill"
+      if FirstLen > Fill:
+         amLog.Logit("Error: FormatLineLJust(), 'First' length greater than 'Fill'\r\nFirst = %s, Fill = %i" % (First, Fill) )
+         # Just append and send the line back
+         return (First + Last)
+        
+      # Append the appropriate amount of spaces
+      fillText = " " * (Fill - FirstLen)
+    
+      return ( First + fillText + Last )
+
+   
+   # Sub function to right justify text
+   def FormatLineRJust( First, Last, Fill ):  
+      FirstLen = len( First )
+      LastLen  = len( Last  )
+      
+      # Check to make sure "First" len() isn't greater than "Fill"
+      if FirstLen > Fill:
+         amLog.Logit("Error: FormatLineRJust(), 'First' length greater than 'Fill'\r\nFirst = %s, Fill = %i" % (First, Fill) )
+          # Just append and send the line back
+         return (First + Last)
+     
+      # Figure out fill space required. Subtract 2 extra so we can add 2 spaces at the end
+      fillSpace = " " * ( ( Fill - FirstLen ) - ( LastLen + 2 ) )
+      return ( "%s%s%s%s" % (First, fillSpace, Last, "  ") )
+       
+
+   
+   #==== Beginning of primary function ====
 
    if player.hp < ( ( float(player.maxhp) / 100) * 25 ):
       HealthStr = "horribly"
@@ -954,43 +989,61 @@ def Status(player):
    if player.hp > player.maxhp:
       hpcolor = amDefines.BLUE
 
+      
+   # Set fill length for FormatLineJustify and send the text to the user
+   LFILL       = 30
+   RFILL1      = 30
+   RFILL2      = 27
+   NumFill1    = 22
+   NumFill2    = 52
+   
    # Format the output strings for the stat output   
-   L1  = "%sName:%s %s" % ( amDefines.GREEN, amDefines.WHITE, player.name )
+   Line1  = "%sName:%s %s" % ( amDefines.GREEN, amDefines.WHITE, player.name )
    
-   L2a = "%sRace:%s %s" % ( amDefines.GREEN, amDefines.WHITE, amRace.RaceList[player.race].name )
-   L2b = "%sClass:%s %s" % ( amDefines.GREEN, amDefines.WHITE, amRace.ClassList[player.Class].name )
+   L2a    = "%sRace:%s %s" % ( amDefines.GREEN, amDefines.WHITE, amRace.RaceList[player.race].name )
+   L2b    = "%sClass:%s %s" % ( amDefines.GREEN, amDefines.WHITE, amRace.ClassList[player.Class].name )
+   Line2  = FormatLineLJust(L2a, L2b, LFILL)
    
-   L3  = "%sHealth:%s %i %sof %i" % ( amDefines.GREEN, hpcolor, player.hp, amDefines.WHITE, player.maxhp )
+   L3a    = "%sHealth:%s" % ( amDefines.GREEN, amDefines.WHITE )
+   L3b    = "%i of %i" % ( player.hp, player.maxhp )
+   Line3  =  FormatLineRJust(L3a, L3b, RFILL1)
    
-   L4a = "%sOffense:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.offense )
-   L4b = "%sDefense:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.defense )
+   # Line four
+   L4a    = "%sOffense:%s" % ( amDefines.GREEN, amDefines.WHITE )
+   L4b    = "%i" % ( player.offense )
+   L4c    = "%sDefense:%s" % ( amDefines.GREEN, amDefines.WHITE )
+   L4d    = "%i" % ( player.defense )
+   Line4  = "%s%s" % ( FormatLineRJust(L4a, L4b, RFILL1), FormatLineRJust(L4c, L4d, RFILL2) )
    
-   L5a = "%sSpellCasting:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.spellcasting )
-   L5b = "%sMagic Res:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.magicres )
+   # Line 5
+   L5a    = "%sSpellCasting:%s" % ( amDefines.GREEN, amDefines.WHITE )
+   L5b    = "%i" % ( player.spellcasting )
+   L5c    = "%sMagic Res:%s" % ( amDefines.GREEN, amDefines.WHITE )
+   L5d    = "%i" % ( player.magicres )
+   Line5  = "%s%s" % ( FormatLineRJust(L5a, L5b, RFILL1), FormatLineRJust(L5c, L5d, RFILL2) )
    
-   L6  = "%sStealth:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.stealth )
+   Line6  = "%sStealth:%s %i" % ( amDefines.GREEN, amDefines.WHITE, player.stealth )
    
-   L7  = "%sYou are %s%s %s wounded." % ( amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN )
+   Line7  = "%sYou are %s%s %s wounded." % ( amDefines.GREEN, hpcolor, HealthStr, amDefines.GREEN )
    
-   L8  = "%sYou have %i kills and %i deaths" % ( amDefines.GREEN, player.kills, player.deaths )
+   Line8  = "%sYou have %i kills and %i deaths" % ( amDefines.GREEN, player.kills, player.deaths )
    
    # Separator line to make the stat look better and easier to read
    HR = "%s=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" % ( amDefines.WHITE )
    
    
-   # Set fill length for FormatLine and send the text to the user
-   FILL = 30
-   
-   player.sendToPlayer(HR)
-   player.sendToPlayer(L1)
-   player.sendToPlayer( amUtils.FormatLine(L2a, L2b, FILL) )
-   player.sendToPlayer(L3)
-   player.sendToPlayer( amUtils.FormatLine(L4a, L4b, FILL) )
-   player.sendToPlayer( amUtils.FormatLine(L5a, L5b, FILL) )
-   player.sendToPlayer(L6)   
-   player.sendToPlayer(HR)   
-   player.sendToPlayer(L7)
-   player.sendToPlayer(L8)
+
+
+   player.sendToPlayer( HR )
+   player.sendToPlayer( Line1 )
+   player.sendToPlayer( Line2 )
+   player.sendToPlayer( Line3 )
+   player.sendToPlayer( Line4 )
+   player.sendToPlayer( Line5 )
+   player.sendToPlayer( Line6 )   
+   player.sendToPlayer( HR )   
+   player.sendToPlayer( Line7 )
+   player.sendToPlayer( Line8 )
     
 
    # Cycle through spells affecting the player and tell them
