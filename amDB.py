@@ -506,6 +506,7 @@ def LoadRaces(Sonzo):
         amRace.RaceList[row[0]].attackbonus                     = row[8]
         amRace.RaceList[row[0]].stealth                         = row[9]
         amRace.RaceList[row[0]].MRBonus                         = row[10]
+        amRace.RaceList[row[0]].SpeedBonus                      = row[11]
 
     print "Loaded %d races." % (len(amRace.RaceList),)
 

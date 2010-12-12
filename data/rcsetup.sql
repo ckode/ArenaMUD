@@ -26,7 +26,8 @@ CREATE TABLE race (
    DefenseBonus       INTEGER NOT NULL,         -- Makes you harder to hit
    ToHitBonus         INTEGER NOT NULL,         -- Makes you more accurate
    Stealth            INTEGER NOT NULL,         -- Bonus to stealth if class has stealth
-   MRBonus            INTEGER NOT NULL
+   MRBonus            INTEGER NOT NULL,         -- Race bonus to MR
+   SpeedBonus         INTEGER NOT NULL          -- Race bonus to speed
 );
 
 CREATE TABLE class (
