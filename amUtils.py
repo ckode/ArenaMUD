@@ -416,6 +416,7 @@ def ResetPlayerStats( player ):
     player.stealth         += race.stealth
     player.staticmaxhp      = player.maxhp
     player.magicres        += race.MRBonus
+    player.speed           += race.SpeedBonus
 
     # Reset other stats
     player.attacking             = 0

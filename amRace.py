@@ -33,6 +33,7 @@ class Race():
         self.attackbonus      = 0
         self.stealth          = 0
         self.MRBonus          = 0
+        self.SpeedBonus       = 0
 
 
 

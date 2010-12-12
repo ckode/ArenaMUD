@@ -166,6 +166,10 @@ def PlayerAttack(player):
     if player.attacking == 0:
         return
 
+    # player can't have less that 1 attack per round
+    if player.speed < 1:
+        player.speed = 1
+        
     player.resting = False
     # Is the victim in the room?  If so, do attack
     if player.victim in amMaps.Map.Rooms[player.room].Players.keys():
@@ -268,7 +272,13 @@ def DamageRoll( player, victim ):
     
     damage = random.randint(player.mindamage, player.maxdamage)   
     
-    return (damage + int(player.damagebonus) )
+    returnDamage = (damage + int(player.damagebonus) )
+    
+    # If damage is less than 1, it will be a miss, can't have that!
+    if returnDamage < 1:
+        return 1
+    else:
+        return returnDamage
 
 #==================================================
 # SendDamageTextToRoom()

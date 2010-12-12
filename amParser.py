@@ -639,6 +639,7 @@ def PickRace(player, racenum):
         player.STATUS           = amDefines.PLAYING
         player.staticmaxhp      = player.maxhp
         player.magicres        += race.MRBonus
+        player.speed           += race.SpeedBonus
 
         if player.Rerolling == False:
             print strftime("%b %d %Y %H:%M:%S ", localtime()) + player.name + " just logged on."

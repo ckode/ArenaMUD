@@ -1042,7 +1042,12 @@ def CastSpell( player, Cmd ):
    if len( Cmd ) < 2 and Spell.UsedOn == 2:
       player.sendToPlayer("%sYou must specify a target!" % (amDefines.BROWN))
       return True
-   
+
+   # You can't cast and attack at the same time.
+   if player.attacking == 1:
+      player.factory.CombatQueue.RemoveAttack(player.playerid)
+      player.attacking = 0
+         
    # Just the command was given, can we cast it on ourself?
    if len( Cmd ) == 1 and ( Spell.UsedOn == 1 or Spell.UsedOn == 3 ):
       if amCombat.HitRoll( player, player, ATTACKTYPE ):
