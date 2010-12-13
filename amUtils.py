@@ -451,46 +451,5 @@ def ResetAllPlayerStats( player ):
     ResetPlayerStats( player )
     
 
-#=========================================================
-# FormatLine()
-#
-# Appends two strings together and left justify the second
-# one based on Fill.
-#=========================================================
-def FormatLineLJust( First, Last, Fill ):
-    
-    FirstLen = len(First)
-    
-    # Check to make sure "First" len() isn't greater than "Fill"
-    if FirstLen > Fill:
-        amLog.Logit("Error: FormatLineLJust(), 'First' length greater than 'Fill'\r\nFirst = %s, Fill = %i" % (First, Fill) )
-        # Just append and send the line back
-        return (First + Last)
-        
-    # Append the appropriate amount of spaces
-    fillText = " " * (Fill - FirstLen)
-    
-    return ( First + fillText + Last )
-
-
-def FormatLineRJust( First, Last, Fill ):
-    
-    FirstLen = len( amParser.CleanPlayerInput(First) )
-    LastLen  = len( amParser.CleanPlayerInput(Last ) )
-    print amParser.CleanPlayerInput(First)
-    
-    if FirstLen > Fill:
-        amLog.Logit("Error: FormatLineRJust(), 'First' length greater than 'Fill'\r\nFirst = %s, Fill = %i" % (First, Fill) )
-        # Just append and send the line back
-        return (First + Last)
-    
-    
-    fillSpace = " " * ( ( Fill - FirstLen ) - ( LastLen + 2 ) )
-    
-    print "F: %i, L: %i, FILL: %i" % ( FirstLen, LastLen, len(fillSpace) )
-    print "Text: %s" % (First)
-    
-    return ( First + fillSpace + Last + "  " )
-    
     
     

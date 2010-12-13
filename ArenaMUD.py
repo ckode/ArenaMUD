@@ -28,7 +28,7 @@ import amRooms, amDB, amUtils, amMaps, amCombat
 import amSpells
 
 # default Python library imports
-import sys
+import sys, cProfile
 from time import strftime, localtime
 
 class Users(StatefulTelnetProtocol):
@@ -283,31 +283,40 @@ class SonzoFactory(ServerFactory):
         reactor.stop()
 
 
-#Create server factory
-factory = SonzoFactory()
-
-# Check to make sure at least one map laoded.  If not, shutdown!
-try:
-    tmp = len(amMaps.Map.Rooms)
-except:
-    amLog.Logit("Error: No maps loaded! Shutting down...")
-    factory.ShutdownPreReactorStart()
-    sys.exit(1)
 
 
-# Start listener on port 23 (telnet)
-factory.protocol = lambda: TelnetTransport(Users)
-reactor.listenTCP(23, factory)
 
-# 4 Second Loop
-FourSecondLoop = LoopingCall(factory.FourSecondLoop)
-FourSecondLoop.start(4)
+# Wrapped it in main() so I can profile the game and see where improvements can be made.
+def main():
+    #Create server factory
+    factory = SonzoFactory()
 
-# 2 Second Loop
-TwoSecondLoop = LoopingCall(factory.TwoSecondLoop)
-TwoSecondLoop.start(2)
+    # Check to make sure at least one map laoded.  If not, shutdown!
+    try:
+        tmp = len(amMaps.Map.Rooms)
+    except:
+        amLog.Logit("Error: No maps loaded! Shutting down...")
+        factory.ShutdownPreReactorStart()
+        sys.exit(1)
 
-# Natural healing process ever 15 seconds
-FifteenSecondLoop = LoopingCall(factory.FifteenSecondLoop)
-FifteenSecondLoop.start(15)
-reactor.run()
+
+    # Start listener on port 23 (telnet)
+    factory.protocol = lambda: TelnetTransport(Users)
+    reactor.listenTCP(23, factory)
+        
+    # 4 Second Loop
+    FourSecondLoop = LoopingCall(factory.FourSecondLoop)
+    FourSecondLoop.start(4)
+
+    # 2 Second Loop
+    TwoSecondLoop = LoopingCall(factory.TwoSecondLoop)
+    TwoSecondLoop.start(2)
+
+    # Natural healing process ever 15 seconds
+    FifteenSecondLoop = LoopingCall(factory.FifteenSecondLoop)
+    FifteenSecondLoop.start(15)
+    reactor.run()
+    
+    
+#cProfile.run('main()')
+main()
