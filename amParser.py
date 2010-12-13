@@ -33,6 +33,7 @@ def commandParser(player, line):
         return
     # Clean players input
     line = CleanPlayerInput(line)
+    
 
     # Player isn't logged in yet, do dialog
     if player.STATUS != amDefines.PLAYING:
