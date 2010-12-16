@@ -315,22 +315,19 @@ def EnterPurgatory(player):
 # Kill all combat, empty any queues necessary and then
 # set the status of each player to purgatory
 #####################################################
-def KickAllToPurgatory(player):
-    def KickLoop(user):
+def KickAllToPurgatory(player): 
+    global CombatQueue
+       
+    player.factory.CombatQueue.KillAllCombat()  
+       
+    # Kick all users to Purgatory
+    for user in player.factory.players.values():
         if user.STATUS == amDefines.PLAYING or user.STATUS == amDefines.PURGATORY:
             # Reset all the players stats
             ResetAllPlayerStats( user )
             user.STATUS = amDefines.PURGATORY
             amCommands.Who( user )
             user.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
-    
-    global CombatQueue
-       
-    player.factory.CombatQueue.KillAllCombat()  
-    #playerList = player.factory.players.values()
-    
-    # Kick all users to Purgatory
-    map(KickLoop, player.factory.players.values())
 
             
 #=====================================================
