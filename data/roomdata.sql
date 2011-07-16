@@ -51,3 +51,7 @@ INSERT INTO RoomSpells (id, hp_adjust, desc, name) VALUES (4, -200, "You are cru
 
 -- stat: 1=hp (add more later)
 INSERT INTO RoomTraps (id, stat, value, duration, playerdesc, roomdesc, name) VALUES (1, 1, -25, 0, "A trap springs and you are hit with a dart!", "%s springs a trap and writhes in pain!", "Dart Trap");
+
+-- Items that spawn in rooms
+INSERT INTO "Items" VALUES (3, 1);
+INSERT INTO "Items" VALUES (10, 1);

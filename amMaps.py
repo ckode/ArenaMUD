@@ -14,7 +14,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import amLog, amDB, os
+import amLog, amDB, amUtils,amSpells, os
 
 
 Map = None
@@ -80,6 +80,7 @@ class ArenaQueue:
 
             # Load and verify the map    
             CurMap = self.LoadArena( MapFile, Arena() )
+            
             # If map is not bad, put it in the ArenaQueue      
             if CurMap != False:
                 # Append maps to Index and Queue
@@ -87,7 +88,8 @@ class ArenaQueue:
                 self.arenaQueue.append(x)
                 # If this is the first map, assign it to the global Map var
                 if x == 0:
-                    Map = CurMap
+                    Map = CurMap         
+                    self.LoadThenSpawnItems(Map)
                 x += 1
            
         # Indexes starts at zero instead of 1, so subtract one from 
@@ -114,8 +116,17 @@ class ArenaQueue:
         else:
             self.CurrentArena += 1
         
+        # Delete all callLater respawns that are active
+        for callLaterItem in amSpells.ReSpawnItemList:
+            callLaterItem.cancel()          
+        amSpells.ReSpawnItemList = []
+        
         # Load next Arena.
         Map = self.LoadArena( self.ArenaIndex[self.CurrentArena], Arena() )
+        self.LoadThenSpawnItems(Map)
+        
+
+            
         
     
     #################################################
@@ -126,6 +137,7 @@ class ArenaQueue:
     def LoadArena(self, MapFile, Arena):
         # Apply Path to filename
         Arena.MapFile = "%s\data\%s" % ( os.getcwd(), MapFile )
+        amLog.Logit( "Loading %s..." % MapFile )
 
         if os.path.exists( Arena.MapFile ):
             # Load the map info
@@ -166,7 +178,8 @@ class ArenaQueue:
                 ErrMesg = "Error: Failed to load room traps from arena file: %s" % ( Arena.MapFile )
                 amLog.Logit( ErrMesg )
                 return False
-        
+
+                                              
             # Verify the map is consistent, else return False
             if not self.VerifyArena( Arena ):
                 return False
@@ -174,7 +187,36 @@ class ArenaQueue:
             print "Map doesn't exist!"
         # Arena is loaded and check for consistency, return the Arena (map)
         return Arena
-        
+
+
+    #################################################
+    # LoadThenSpawnItems()
+    #
+    # Does the initial spawnning of all items for
+    # a map once the map is loaded.
+    #################################################
+    def LoadThenSpawnItems(self, Map):            
+        try:   
+            self.SpawnItems( amDB.LoadRoomItems( Map.MapFile ) )
+        except:
+            ErrMesg = "Error:  Failed to load / spawn room items for arena file: %s" % ( Map.MapFile )
+            amLog.Logit( ErrMesg )
+
+    
+    #################################################
+    # SpawnItems
+    #
+    # Does the initial spawnning of all items for
+    # a map once the map is loaded.
+    #################################################
+    def SpawnItems( self, RoomItems ):
+
+        for itemNum, count in RoomItems:
+            Item = amSpells.ItemsList[itemNum]
+            for i in range( 0, count):
+                amUtils.SpawnItem( Item )
+  
+            
     #################################################
     # VerifyArena()
     #

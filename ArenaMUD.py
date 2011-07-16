@@ -213,16 +213,19 @@ class SonzoFactory(ServerFactory):
     def __init__(self):
 
         self.players = {}
+        
+        amSpells.SpellList, amSpells.ItemsList = amDB.LoadSpellsAndItems( self )
         self.CombatQueue = amCombat.CombatQueue()
         self.ArenaQueue = amMaps.ArenaQueue()
-
+        
         # Load map details for the database
 
         amDB.LoadMessages(self)
         amDB.LoadClasses(self)
         amDB.LoadRaces(self)
         amDB.LoadAnsiScreens()
-        amSpells.SpellList, amSpells.ItemsList = amDB.LoadSpellsAndItems( self )
+        
+
 
         # Disable the following until the new map queue is complete
         
@@ -231,8 +234,8 @@ class SonzoFactory(ServerFactory):
 
             
         # Spawn the items
-        for item in amSpells.ItemsList.values():
-            amUtils.SpawnItem( item )
+#        for item in amSpells.ItemsList.values():
+#            amUtils.SpawnItem( item )
 
     def sendMessageToAllClients(self, mesg):
         for client in self.players.values():

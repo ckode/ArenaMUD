@@ -64,6 +64,10 @@ CREATE TABLE MapInfo (
     description       VARCHAR(1024) NOT NULL
 );
 
+CREATE TABLE Items (
+    ItemNumber        INTEGER NOT NULL,
+    ItemCount         INTEGER NOT NULL
+);
 
 PRAGMA foreign_keys=OFF;
 
@@ -176,5 +180,10 @@ INSERT INTO "Doors" VALUES(25,1,1,2,0,0,45,16,17);
 
 
 INSERT INTO "RoomTraps" VALUES(1,1,-10,0,'A sharpened turd rockets out of a slit in the wall and lodges in your forehead!','A sharpened turd rockets out of a slit in the wall and lodges in forehead of %s!','Turd Darts');
+
+-- Items that spawn in rooms
+INSERT INTO "Items" VALUES (3, 2);
+INSERT INTO "Items" VALUES (10, 2);
+
 
 COMMIT;

@@ -63,3 +63,8 @@ CREATE TABLE MapInfo (
     name              VARCHAR(30) NOT NULL,
     description       VARCHAR(1024) NOT NULL
 );
+
+CREATE TABLE Items (
+    ItemNumber        INTEGER NOT NULL,
+    ItemCount         INTEGER NOT NULL
+);
