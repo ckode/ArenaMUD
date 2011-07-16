@@ -30,6 +30,7 @@ EDIT             = 50
 
 # All allowable printable characters (and BACKSPACE!)
 PRINTABLE_CHARS = string.printable + chr(0x08)
+SERVER_VERSION = "v1.0"
 
 #############ANSI defines################
 #          Foreground Colors
@@ -76,7 +77,7 @@ DELETELINE         = chr(27) + "[2K"
 FIRSTCOL           = chr(27) + "[80D"
 CURPOS             = chr(27) + "6n"
 SAVECUR            = chr(27) + "s"
-RESTORECUR         = chr(27) + "r"
+RESTORECUR         = chr(27) + "u"
 DELETELEFT         = chr(27) + "[1K"
 CLEARSCREEN        = chr(27) + "[2J"
 

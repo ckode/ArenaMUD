@@ -17,7 +17,7 @@
 from twisted.internet import reactor
 
 import amDefines, amCommands, amDB, amMaps
-import amRooms, amUtils, amRace, amSpells
+import amRooms, amUtils, amRace, amSpells, amHelp
 
 import re, string
 from time import strftime, localtime
@@ -45,7 +45,7 @@ def commandParser(player, line):
                  'emote':            amCommands.Emote,
                  'who':              amCommands.WhoCmd,
                  'set':              amCommands.Set,
-                 'help':             amCommands.Help,
+                 'help':             amHelp.HelpParser,
                  'look':             amCommands.Look,
                  'down':             amCommands.Down,
                  'up':               amCommands.Up,
@@ -210,8 +210,13 @@ def commandParser(player, line):
                     continue
             # Help command (help typed by itself)
             elif each == "help":
-                if len(cmd) == 1 and len(cmd[0]) == 4:
-                    commands[each](player)
+                if len(cmd[0]) == 4:
+                    if len(cmd) > 2:
+                        continue
+                    elif len(cmd) > 1:
+                        commands[each](player, cmd[1])
+                    else:
+                        amHelp.GeneralHelpTopics(player)
                     return
                 continue
             # Set command
@@ -446,7 +451,7 @@ def GetPlayerName(player, line):
     player.name = name.capitalize()
     pid = amDB.GetUserID(player.name)
     if pid > 0:
-        player.transport.write("Username already exist, try again: ")
+        player.transport.write("Username already exists, try again: ")
     else:
         player.STATUS = amDefines.GETPASSWORD
         player.transport.write("Enter your password: ")
@@ -677,7 +682,7 @@ def PurgatoryParser(player, line):
                  'gossip':           amCommands.Gossip,
                  'spawn':            amUtils.SpawnPlayer,
                  'who':              amCommands.Who,
-                 'help':             amCommands.Help,
+                 'help':             amHelp.HelpParser,
                  'superuser':        "",
                  'nextmap':          amCommands.NextMap,
                  'reroll':           amCommands.Reroll
@@ -722,8 +727,11 @@ def PurgatoryParser(player, line):
                 continue
            # Help command (help typed by itself)
             elif each == "help":
-                if len(cmd) == 1 and len(cmd[0]) == 4:
-                    commands[each](player)
+                if len(cmd) > 1:
+                    commands[each](player, cmd[1])
+                    return
+                else:
+                    amHelp.GeneralHelpTopics(player)
                     return
                 continue
             # Become an admin (access admin commands)
