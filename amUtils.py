@@ -74,6 +74,12 @@ def FindPlayerInRoom(player, Name):
 def StatLine(player):
     # If player not playing, return
     if player.STATUS != amDefines.PLAYING:
+        STATLINE = "Type 'spawn' to begin playing: "
+        STATSIZE = len(STATLINE)
+        player.transport.write(amDefines.SAVECUR)
+        player.transport.write(amDefines.FIRSTCOL)
+        player.transport.write(STATLINE)
+        player.transport.write(amDefines.RESTORECUR)
         return
     
     if player.hp < ( ( float(player.maxhp) / 100) * 25 ):
