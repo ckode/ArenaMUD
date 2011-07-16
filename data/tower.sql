@@ -111,3 +111,7 @@ INSERT INTO 'doors' VALUES (45, 4, 0, 1, 1, 1, 42, 43, 44);
 
 -- Top Room Dumbwaiter
 INSERT INTO "rooms" VALUES (44, "Dumbwaiter, Top Floor", "This dumbwaiter is the largest one you've ever seen. It is almost the same ", "size as a normal elevator, except that it could fit several people. There", "are cobwebs everywhere and rats scurry through it which is very odd ", "considering how pristine the rest of the tower is. You can go back down", "or into a shadowy room to the northwest.", "8:45|10:36", 1, 0, 0, 0);
+
+-- Items that spawn in rooms
+INSERT INTO "Items" VALUES (3, 3);
+INSERT INTO "Items" VALUES (10, 1);

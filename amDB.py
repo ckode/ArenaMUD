@@ -272,7 +272,7 @@ def LoadSpellsAndItems( Sonzo ):
     
         
     conn.close()
-    print "Spells loaded: %s Spawn Items loaded: %i" % ( len(Spells), len(Items) )
+    print "Spells loaded: %s Items loaded: %i" % ( len(Spells), len(Items) )
     return Spells, Items
 ################################################
 # LoadDoors()
@@ -434,6 +434,34 @@ def LoadMapInfo( MapDB ):
         MapInfo[1]    = str(row[1])
         
     return MapInfo
+
+###########################################
+# LoadRoomItems()
+#
+# Loads a list of items to be spawned in
+# the map.
+###########################################
+def LoadRoomItems( MapDB ):
+    SpawnItems = []
+    
+    try:
+        conn     = sqlite3.connect( MapDB )
+        cur      = conn.cursor()
+    except:
+        amLog.Logit("Failed to open database: %s" % ( MapDB ) )
+        player.Shutdown()
+    try:
+        cur.execute( "SELECT * FROM Items")
+    except:
+        amLog.Logit("Failed to query database for map info information!")
+    
+    for row in cur:
+        itemNum          = row[0]
+        itemCount        = row[1]
+
+        SpawnItems.append([itemNum, itemCount])
+              
+    return SpawnItems
 
 ###########################################
 # Load Classes

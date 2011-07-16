@@ -22,6 +22,7 @@ import amDefines, amUtils, amCombat, amLog
 
 ItemsList       = {}
 SpellList       = {}
+ReSpawnItemList     = []
 
 HP              = 1
 MAXHP           = 2

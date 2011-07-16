@@ -300,6 +300,14 @@ def SpawnItem(item):
     newRoom = SpawnRooms[( random.randint( 1, len(SpawnRooms) ) ) - 1 ]
 
     amMaps.Map.Rooms[newRoom.RoomNum].Items[item.name] = item
+    
+    # Delete callLater items from respawn list that have respawned already
+    x = 0
+    for callLaterItem in amSpells.ReSpawnItemList:
+        if not callLaterItem.active():
+            del amSpells.ReSpawnItemList[x]
+        x =x + 1
+            
 
 
 #####################################################
