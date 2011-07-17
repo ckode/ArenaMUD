@@ -466,5 +466,13 @@ def ResetAllPlayerStats( player ):
     ResetPlayerStats( player )
     
 
+#==========================================================
+# DoSocalAction()
+#
+# Executes socal action.
+#==========================================================
+def DoSocalAction( player, ActionDefinition ):
+    actionType = ActionDefinition[0]
+    
     
     

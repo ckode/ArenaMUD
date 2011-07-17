@@ -55,3 +55,5 @@ INSERT INTO RoomTraps (id, stat, value, duration, playerdesc, roomdesc, name) VA
 -- Items that spawn in rooms
 INSERT INTO "Items" VALUES (3, 1);
 INSERT INTO "Items" VALUES (10, 1);
+INSERT INTO "Items" VALUES (11, 2);
+
