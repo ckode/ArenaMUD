@@ -81,6 +81,14 @@ RESTORECUR         = chr(27) + "u"
 DELETELEFT         = chr(27) + "[1K"
 CLEARSCREEN        = chr(27) + "[2J"
 
+#          Box Drawing characters
+BOX_TOP_LEFT       = chr(0xC9)
+BOX_DOUBLE_LINE    = chr(205)
+BOX_TOP_RIGHT      = chr(187)
+BOX_SIDE_DOUBLE    = chr(0xBA)
+BOX_BOTTOM_LEFT    = chr(0xC8)
+BOX_BOTTOM_RIGHT   = chr(0xBC)
+
 #          Light Levels
 NORMALVISION       = 1
 NIGHTVISION        = 2
