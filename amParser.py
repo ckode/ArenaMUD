@@ -16,7 +16,7 @@
 
 from twisted.internet import reactor
 
-import amDefines, amCommands, amDB, amMaps
+import amDefines, amCommands, amDB, amMaps, amSocial
 import amRooms, amUtils, amRace, amSpells, amHelp
 
 import re, string
@@ -92,6 +92,10 @@ def commandParser(player, line):
             player.sneaking = False
             return
         return
+
+    # Is the command a social action?
+    if cmd[0] in amSocial.SocalList.keys():
+        pass
         
     cmdstr = re.compile(re.escape(cmd[0].lower()))
     for each in commands.keys():
