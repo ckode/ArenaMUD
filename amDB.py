@@ -545,6 +545,13 @@ def LoadRaces(Sonzo):
 ######################################################
 def LoadAnsiScreens():
     global AnsiScreen
-    f = open('data\\splash.ans','rb')
-    amRooms.AnsiScreen = f.read()
-    f.close()
+    
+    try:
+        f = open('data\\splash.ans','rb')
+    except IOError as e:
+        amLog.Logit("Unable to open splash.ans, error: %s\n" % e)
+        amRooms.AnsiScreen = ("%s%sWelcome to ArenaMUD %s - (C)2011 SonzoSoft Software%s\n\r" % amDefines.CLEARSCREEN, amDefines.LRED, amDefines.SERVER_VERSION, amDefines.WHITE)
+    else:
+        amRooms.AnsiScreen = f.read()
+        f.close()
+    return
