@@ -196,11 +196,11 @@ class ArenaQueue:
     # a map once the map is loaded.
     #################################################
     def LoadThenSpawnItems(self, Map):            
-        try:   
-            self.SpawnItems( amDB.LoadRoomItems( Map.MapFile ) )
-        except:
-            ErrMesg = "Error:  Failed to load / spawn room items for arena file: %s" % ( Map.MapFile )
-            amLog.Logit( ErrMesg )
+        #try:   
+        self.SpawnItems( amDB.LoadRoomItems( Map.MapFile ) )
+        #except:
+        #    ErrMesg = "Error:  Failed to load / spawn room items for arena file: %s" % ( Map.MapFile )
+        #    amLog.Logit( ErrMesg )
 
     
     #################################################
@@ -214,7 +214,7 @@ class ArenaQueue:
         for itemNum, count in RoomItems:
             Item = amSpells.ItemsList[itemNum]
             for i in range( 0, count):
-                amUtils.SpawnItem( Item )
+                amUtils.SpawnItem( Item, False )
   
             
     #################################################

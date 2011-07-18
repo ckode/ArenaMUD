@@ -232,16 +232,24 @@ class SonzoFactory(ServerFactory):
         if self.ArenaQueue.ConfFileFail:
             self.ShutdownPreReactorStart()
 
-            
-        # Spawn the items
-#        for item in amSpells.ItemsList.values():
-#            amUtils.SpawnItem( item )
 
     def sendMessageToAllClients(self, mesg):
         for client in self.players.values():
             if client.STATUS == amDefines.PLAYING or client.STATUS == amDefines.PURGATORY:
                 client.sendLine(mesg + amDefines.WHITE)
+                
 
+    def sendMessageToAllClientsInRoom(self, mesg, room):
+        for client in self.players.values():
+            if client.STATUS == amDefines.PLAYING or client.STATUS == amDefines.PURGATORY:
+                if client.room == room:
+                    client.transport.write(amDefines.DELETELEFT)
+                    client.transport.write(amDefines.FIRSTCOL)
+                    client.transport.write(mesg + amDefines.WHITE)  
+                    amUtils.StatLine(client)
+                    
+                    
+                
     # Event loop that happens every 15 seconds
     def FifteenSecondLoop(self):
        # Actions within the Fifteen seconds loop

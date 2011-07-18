@@ -282,7 +282,7 @@ def SpawnPlayer(player):
 # Spawns a player in an empty room (no other players)
 # Of someone is in every room, just spawn the player
 ###################################################
-def SpawnItem(item):
+def SpawnItem( item, player ):
 
     SpawnRooms = []
     
@@ -300,6 +300,9 @@ def SpawnItem(item):
     newRoom = SpawnRooms[( random.randint( 1, len(SpawnRooms) ) ) - 1 ]
 
     amMaps.Map.Rooms[newRoom.RoomNum].Items[item.name] = item
+    
+    if player:
+        player.factory.sendMessageToAllClientsInRoom("%s has spawn." % item.name, newRoom.RoomNum)
     
     # Delete callLater items from respawn list that have respawned already
     x = 0
