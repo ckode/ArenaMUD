@@ -877,7 +877,7 @@ def Get(player, line):
       print "Failed to remove item from room on GET"
       
    # Set the respawn timer!
-   amSpells.ReSpawnItemList.append( reactor.callLater(items[key].CoolDown, amUtils.SpawnItem, items[key]) )
+   amSpells.ReSpawnItemList.append( reactor.callLater(items[key].CoolDown, amUtils.SpawnItem, items[key], player) )
    
    return
          
