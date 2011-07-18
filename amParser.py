@@ -24,6 +24,48 @@ from time import strftime, localtime
 
 USERPID = 1
 FULLDESC = 0
+
+# Map (dict) for commands to corosponding function
+commands = { '/quit':            amCommands.Quit,
+             'gossip':           amCommands.Gossip,
+             'emote':            amCommands.Emote,
+             'who':              amCommands.WhoCmd,
+             'set':              amCommands.Set,
+             'help':             amHelp.HelpParser,
+             'look':             amCommands.Look,
+             'down':             amCommands.Down,
+             'up':               amCommands.Up,
+             'north':            amCommands.North,
+             'ne':               amCommands.NorthEast,
+             'east':             amCommands.East,
+             'se':               amCommands.SouthEast,
+             'south':            amCommands.South,
+             'sw':               amCommands.SouthWest,
+             'west':             amCommands.West,
+             'nw':               amCommands.NorthWest,
+             'crackpipe':        amCommands.Crackpipe,
+             'rofl':             amCommands.Rofl,
+             'wtf':              amCommands.Wtf,
+             'slap':             amCommands.Slap,
+             'vision':           "",
+             'brief':            amCommands.Brief,
+             'open':             amCommands.Open,
+             'close':            amCommands.Close,
+             'remote':           "",
+             'look':             amCommands.LookAt,
+             'bash':             amCommands.Bash,
+             'superuser':        "",
+             'attack':           amCommands.Attack,
+             'rest':             amCommands.Rest,
+             'sneak':            amCommands.Sneak,
+             'break':            amCommands.Break,
+             'nextmap':          amCommands.NextMap,
+             'status':           amCommands.Status,
+             'spells':           amCommands.ListSpells,
+             'reroll':           amCommands.Reroll,
+             'get':              amCommands.Get,
+}
+
 def commandParser(player, line):
 
     # If player is stun, do nothing
@@ -39,46 +81,7 @@ def commandParser(player, line):
     if player.STATUS != amDefines.PLAYING:
         NotPlayingDialog(player, line)
         return
-    # Map (dict) for commands to corosponding function
-    commands = { '/quit':            amCommands.Quit,
-                 'gossip':           amCommands.Gossip,
-                 'emote':            amCommands.Emote,
-                 'who':              amCommands.WhoCmd,
-                 'set':              amCommands.Set,
-                 'help':             amHelp.HelpParser,
-                 'look':             amCommands.Look,
-                 'down':             amCommands.Down,
-                 'up':               amCommands.Up,
-                 'north':            amCommands.North,
-                 'ne':               amCommands.NorthEast,
-                 'east':             amCommands.East,
-                 'se':               amCommands.SouthEast,
-                 'south':            amCommands.South,
-                 'sw':               amCommands.SouthWest,
-                 'west':             amCommands.West,
-                 'nw':               amCommands.NorthWest,
-                 'crackpipe':        amCommands.Crackpipe,
-                 'rofl':             amCommands.Rofl,
-                 'wtf':              amCommands.Wtf,
-                 'slap':             amCommands.Slap,
-                 'vision':           "",
-                 'brief':            amCommands.Brief,
-                 'open':             amCommands.Open,
-                 'close':            amCommands.Close,
-                 'remote':           "",
-                 'look':             amCommands.LookAt,
-                 'bash':             amCommands.Bash,
-                 'superuser':        "",
-                 'attack':           amCommands.Attack,
-                 'rest':             amCommands.Rest,
-                 'sneak':            amCommands.Sneak,
-                 'break':            amCommands.Break,
-                 'nextmap':          amCommands.NextMap,
-                 'status':           amCommands.Status,
-                 'spells':           amCommands.ListSpells,
-                 'reroll':           amCommands.Reroll,
-                 'get':              amCommands.Get,
-               }
+
     cmd = line.split()
     # Player just hit enter, look around the room.
     if len(cmd) == 0:
