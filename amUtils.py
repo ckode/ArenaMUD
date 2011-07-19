@@ -74,7 +74,7 @@ def FindPlayerInRoom(player, Name):
 def StatLine(player):
     # If player not playing, return
     if player.STATUS != amDefines.PLAYING:
-        STATLINE = "Type 'spawn' to begin playing: "
+        STATLINE = "Type 'spawn' to spawn, type 'help' for help: "
         STATSIZE = len(STATLINE)
         player.transport.write(amDefines.SAVECUR)
         player.transport.write(amDefines.FIRSTCOL)
@@ -323,7 +323,7 @@ def EnterPurgatory(player):
     amUtils.ResetPlayerStats( player )
     player.STATUS = amDefines.PURGATORY
     amCommands.Who(player)
-    player.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
+    #player.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
 
     
 #####################################################
@@ -344,7 +344,7 @@ def KickAllToPurgatory(player):
             ResetAllPlayerStats( user )
             user.STATUS = amDefines.PURGATORY
             amCommands.Who( user )
-            user.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
+            #user.sendToPlayer("Type 'spawn' to spawn, type 'help' for help.")
 
             
 #=====================================================

@@ -43,7 +43,7 @@ def HelpParser(player,cmd):
                 RaceHelp(player)
                 return
             elif each == "class":
-                player.transport.write("%sYou have chosen help on the class topic. It is not yet available.\n\r" % (amDefines.LCYAN))
+                ClassHelp(player)
                 return
             elif each == "commands":
                 CommandHelp(player)
@@ -116,6 +116,32 @@ def CommandHelp(player):
         player.transport.write(displayStr)
         
     player.transport.write(bottomLine)
+    amUtils.StatLine(player)
+    return
+
+############################################################
+# classHelp function
+# List the available classes to the user
+############################################################
+def ClassHelp(player):
     
+    titleText = " {0}ArenaMUD {1} Class Help{2} ".format(amDefines.LRED, amDefines.SERVER_VERSION, amDefines.LGREEN)
+    blankLine = "\n\r{0}{1:64}{2}".format(amDefines.BOX_SIDE_DOUBLE, '', amDefines.BOX_SIDE_DOUBLE)
+    topLine = "\n\r{0}{1}{2:\xCD^78}{3}".format(amDefines.LGREEN,amDefines.BOX_TOP_LEFT, titleText, amDefines.BOX_TOP_RIGHT)
+    bottomLine = "\n\r{0}{1}{2:\xCD^64}{3:1}{4:1}\n\r".format(amDefines.LGREEN, amDefines.BOX_BOTTOM_LEFT, amDefines.BOX_DOUBLE_LINE,
+                                                              amDefines.BOX_BOTTOM_RIGHT, amDefines.WHITE)
+    
+    player.transport.write(topLine + blankLine)
+    
+    for Key, Value in amRace.ClassList.items():
+        displayStr = "\n\r{0}{1:<1}  {2}{3:<13} {4}{5:<48}{6}{7:1}".format(amDefines.LGREEN, amDefines.BOX_SIDE_DOUBLE, amDefines.LCYAN, Value.name,
+                                                                  amDefines.YELLOW, Value.desc, amDefines.LGREEN, amDefines.BOX_SIDE_DOUBLE)
+        player.transport.write(displayStr)
+    
+    displayStr = "\n\r{0}{1}{2}{3:^64}{4}{5}".format( amDefines.LGREEN, amDefines.BOX_SIDE_DOUBLE, amDefines.YELLOW,
+                                                      "Type help <class> for class specific information.", amDefines.LGREEN,
+                                                      amDefines.BOX_SIDE_DOUBLE)
+    player.transport.write( blankLine + displayStr + blankLine)
+    player.transport.write(bottomLine)
     amUtils.StatLine(player)
     return
