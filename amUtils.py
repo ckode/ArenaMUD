@@ -302,7 +302,8 @@ def SpawnItem( item, player ):
     amMaps.Map.Rooms[newRoom.RoomNum].Items[item.name] = item
     
     if player:
-        player.factory.sendMessageToAllClientsInRoom("%s has spawn." % item.name, newRoom.RoomNum)
+        player.factory.sendMessageToAllClientsInRoom("A %s has appeared." % item.name, newRoom.RoomNum)
+
     
     # Delete callLater items from respawn list that have respawned already
     x = 0
