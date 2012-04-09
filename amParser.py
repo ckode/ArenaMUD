@@ -64,6 +64,7 @@ commands = { '/quit':            amCommands.Quit,
              'spells':           amCommands.ListSpells,
              'reroll':           amCommands.Reroll,
              'get':              amCommands.Get,
+             'statline':         "",
 }
 
 def commandParser(player, line):
@@ -111,7 +112,7 @@ def commandParser(player, line):
                         player.vision = int(cmd[1])
                         player.sendToPlayer("%sVision changed." % (amDefines.WHITE,) )
                         return
-                    continue
+                    continue       
             elif each == "rest":
                 if len(cmd[0]) == 4 and len(cmd) == 1:
                     commands[each](player)
@@ -387,7 +388,14 @@ def commandParser(player, line):
                     commands[each](player)
                     return
                 continue
-
+            elif each == "statline":
+                if len(cmd) == 2 and len(cmd[0]) == 8 and cmd[1] == "off":
+                    player.statLine = False
+                    return
+                elif len(cmd) == 2 and len(cmd[0]) == 8 and cmd[1] == "on":
+                    player.statLine = True
+                    return
+                                
 
     # No command found so say it to the room
     amCommands.Say(player, line)

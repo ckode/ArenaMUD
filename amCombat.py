@@ -36,15 +36,11 @@ class CombatQueue():
 
     # Add new combat attack to CombatList
     def AddAttack(self, playerid):
-        # Is the player already attacking? If so, delete old attack and add new one
-        if playerid in self.QueueIndex.keys():
-            del self.combatQueue[self.QueueIndex[playerid]]
-            self.combatQueue.append(playerid)
-            self.UpdateIndex()
-        # Not already attacking, so just add combat to queue
-        else:
-            self.combatQueue.append(playerid)
-            self.QueueIndex[playerid] = (len(self.combatQueue) - 1)
+        # Call RemoveAttack to remove any active attacks by player
+        self.RemoveAttack(playerid)
+        # add new attack and update index.
+        self.combatQueue.append(playerid)
+        self.UpdateIndex()
 
 
     # Remove players combat from CombatQueue
@@ -57,8 +53,8 @@ class CombatQueue():
     def UpdateIndex(self):
 
         self.QueueIndex.clear()
+        x = 0
         for playerid in self.combatQueue:
-            x = 0
             self.QueueIndex[playerid] = x
             x += 1
 

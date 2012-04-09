@@ -72,6 +72,9 @@ def FindPlayerInRoom(player, Name):
 # Sends the players statline (health and mana)
 #################################################
 def StatLine(player):
+    if player.statLine == False:
+        return
+    
     # If player not playing, return
     if player.STATUS != amDefines.PLAYING:
         STATLINE = "Type 'spawn' to spawn, type 'help' for help: "

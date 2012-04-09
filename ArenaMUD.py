@@ -82,6 +82,7 @@ class Users(StatefulTelnetProtocol):
         self.attacking          = 0
         self.briefDesc          = 1
         self.Rerolling          = False
+        self.statLine           = True
         
         
         # playing stats
